@@ -1,3 +1,6 @@
+import daisyui from 'daisyui';
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -5,7 +8,15 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        /** @see https://tailwindcss.com/docs/font-family#customizing-the-default-font */
+        'sans': ['"Inter"', ...defaultTheme.fontFamily.sans],
+      }
+    },
   },
-  plugins: [],
+  plugins: [daisyui],
+  daisyui: {
+    themes: ['winter'],
+  },
 }
