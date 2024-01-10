@@ -7,9 +7,22 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'prettier', // Prettier must be last
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+    'prettier.config.cjs',
+    'postcss.config.cjs',
+  ],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'prettier'],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: './tsconfig.json',
+  },
+  plugins: ['@typescript-eslint', 'react-refresh', 'prettier'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
