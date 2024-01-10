@@ -2,7 +2,7 @@ export default function App() {
   return (
     <div className="container mx-auto px-4 max-w-xl md:px-8 xl:px-0">
 
-      <div className="h-screen flex flex-col gap-16 justify-center items-center">
+      <div className="min-h-screen flex flex-col gap-16 justify-center items-center">
         <img src="/remit.svg" alt="Remit logo" />
 
         <div className="w-full flex flex-col gap-5 p-8 rounded-lg border border-[#EBEEF1] bg-white shadow-md">
