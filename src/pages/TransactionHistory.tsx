@@ -61,7 +61,7 @@ export function TransactionItem({
           <div className="text-sm md:text-lg font-semibold max-w-sm">
             {recipient}
           </div>
-          <div className="text-sm md:text-lg text-sleep-100 capitalize">
+          <div className="text-sm md:text-lg text-sleep-100 max-w-sm capitalize">
             {status.replace('_', ' ').toLowerCase()}
           </div>
         </div>
