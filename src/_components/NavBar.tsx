@@ -1,5 +1,5 @@
 import { Bars3Icon } from '@heroicons/react/20/solid';
-import Brand from './Brand';
+import Brand from '../components/Brand';
 
 export default function NavBar() {
   return (

@@ -18,6 +18,7 @@ module.exports = {
     'dist',
     '.eslintrc.cjs',
     'prettier.config.cjs',
+    'tailwind.config.js',
     'postcss.config.js',
     'vite.config.ts',
   ],

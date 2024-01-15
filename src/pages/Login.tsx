@@ -2,7 +2,7 @@ import Brand from '../components/Brand';
 
 export default function Login() {
   return (
-    <div className="max-w-md mx-auto px-4 md:px-8 xl:px-0">
+    <main className="max-w-md mx-auto px-4 md:px-8 xl:px-0">
       <div className="min-h-screen flex flex-col gap-16 justify-center items-center">
         <Brand />
 
@@ -11,14 +11,14 @@ export default function Login() {
 
           <label className="form-control w-full">
             <div className="label">
-              <span className="label-text text=[#757F87] font-bold">ID #</span>
+              <span className="label-text text-sleep-200 font-bold">ID #</span>
             </div>
             <input type="text" className="input input-bordered w-full" />
           </label>
 
           <label className="form-control w-full">
             <div className="label">
-              <span className="label-text text=[#757F87] font-bold">
+              <span className="label-text text-sleep-200 font-bold">
                 Password
               </span>
             </div>
@@ -31,6 +31,6 @@ export default function Login() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

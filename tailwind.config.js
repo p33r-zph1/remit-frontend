@@ -11,10 +11,21 @@ export default {
         /** @see https://tailwindcss.com/docs/font-family#customizing-the-default-font */
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        'sleep-100': '#9CA3AF',
+        'sleep-200': '#757F87',
+      },
     },
   },
   plugins: [forms, daisyui],
   daisyui: {
-    themes: ['winter'],
+    themes: [
+      {
+        winter: {
+          ...require('daisyui/src/theming/themes')['winter'],
+          primary: '#1165EF',
+        },
+      },
+    ],
   },
 };
