@@ -1,19 +1,31 @@
-import { Fragment } from 'react';
+import { useState } from 'react';
 import NavBar from './_components/NavBar';
 import Login from './pages/Login';
+import SelectCurrency from './components/SelectCurrency';
+import fiatCurrencies, { Currency } from './constants/currency';
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import { MinusIcon } from '@heroicons/react/20/solid';
+import BottomNavigation from './_components/BottomNavigation';
 
 // TODO: implement login functionality
 const isLoggedin = true;
+const defaultCurrency = fiatCurrencies[0];
+const secondaryCurrency = fiatCurrencies[1];
 
 export default function App() {
+  const [senderFiat, setSenderFiat] = useState<Currency>(defaultCurrency);
+  const [recipientFiat, setRecipientFiat] =
+    useState<Currency>(secondaryCurrency);
+
   if (!isLoggedin) return <Login />;
 
   return (
-    <Fragment>
+    <main className="mb-16">
       <NavBar />
 
-      <main className="px-6 py-2">
-        <label className="flex flex-col mt-4 max-w-md md:mx-auto md:mt-16">
+      <div className="px-6 py-2">
+        {/* Recipient Input */}
+        <label className="flex flex-col mt-4 max-w-md sm:mx-auto sm:mt-16">
           <span className="label-text text-sleep-100 text-base">Recipient</span>
           <input
             type="text"
@@ -21,8 +33,8 @@ export default function App() {
             className="input input-ghost border-0 focus:outline-none p-0 font-bold text-2xl placeholder:text-lg placeholder:opacity-50"
           />
         </label>
-
-        <label className="flex flex-col mt-12 max-w-md md:mx-auto relative">
+        {/* Sender: Fiat Currency Selection & Input */}
+        <div className="flex flex-col mt-12 sm:max-w-md sm:mx-auto relative">
           <span className="absolute top-3 left-8 text-sm text-sleep-200">
             You send
           </span>
@@ -31,8 +43,79 @@ export default function App() {
             className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl"
             placeholder="0.00"
           />
-        </label>
-      </main>
-    </Fragment>
+
+          <div className="absolute inset-y-0 right-0 flex items-center border-l">
+            <SelectCurrency<Currency>
+              selected={senderFiat}
+              currencies={fiatCurrencies}
+              disabled={false}
+              hideChevron={false}
+              onChange={fiat => setSenderFiat(fiat)}
+            />
+          </div>
+        </div>
+        {/* Conversion & Fee Summary */}
+        <div className="sm:max-w-md sm:mx-auto relative">
+          <div className="absolute inset-y-0 left-8 w-0.5 bg-[#E7E9EB]" />
+
+          <div className="space-y-6 py-6">
+            <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
+              <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
+                <XMarkIcon
+                  className="h-full w-full text-sleep-200"
+                  strokeWidth={2}
+                />
+              </div>
+              <span className="text-sm font-semibold text-sleep-100">0.00</span>
+              <span className="text-sm font-semibold text-sleep-200">
+                Conversion rate
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
+              <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
+                <MinusIcon
+                  className="h-full w-full text-sleep-200"
+                  strokeWidth={2}
+                />
+              </div>
+              <span className="text-sm font-semibold text-sleep-100">0.00</span>
+              <span className="text-sm font-semibold text-sleep-200">
+                Platform fee
+              </span>
+            </div>
+          </div>
+        </div>
+        {/* Recipient: Fiat Currency Selection & Input */}
+        <div className="flex flex-col sm:max-w-md sm:mx-auto relative">
+          <span className="absolute top-3 left-8 text-sm text-sleep-200">
+            Recipient will get
+          </span>
+          <input
+            type="text"
+            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl"
+            placeholder="0.00"
+          />
+
+          <div className="absolute inset-y-0 right-0 flex items-center border-l">
+            <SelectCurrency<Currency>
+              selected={recipientFiat}
+              currencies={fiatCurrencies}
+              disabled={false}
+              hideChevron={false}
+              onChange={fiat => setRecipientFiat(fiat)}
+            />
+          </div>
+        </div>
+        {/* Send Money Button */}
+        <div className="sm:max-w-md sm:mx-auto mt-16">
+          <button className="btn btn-primary btn-block rounded-full font-semibold text-xl">
+            Send money
+          </button>
+        </div>
+      </div>
+
+      <BottomNavigation />
+    </main>
   );
 }

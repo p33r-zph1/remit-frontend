@@ -12,6 +12,7 @@ export default {
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
       colors: {
+        brand: '#1165EF',
         'sleep-100': '#9CA3AF',
         'sleep-200': '#757F87',
       },
