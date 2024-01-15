@@ -1,9 +1,9 @@
 // import Login from './pages/Login';
-// import SendMoney from './pages/SendMoney';
+import SendMoney from './pages/SendMoney';
 
 import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
-import Transfer from './pages/Transfer';
+// import Transfer from './pages/Transfer';
 // const isLoggedin = true;
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
     <main className="mb-16">
       <NavBar />
 
-      <Transfer />
+      <SendMoney />
 
       <BottomNavigation />
     </main>

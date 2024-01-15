@@ -14,9 +14,9 @@ export default function SendMoney() {
     useState<Currency>(secondaryCurrency);
 
   return (
-    <div className="px-6 py-2">
+    <div className="px-6 py-2 sm:max-w-md sm:mx-auto">
       {/* Recipient Input */}
-      <label className="flex flex-col mt-4 max-w-md sm:mx-auto sm:mt-16">
+      <label className="flex flex-col mt-4 sm:mt-16">
         <span className="label-text text-sleep-100 text-base">Recipient</span>
         <input
           type="text"
@@ -25,7 +25,7 @@ export default function SendMoney() {
         />
       </label>
       {/* Sender: Fiat Currency Selection & Input */}
-      <div className="flex flex-col mt-12 sm:max-w-md sm:mx-auto relative">
+      <div className="flex flex-col mt-12 relative">
         <span className="absolute top-3 left-8 text-sm text-sleep-200">
           You send
         </span>
@@ -46,7 +46,7 @@ export default function SendMoney() {
         </div>
       </div>
       {/* Conversion & Fee Summary */}
-      <div className="sm:max-w-md sm:mx-auto relative">
+      <div className="relative">
         <div className="absolute inset-y-0 left-8 w-0.5 bg-[#E7E9EB]" />
 
         <div className="space-y-6 py-6">
@@ -86,7 +86,7 @@ export default function SendMoney() {
         </div>
       </div>
       {/* Recipient: Fiat Currency Selection & Input */}
-      <div className="flex flex-col sm:max-w-md sm:mx-auto relative">
+      <div className="flex flex-col relative">
         <span className="absolute top-3 left-8 text-sm text-sleep-200">
           Recipient will get
         </span>
@@ -107,7 +107,7 @@ export default function SendMoney() {
         </div>
       </div>
       {/* Send Money Button */}
-      <div className="sm:max-w-md sm:mx-auto mt-16">
+      <div className="mt-16">
         <button className="btn btn-primary btn-block rounded-full font-semibold text-xl">
           Send money
         </button>
