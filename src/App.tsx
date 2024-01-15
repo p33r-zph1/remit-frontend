@@ -40,7 +40,7 @@ export default function App() {
           </span>
           <input
             type="text"
-            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl transition-shadow duration-200"
+            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
             placeholder="0.00"
           />
 
@@ -101,7 +101,7 @@ export default function App() {
           </span>
           <input
             type="text"
-            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl transition-shadow duration-200"
+            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
             placeholder="0.00"
           />
 
