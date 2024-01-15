@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import NavBar from './_components/NavBar';
+import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import SelectCurrency from './components/SelectCurrency';
 import fiatCurrencies, { Currency } from './constants/currency';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { MinusIcon } from '@heroicons/react/20/solid';
-import BottomNavigation from './_components/BottomNavigation';
+import BottomNavigation from './components/BottomNavigation';
 
 // TODO: implement login functionality
 const isLoggedin = true;
