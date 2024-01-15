@@ -3,7 +3,7 @@ import Brand from './Brand';
 
 export default function NavBar() {
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar sticky top-0 bg-base-100">
       <div className="navbar-start visible md:invisible">
         <Brand />
       </div>

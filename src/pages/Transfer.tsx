@@ -14,9 +14,9 @@ export default function Transfer() {
 
         <div className="flex flex-row justify-between items-center py-1">
           <div className="text-3xl font-bold max-w-sm md:text-4xl transition hover:scale-105 duration-200">
-            <span className="">12,497,549.47</span> PHP
+            <span>12,497,549.47</span> PHP
           </div>
-          <ArrowUpIcon className="w-12 h-12 bg-gray-500 rounded-full p-3 text-white" />
+          <ArrowUpIcon className="w-12 h-12 bg-gray-500 rounded-full p-3 text-white ml-4 md:ml-16" />
         </div>
 
         <div className="text-sleep-200 text-base md:text-lg">

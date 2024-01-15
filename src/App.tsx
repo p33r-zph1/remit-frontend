@@ -1,20 +1,19 @@
 // import Login from './pages/Login';
 // import SendMoney from './pages/SendMoney';
+// import Transfer from './pages/Transfer';
+import TransactionHistory from './pages/TransactionHistory';
 
 import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
-import Transfer from './pages/Transfer';
-// const isLoggedin = true;
 
 export default function App() {
-  // if (!isLoggedin) return <Login />;
+  // if (true) return <Login />;
 
   return (
-    <main className="mb-16">
+    <main className="pb-16 min-h-screen flex flex-col">
       <NavBar />
 
-      <Transfer />
-
+      <TransactionHistory />
       <BottomNavigation />
     </main>
   );
