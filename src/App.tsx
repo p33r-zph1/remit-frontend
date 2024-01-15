@@ -40,7 +40,7 @@ export default function App() {
           </span>
           <input
             type="text"
-            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl"
+            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl transition-shadow duration-200"
             placeholder="0.00"
           />
 
@@ -61,28 +61,36 @@ export default function App() {
           <div className="space-y-6 py-6">
             <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
               <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
-                <XMarkIcon
-                  className="h-full w-full text-sleep-200"
-                  strokeWidth={2}
-                />
-              </div>
-              <span className="text-sm font-semibold text-sleep-100">0.00</span>
-              <span className="text-sm font-semibold text-sleep-200">
-                Conversion rate
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
-              <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
                 <MinusIcon
                   className="h-full w-full text-sleep-200"
                   strokeWidth={2}
                 />
               </div>
-              <span className="text-sm font-semibold text-sleep-100">0.00</span>
+              <span className="text-sm font-semibold text-sleep-200 w-1/2 truncate">
+                0.00
+              </span>
               <span className="text-sm font-semibold text-sleep-200">
                 Platform fee
               </span>
+            </div>
+
+            <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
+              <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
+                <XMarkIcon
+                  className="h-full w-full text-sleep-200"
+                  strokeWidth={2}
+                />
+              </div>
+              <select className="select w-full focus:outline-none select-bordered rounded-full shadow-sm hover:shadow-md duration-200">
+                <option disabled selected>
+                  Select agent commision
+                </option>
+
+                <option>0.3% - Agent 6443</option>
+                <option>0.5% - Agent 2887</option>
+                <option>0.8% - Agent 2341</option>
+                <option>1% - Agent 8211</option>
+              </select>
             </div>
           </div>
         </div>
@@ -93,7 +101,7 @@ export default function App() {
           </span>
           <input
             type="text"
-            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl"
+            className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 text-xl transition-shadow duration-200"
             placeholder="0.00"
           />
 
