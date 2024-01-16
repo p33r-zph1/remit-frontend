@@ -6,23 +6,25 @@ import {
   Outlet,
   Router,
   Route,
-  RootRoute,
   RouterProvider,
+  rootRouteWithContext,
 } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
 
 import SendMoney from './pages/SendMoney';
 import Transfer from './pages/Transfer';
-import TransactionHistory from './pages/TransactionHistory';
+import History from './pages/History';
 import Alerts from './pages/Alerts';
 import NotFound from './pages/NotFound';
 
-console.log(import.meta.env.DEV);
-
-const rootRoute = new RootRoute({
+const rootRoute = rootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   component: () => (
     <main className="pb-16 min-h-screen flex flex-col">
       <NavBar />
@@ -32,6 +34,7 @@ const rootRoute = new RootRoute({
       <BottomNavigation />
 
       {import.meta.env.DEV && <TanStackRouterDevtools />}
+      {import.meta.env.DEV && <ReactQueryDevtools />}
     </main>
   ),
 });
@@ -48,10 +51,10 @@ const transferRoute = new Route({
   component: () => <Transfer />,
 });
 
-const transactionHistoryRoute = new Route({
+const historyRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/history',
-  component: () => <TransactionHistory />,
+  component: () => <History />,
 });
 
 const alertsRoute = new Route({
@@ -69,11 +72,19 @@ const notFoundRoute = new Route({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   transferRoute,
-  transactionHistoryRoute,
+  historyRoute,
   alertsRoute,
 ]);
 
-const router = new Router({ routeTree, notFoundRoute });
+const queryClient = new QueryClient();
+
+const router = new Router({
+  routeTree,
+  notFoundRoute,
+  context: {
+    queryClient,
+  },
+});
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -83,6 +94,8 @@ declare module '@tanstack/react-router' {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
