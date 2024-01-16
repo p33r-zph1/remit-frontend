@@ -72,15 +72,19 @@ export default function SendMoney() {
                 strokeWidth={2}
               />
             </div>
-            <select className="select w-full focus:outline-none select-bordered rounded-full shadow-sm hover:shadow-md duration-200">
-              <option disabled selected>
+            <select
+              value="default"
+              onChange={() => {}}
+              className="select w-full focus:outline-none select-bordered rounded-full shadow-sm hover:shadow-md duration-200"
+            >
+              <option disabled value="default">
                 Select agent commision
               </option>
 
-              <option>0.3% - Agent 6443</option>
-              <option>0.5% - Agent 2887</option>
-              <option>0.8% - Agent 2341</option>
-              <option>1% - Agent 8211</option>
+              <option value="a">0.3% - Agent 6443</option>
+              <option value="b">0.5% - Agent 2887</option>
+              <option value="c">0.8% - Agent 2341</option>
+              <option value="d">1% - Agent 8211</option>
             </select>
           </div>
         </div>
