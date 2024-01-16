@@ -17,6 +17,8 @@ import Transfer from './pages/Transfer';
 import TransactionHistory from './pages/TransactionHistory';
 import Alerts from './pages/Alerts';
 
+console.log(import.meta.env.DEV);
+
 const rootRoute = new RootRoute({
   component: () => (
     <main className="pb-16 min-h-screen flex flex-col">
@@ -26,7 +28,7 @@ const rootRoute = new RootRoute({
 
       <BottomNavigation />
 
-      <TanStackRouterDevtools />
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
     </main>
   ),
 });
