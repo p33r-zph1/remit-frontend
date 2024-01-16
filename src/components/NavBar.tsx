@@ -24,21 +24,6 @@ export default function NavBar() {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to="/">
-                <a>Send</a>
-              </Link>
-            </li>
-            <li>
-              <Link to="/transactionHistory">
-                <a>History</a>
-              </Link>
-            </li>
-            <li>
-              <Link to="/alerts">
-                <a>Alerts</a>
-              </Link>
-            </li>
-            <li>
               <a>Logout</a>
             </li>
           </ul>
