@@ -10,12 +10,15 @@ import {
   RouterProvider,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+
 import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
+
 import SendMoney from './pages/SendMoney';
 import Transfer from './pages/Transfer';
 import TransactionHistory from './pages/TransactionHistory';
 import Alerts from './pages/Alerts';
+import NotFound from './pages/NotFound';
 
 console.log(import.meta.env.DEV);
 
@@ -47,7 +50,7 @@ const transferRoute = new Route({
 
 const transactionHistoryRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/transactionHistory',
+  path: '/history',
   component: () => <TransactionHistory />,
 });
 
@@ -57,6 +60,12 @@ const alertsRoute = new Route({
   component: () => <Alerts />,
 });
 
+const notFoundRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/not-found',
+  component: () => <NotFound />,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   transferRoute,
@@ -64,7 +73,7 @@ const routeTree = rootRoute.addChildren([
   alertsRoute,
 ]);
 
-const router = new Router({ routeTree });
+const router = new Router({ routeTree, notFoundRoute });
 
 declare module '@tanstack/react-router' {
   interface Register {

@@ -40,10 +40,7 @@ export default function BottomNavigation() {
           )}
         </Link>
 
-        <Link
-          to="/transactionHistory"
-          activeProps={{ className: 'text-primary' }}
-        >
+        <Link to="/history" activeProps={{ className: 'text-primary' }}>
           {({ isActive }) => (
             <BtmLink
               title="History"

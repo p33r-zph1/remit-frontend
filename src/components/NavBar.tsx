@@ -43,7 +43,7 @@ export default function NavBar() {
           </li>
           <li>
             <Link
-              to="/transactionHistory"
+              to="/history"
               className="btn btn-ghost"
               activeProps={{
                 className: 'text-primary',
