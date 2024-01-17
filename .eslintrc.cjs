@@ -43,6 +43,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
 
+    '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'prettier/prettier': 'error',
   },
 };
