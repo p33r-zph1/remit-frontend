@@ -1,6 +1,6 @@
 function SkeletonItem() {
   return (
-    <div className="w-full flex flex-row items-center justify-between space-x-4 py-3 md:max-w-xl md:mx-auto">
+    <div className="w-full flex flex-row items-center justify-between space-x-4 py-3">
       <div className="flex flex-row items-center justify-center space-x-4 w-full">
         <div className="skeleton w-12 md:w-14 h-12 md:h-14 rounded-full shrink-0" />
 
