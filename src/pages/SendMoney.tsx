@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { NumericFormat } from 'react-number-format';
 
 import SelectCurrency from '../components/SelectCurrency';
 import fiatCurrencies, { Currency } from '../constants/currency';
@@ -13,13 +14,14 @@ export default function SendMoney() {
   const [recipientFiat, setRecipientFiat] =
     useState<Currency>(secondaryCurrency);
 
+  const [sendAmount, setSendAmount] = useState('');
+
   return (
     <div className="px-6 py-2 sm:max-w-md sm:mx-auto">
       {/* Recipient Input */}
       <label className="flex flex-col mt-4 sm:mt-16">
         <span className="label-text text-sleep-100 text-base">Recipient</span>
-        <input
-          type="text"
+        <NumericFormat
           placeholder="Enter recipient number"
           className="input input-ghost border-0 focus:outline-none p-0 font-bold text-2xl placeholder:text-lg placeholder:opacity-50"
         />
@@ -29,8 +31,10 @@ export default function SendMoney() {
         <span className="absolute top-3 left-8 text-sm text-sleep-200">
           You send
         </span>
-        <input
-          type="text"
+        <NumericFormat
+          thousandSeparator
+          value={sendAmount}
+          onValueChange={values => setSendAmount(values.value)}
           className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
           placeholder="0.00"
         />
@@ -94,8 +98,8 @@ export default function SendMoney() {
         <span className="absolute top-3 left-8 text-sm text-sleep-200">
           Recipient will get
         </span>
-        <input
-          type="text"
+        <NumericFormat
+          thousandSeparator
           className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
           placeholder="0.00"
         />
