@@ -70,14 +70,14 @@ function Item({
 
       <div className="timeline-middle">{getIconByStatus(status)}</div>
 
-      <div className="timeline-end timeline-box group">
+      <div className="group timeline-end timeline-box">
         <div
-          className="flex flex-col tooltip items-baseline select-none"
+          className="tooltip flex select-none flex-col items-baseline"
           data-tip={getTooltipByStatus(status)}
         >
-          <span className="text-xs md:text-sm font-semibold">{title}</span>
+          <span className="text-xs font-semibold md:text-sm">{title}</span>
 
-          <span className="text-xs md:text-sm group-hover:text-sm md:group-hover:text-base duration-200">
+          <span className="text-xs duration-200 group-hover:text-sm md:text-sm md:group-hover:text-base">
             {description}
           </span>
         </div>
@@ -91,7 +91,7 @@ function Item({
 export default function TransferTimeline({ timeline }: Props) {
   return (
     <>
-      <div className="text-lg font-semibold mt-12 md:text-xl md:mt-16">
+      <div className="mt-12 text-lg font-semibold md:mt-16 md:text-xl">
         Transfer timeline
       </div>
 

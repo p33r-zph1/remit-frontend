@@ -16,25 +16,25 @@ export default function SendMoney() {
   const [sendAmount, setSendAmount] = useState('');
 
   return (
-    <div className="px-6 py-2 sm:max-w-md sm:mx-auto">
+    <div className="px-6 py-2 sm:mx-auto sm:max-w-md">
       {/* Recipient Input */}
-      <label className="flex flex-col mt-4 sm:mt-16">
-        <span className="label-text text-sleep-100 text-base">Recipient</span>
+      <label className="mt-4 flex flex-col sm:mt-16">
+        <span className="label-text text-base text-sleep-100">Recipient</span>
         <NumericFormat
           placeholder="Enter recipient number"
-          className="input input-ghost border-0 focus:outline-none p-0 font-bold text-2xl placeholder:text-lg placeholder:opacity-50"
+          className="input input-ghost border-0 p-0 text-2xl font-bold placeholder:text-lg placeholder:opacity-50 focus:outline-none"
         />
       </label>
       {/* Sender: Fiat Currency Selection & Input */}
-      <div className="flex flex-col mt-12 relative">
-        <span className="absolute top-3 left-8 text-sm text-sleep-200">
+      <div className="relative mt-12 flex flex-col">
+        <span className="absolute left-8 top-3 text-sm text-sleep-200">
           You send
         </span>
         <NumericFormat
           thousandSeparator
           value={sendAmount}
           onValueChange={values => setSendAmount(values.value)}
-          className="rounded-full font-bold border-primary pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
+          className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
           placeholder="0.00"
         />
 
@@ -60,7 +60,7 @@ export default function SendMoney() {
                 strokeWidth={2}
               />
             </div>
-            <span className="text-sm font-semibold text-sleep-200 w-1/2 truncate">
+            <span className="w-1/2 truncate text-sm font-semibold text-sleep-200">
               0.00
             </span>
             <span className="text-sm font-semibold text-sleep-200">
@@ -78,7 +78,7 @@ export default function SendMoney() {
             <select
               value="default"
               onChange={() => {}}
-              className="select w-full focus:outline-none select-bordered rounded-full shadow-sm hover:shadow-md duration-200"
+              className="select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none"
             >
               <option disabled value="default">
                 Select agent commision
@@ -93,13 +93,13 @@ export default function SendMoney() {
         </div>
       </div>
       {/* Recipient: Fiat Currency Selection & Input */}
-      <div className="flex flex-col relative">
-        <span className="absolute top-3 left-8 text-sm text-sleep-200">
+      <div className="relative flex flex-col">
+        <span className="absolute left-8 top-3 text-sm text-sleep-200">
           Recipient will get
         </span>
         <NumericFormat
           thousandSeparator
-          className="rounded-full font-bold border-primary pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
+          className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
           placeholder="0.00"
         />
 
@@ -115,7 +115,7 @@ export default function SendMoney() {
       </div>
       {/* Send Money Button */}
       <div className="mt-16">
-        <button className="btn btn-primary btn-block rounded-full font-semibold text-xl">
+        <button className="btn btn-primary btn-block rounded-full text-xl font-semibold">
           Send money
         </button>
       </div>

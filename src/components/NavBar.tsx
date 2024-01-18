@@ -16,12 +16,12 @@ export default function NavBar() {
 
       <div className="navbar-end">
         <div className="dropdown dropdown-end lg:hidden">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <div tabIndex={0} role="button" className="btn btn-circle btn-ghost">
             <Bars3Icon className="h-6 w-6" />
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
           >
             <li>
               <a>Logout</a>
@@ -29,7 +29,7 @@ export default function NavBar() {
           </ul>
         </div>
 
-        <ul className="hidden space-x-1 font-semibold px-1 lg:inline-flex">
+        <ul className="hidden space-x-1 px-1 font-semibold lg:inline-flex">
           <li>
             <Link
               to="/"
@@ -64,7 +64,7 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <button className="btn btn-ghost btn-circle">
+            <button className="btn btn-circle btn-ghost">
               <PowerIcon className="h-6 w-6 text-gray-500" />
             </button>
           </li>

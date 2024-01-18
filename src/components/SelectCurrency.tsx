@@ -26,9 +26,9 @@ export default function SelectCurrency<T extends Currency>({
 }: Props<T>) {
   if (currencies.length === 0 || !selected) {
     return (
-      <div className="flex flex-col justify-center items-center space-x-2 px-4 py-2">
-        <ExclamationCircleIcon className="w-6 h-6 text-red-400" />
-        <span className="text-xs font-bold text-red-400 pr-2">Error</span>
+      <div className="flex flex-col items-center justify-center space-x-2 px-4 py-2">
+        <ExclamationCircleIcon className="h-6 w-6 text-red-400" />
+        <span className="pr-2 text-xs font-bold text-red-400">Error</span>
       </div>
     );
   }
@@ -36,7 +36,7 @@ export default function SelectCurrency<T extends Currency>({
   return (
     <Listbox value={selected} onChange={onChange} disabled={disabled}>
       <div className="relative">
-        <Listbox.Button className="inline-flex items-center justify-center rounded-4xl px-4 py-2 font-bold">
+        <Listbox.Button className="rounded-4xl inline-flex items-center justify-center px-4 py-2 font-bold">
           {selected.icon && (
             <img
               src={selected.icon}
@@ -46,11 +46,11 @@ export default function SelectCurrency<T extends Currency>({
               className="mr-2"
             />
           )}
-          <span className="text-sm lg:text-md">{selected.symbol}</span>
+          <span className="lg:text-md text-sm">{selected.symbol}</span>
           {hideChevron ? (
             <span className="mr-8" />
           ) : (
-            <ChevronDownIcon className="ml-2 -mr-1 h-5 w-5 text-sleep-200 hover:text-gray-800" />
+            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-sleep-200 hover:text-gray-800" />
           )}
         </Listbox.Button>
 

@@ -6,12 +6,12 @@ import TransferDetails from '../components/Transfer/Details';
 
 export default function Transfer() {
   return (
-    <div className="w-full flex flex-col px-6 py-2 sm:max-w-3xl sm:mx-auto">
+    <div className="flex w-full flex-col px-6 py-2 sm:mx-auto sm:max-w-3xl">
       <Link
         to="/"
-        className="btn btn-ghost btn-circle mt-6 mb-2 sm:mt-16 -ml-3"
+        className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16"
       >
-        <ArrowLeftIcon className="h-4 w-4 md:w-6 md:h-6 text-black" />
+        <ArrowLeftIcon className="h-4 w-4 text-black md:h-6 md:w-6" />
       </Link>
 
       <TransferDetails

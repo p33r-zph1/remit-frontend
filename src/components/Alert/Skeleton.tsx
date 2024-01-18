@@ -1,7 +1,7 @@
 function SkeletonItem() {
   return (
-    <div className="w-full flex flex-row items-center justify-between space-x-1 py-3">
-      <div className="flex flex-col space-y-4 w-full">
+    <div className="flex w-full flex-row items-center justify-between space-x-1 py-3">
+      <div className="flex w-full flex-col space-y-4">
         <div className="skeleton h-4 w-5/6 md:h-7" />
         <div className="skeleton h-4 w-2/5 md:h-7" />
       </div>

@@ -9,7 +9,7 @@ import HeaderTitle from '../components/HeaderTitle';
 
 export default function History() {
   return (
-    <div className="flex-1 w-full flex flex-col px-6 py-2 sm:max-w-3xl sm:mx-auto">
+    <div className="flex w-full flex-1 flex-col px-6 py-2 sm:mx-auto sm:max-w-3xl">
       <HeaderTitle>Transaction History</HeaderTitle>
 
       <QueryErrorResetBoundary>

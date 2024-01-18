@@ -15,16 +15,16 @@ export default function TransactionItem({
   conversionAmount,
 }: Item) {
   return (
-    <div className="flex flex-row justify-between items-center py-4 group mb-2">
+    <div className="group mb-2 flex flex-row items-center justify-between py-4">
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">
         <TransactionIcon status={status} />
 
         <div className="flex flex-col items-start justify-center">
-          <div className="text-sm md:text-lg font-semibold max-w-sm">
+          <div className="max-w-sm text-sm font-semibold md:text-lg">
             {recipient}
           </div>
-          <div className="text-sm md:text-lg text-sleep-100 max-w-sm capitalize">
+          <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
             {status.replace('_', ' ').toLowerCase()}
           </div>
         </div>
@@ -32,10 +32,10 @@ export default function TransactionItem({
 
       {/* Amount & Conversion Details */}
       <div className="flex flex-col items-end justify-center">
-        <div className="text-sm md:text-lg font-bold max-w-sm transition group-hover:scale-105 duration-200">
+        <div className="max-w-sm text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
           {sentAmount}
         </div>
-        <div className="text-sm md:text-lg text-sleep-200">
+        <div className="text-sm text-sleep-200 md:text-lg">
           {conversionAmount}
         </div>
       </div>

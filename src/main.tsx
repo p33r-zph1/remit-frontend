@@ -26,7 +26,7 @@ const rootRoute = rootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
   component: () => (
-    <main className="pb-16 min-h-screen flex flex-col">
+    <main className="flex min-h-screen flex-col pb-16">
       <NavBar />
 
       <Outlet />

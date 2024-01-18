@@ -29,7 +29,7 @@ export default function BottomNavigation() {
       <div className="fixed bottom-0 left-0 right-0 h-16 bg-white lg:hidden" />
 
       {/* Bottom Navigation */}
-      <div className="btm-nav btm-nav-sm max-w-xs mx-auto lg:btm-nav-md lg:hidden font-bold">
+      <div className="btm-nav btm-nav-sm mx-auto max-w-xs font-bold lg:btm-nav-md lg:hidden">
         <Link to="/" activeProps={{ className: 'text-primary' }}>
           {({ isActive }) => (
             <BtmLink
