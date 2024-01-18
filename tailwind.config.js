@@ -12,7 +12,6 @@ export default {
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        brand: '#1165EF',
         'sleep-100': '#9CA3AF',
         'sleep-200': '#757F87',
       },
@@ -20,11 +19,15 @@ export default {
   },
   plugins: [forms, daisyui],
   daisyui: {
+    /** @see https://daisyui.com/docs/themes/#-7 */
     themes: [
       {
         winter: {
           ...require('daisyui/src/theming/themes')['winter'],
           primary: '#1165EF',
+          accent: '#de8800',
+          success: '#009747',
+          error: '#cf3452',
         },
       },
     ],

@@ -29,6 +29,13 @@ export default function TransactionList() {
 
       <TransactionItem
         recipient="1243455"
+        status="COMPLETE"
+        sentAmount="12,497,549.47 SGD"
+        conversionAmount="550,219.65 UA"
+      />
+
+      <TransactionItem
+        recipient="1243455"
         status="FAILED"
         sentAmount="12,497,549.47 SGD"
         conversionAmount="550,219.65 UA"

@@ -1,1 +1,1 @@
-export type Status = 'SENT' | 'IN_PROGRESS' | 'FAILED' | 'EXPIRED';
+export type Status = 'SENT' | 'IN_PROGRESS' | 'FAILED' | 'EXPIRED' | 'COMPLETE';

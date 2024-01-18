@@ -10,9 +10,8 @@ const defaultCurrency = fiatCurrencies[0];
 const secondaryCurrency = fiatCurrencies[1];
 
 export default function SendMoney() {
-  const [senderFiat, setSenderFiat] = useState<Currency>(defaultCurrency);
-  const [recipientFiat, setRecipientFiat] =
-    useState<Currency>(secondaryCurrency);
+  const [senderFiat, setSenderFiat] = useState(defaultCurrency);
+  const [recipientFiat, setRecipientFiat] = useState(secondaryCurrency);
 
   const [sendAmount, setSendAmount] = useState('');
 
@@ -35,7 +34,7 @@ export default function SendMoney() {
           thousandSeparator
           value={sendAmount}
           onValueChange={values => setSendAmount(values.value)}
-          className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
+          className="rounded-full font-bold border-primary pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
           placeholder="0.00"
         />
 
@@ -100,7 +99,7 @@ export default function SendMoney() {
         </span>
         <NumericFormat
           thousandSeparator
-          className="rounded-full font-bold border-brand pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
+          className="rounded-full font-bold border-primary pl-8 pt-9 pb-3 pr-32 text-xl transition-shadow duration-200"
           placeholder="0.00"
         />
 

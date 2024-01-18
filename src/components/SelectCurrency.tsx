@@ -66,7 +66,7 @@ export default function SelectCurrency<T extends Currency>({
                 key={idx}
                 className={({ active }) =>
                   cx(
-                    active ? ' text-brand' : '',
+                    active ? ' text-primary' : '',
                     'relative cursor-default select-none py-2 pl-10 pr-4'
                   )
                 }
@@ -84,7 +84,7 @@ export default function SelectCurrency<T extends Currency>({
                     </span>
 
                     {selected && (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-brand">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
                     )}
