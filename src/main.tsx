@@ -16,11 +16,11 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
 
-import SendMoney from './pages/SendMoney';
-import Transfer from './pages/Transfer';
-import History from './pages/History';
-import Alerts from './pages/Alerts';
-import NotFound from './pages/NotFound';
+import SendMoney from './pages/send-money';
+import Transfer from './pages/transfer';
+import History from './pages/history';
+import Alerts from './pages/alerts';
+import NotFound from './pages/not-found';
 
 const rootRoute = rootRouteWithContext<{
   queryClient: QueryClient;

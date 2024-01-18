@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { alertsQueryOptions } from '../../api/alerts/request';
+import { alertsQueryOptions } from '../../api/alerts/query';
 import AlertItem from './Item';
 
 export default function AlertList() {
