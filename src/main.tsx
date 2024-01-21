@@ -17,7 +17,7 @@ import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
 
 import SendMoney from './pages/send-money';
-// import Login from './pages/login';
+import Login from './pages/login';
 import Transfer from './pages/transfer';
 import History from './pages/history';
 import Alerts from './pages/alerts';
@@ -28,11 +28,7 @@ const rootRoute = rootRouteWithContext<{
 }>()({
   component: () => (
     <main className="flex min-h-dvh flex-col pb-16">
-      <NavBar />
-
       <Outlet />
-
-      <BottomNavigation />
 
       {import.meta.env.DEV && <TanStackRouterDevtools />}
       {import.meta.env.DEV && <ReactQueryDevtools />}
@@ -40,34 +36,10 @@ const rootRoute = rootRouteWithContext<{
   ),
 });
 
-const indexRoute = new Route({
+const loginRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/',
-  component: () => <SendMoney />,
-});
-
-// const loginRoute = new Route({
-//   getParentRoute: () => rootRoute,
-//   path: '/login',
-//   component: () => <Login />,
-// });
-
-const transferRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/transfer',
-  component: () => <Transfer />,
-});
-
-const historyRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/history',
-  component: () => <History />,
-});
-
-const alertsRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: '/alerts',
-  component: () => <Alerts />,
+  path: '/login',
+  component: () => <Login />,
 });
 
 const notFoundRoute = new Route({
@@ -76,12 +48,45 @@ const notFoundRoute = new Route({
   component: () => <NotFound />,
 });
 
+const mainRoute = new Route({
+  getParentRoute: () => rootRoute,
+  id: 'main',
+  component: () => (
+    <>
+      <NavBar />
+      <Outlet />
+      <BottomNavigation />
+    </>
+  ),
+});
+
+const indexRoute = new Route({
+  getParentRoute: () => mainRoute,
+  path: '/',
+  component: () => <SendMoney />,
+});
+
+const transferRoute = new Route({
+  getParentRoute: () => mainRoute,
+  path: '/transfer',
+  component: () => <Transfer />,
+});
+
+const historyRoute = new Route({
+  getParentRoute: () => mainRoute,
+  path: '/history',
+  component: () => <History />,
+});
+
+const alertsRoute = new Route({
+  getParentRoute: () => mainRoute,
+  path: '/alerts',
+  component: () => <Alerts />,
+});
+
 const routeTree = rootRoute.addChildren([
-  indexRoute,
-  // loginRoute,
-  transferRoute,
-  historyRoute,
-  alertsRoute,
+  loginRoute,
+  mainRoute.addChildren([indexRoute, transferRoute, historyRoute, alertsRoute]),
 ]);
 
 const queryClient = new QueryClient();
