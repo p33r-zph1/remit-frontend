@@ -17,6 +17,7 @@ import NavBar from './components/NavBar';
 import BottomNavigation from './components/BottomNavigation';
 
 import SendMoney from './pages/send-money';
+// import Login from './pages/login';
 import Transfer from './pages/transfer';
 import History from './pages/history';
 import Alerts from './pages/alerts';
@@ -45,6 +46,12 @@ const indexRoute = new Route({
   component: () => <SendMoney />,
 });
 
+// const loginRoute = new Route({
+//   getParentRoute: () => rootRoute,
+//   path: '/login',
+//   component: () => <Login />,
+// });
+
 const transferRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/transfer',
@@ -71,6 +78,7 @@ const notFoundRoute = new Route({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  // loginRoute,
   transferRoute,
   historyRoute,
   alertsRoute,

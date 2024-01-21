@@ -3,16 +3,20 @@ import { Link } from '@tanstack/react-router';
 
 import TransferTimeline from '../components/Transfer/Timeline';
 import TransferDetails from '../components/Transfer/Details';
+import Page from '../components/Page';
+
+function BackButton() {
+  return (
+    <Link to="/" className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16">
+      <ArrowLeftIcon className="h-4 w-4 text-black md:h-6 md:w-6" />
+    </Link>
+  );
+}
 
 export default function Transfer() {
   return (
-    <div className="flex w-full flex-col px-6 py-2 sm:mx-auto sm:max-w-3xl">
-      <Link
-        to="/"
-        className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16"
-      >
-        <ArrowLeftIcon className="h-4 w-4 text-black md:h-6 md:w-6" />
-      </Link>
+    <Page maxWidth="wide">
+      <BackButton />
 
       <TransferDetails
         status="IN_PROGRESS"
@@ -39,6 +43,6 @@ export default function Transfer() {
           },
         ]}
       />
-    </div>
+    </Page>
   );
 }

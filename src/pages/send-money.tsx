@@ -4,6 +4,7 @@ import { NumericFormat } from 'react-number-format';
 
 import SelectCurrency from '../components/SelectCurrency';
 import fiatCurrencies, { Currency } from '../constants/currency';
+import Page from '../components/Page';
 
 // TODO: implement mobx state management
 const defaultCurrency = fiatCurrencies[0];
@@ -16,7 +17,7 @@ export default function SendMoney() {
   const [sendAmount, setSendAmount] = useState('');
 
   return (
-    <div className="px-6 py-2 sm:mx-auto sm:max-w-md">
+    <Page maxWidth="md">
       {/* Recipient Input */}
       <label className="mt-4 flex flex-col sm:mt-16">
         <span className="label-text text-base text-sleep-100">Recipient</span>
@@ -119,6 +120,6 @@ export default function SendMoney() {
           Send money
         </button>
       </div>
-    </div>
+    </Page>
   );
 }

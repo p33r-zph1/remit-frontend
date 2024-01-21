@@ -6,10 +6,11 @@ import TransactionSkeleton from '../components/Transaction/Skeleton';
 import TransactionList from '../components/Transaction/List';
 import QueryFallback from '../components/QueryFallback';
 import HeaderTitle from '../components/HeaderTitle';
+import Page from '../components/Page';
 
 export default function History() {
   return (
-    <div className="flex w-full flex-1 flex-col px-6 py-2 sm:mx-auto sm:max-w-3xl">
+    <Page maxWidth="wide">
       <HeaderTitle>Transaction History</HeaderTitle>
 
       <QueryErrorResetBoundary>
@@ -21,6 +22,6 @@ export default function History() {
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-    </div>
+    </Page>
   );
 }

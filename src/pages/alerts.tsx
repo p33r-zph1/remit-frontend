@@ -6,10 +6,11 @@ import AlertList from '../components/Alert/List';
 import QueryFallback from '../components/QueryFallback';
 import AlertSkeleton from '../components/Alert/Skeleton';
 import HeaderTitle from '../components/HeaderTitle';
+import Page from '../components/Page';
 
 export default function Alerts() {
   return (
-    <div className="flex w-full flex-1 flex-col px-6 py-2 sm:mx-auto sm:max-w-3xl">
+    <Page maxWidth="wide">
       <HeaderTitle>Alerts</HeaderTitle>
 
       <QueryErrorResetBoundary>
@@ -21,6 +22,6 @@ export default function Alerts() {
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-    </div>
+    </Page>
   );
 }
