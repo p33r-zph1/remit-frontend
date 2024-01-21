@@ -22,6 +22,7 @@ export default function SendMoney() {
       <label className="mt-4 flex flex-col sm:mt-16">
         <span className="label-text text-base text-sleep-100">Recipient</span>
         <NumericFormat
+          inputMode="numeric"
           placeholder="Enter recipient number"
           className="input input-ghost border-0 p-0 text-2xl font-bold placeholder:text-lg placeholder:opacity-50 focus:outline-none"
         />
@@ -33,6 +34,7 @@ export default function SendMoney() {
         </span>
         <NumericFormat
           thousandSeparator
+          inputMode="decimal"
           value={sendAmount}
           onValueChange={values => setSendAmount(values.value)}
           className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
@@ -100,6 +102,7 @@ export default function SendMoney() {
         </span>
         <NumericFormat
           thousandSeparator
+          inputMode="decimal"
           className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
           placeholder="0.00"
         />
