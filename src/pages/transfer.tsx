@@ -15,7 +15,7 @@ function BackButton() {
 
 export default function Transfer() {
   return (
-    <Page maxWidth="wide">
+    <Page className="mx-auto max-w-3xl">
       <BackButton />
 
       <TransferDetails

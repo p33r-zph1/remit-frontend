@@ -10,7 +10,7 @@ import Page from '../components/Page';
 
 export default function Alerts() {
   return (
-    <Page maxWidth="wide">
+    <Page className="mx-auto max-w-3xl">
       <HeaderTitle>Alerts</HeaderTitle>
 
       <QueryErrorResetBoundary>

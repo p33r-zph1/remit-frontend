@@ -10,7 +10,7 @@ import Page from '../components/Page';
 
 export default function History() {
   return (
-    <Page maxWidth="wide">
+    <Page className="mx-auto max-w-3xl">
       <HeaderTitle>Transaction History</HeaderTitle>
 
       <QueryErrorResetBoundary>

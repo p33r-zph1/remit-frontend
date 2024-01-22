@@ -17,7 +17,7 @@ export default function SendMoney() {
   const [sendAmount, setSendAmount] = useState('');
 
   return (
-    <Page maxWidth="md">
+    <Page className="mx-auto max-w-sm md:max-w-lg lg:justify-center">
       {/* Recipient Input */}
       <label className="mt-4 flex flex-col sm:mt-16">
         <span className="label-text text-base text-sleep-100">Recipient</span>
