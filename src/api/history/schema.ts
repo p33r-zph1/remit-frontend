@@ -1,10 +1,10 @@
-import { string, z } from 'zod';
+import { z } from 'zod';
 
 const historySchema = z.object({
-  account: string(),
-  status: string(),
-  amount: string(),
-  conversion: string(),
+  account: z.string(),
+  status: z.string(),
+  amount: z.string(),
+  conversion: z.string(),
 });
 
 export type History = z.infer<typeof historySchema>;

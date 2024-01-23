@@ -1,10 +1,9 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-
 import TransactionItem from './Item';
-import { historyQueryOptions } from '../../api/history/query';
+
+import useHistory from '../../hooks/useHistory';
 
 export default function TransactionList() {
-  const historyQuery = useSuspenseQuery(historyQueryOptions);
+  const historyQuery = useHistory();
   const history = historyQuery.data;
 
   console.log({ history });

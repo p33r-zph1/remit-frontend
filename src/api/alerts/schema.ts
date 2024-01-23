@@ -1,9 +1,9 @@
-import { string, z } from 'zod';
+import { z } from 'zod';
 
 const alertSchema = z.object({
-  title: string(),
-  description: string(),
-  timestamp: string(),
+  title: z.string(),
+  description: z.string(),
+  timestamp: z.string(),
 });
 
 export type Alert = z.infer<typeof alertSchema>;

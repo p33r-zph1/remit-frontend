@@ -1,5 +1,3 @@
-import { queryOptions } from '@tanstack/react-query';
-
 import { delay } from '../../utils';
 // import historySchema from './schema';
 
@@ -32,9 +30,3 @@ export const fetchHistory = async () => {
 
   // return result.data;
 };
-
-export const historyQueryOptions = queryOptions({
-  queryKey: ['history'],
-  queryFn: () => fetchHistory(),
-  refetchInterval: 5000,
-});

@@ -1,5 +1,3 @@
-import { queryOptions } from '@tanstack/react-query';
-
 import { delay } from '../../utils';
 // import alertSchema from './schema';
 
@@ -32,9 +30,3 @@ export const fetchAlerts = async () => {
 
   // return result.data;
 };
-
-export const alertsQueryOptions = queryOptions({
-  queryKey: ['alert'],
-  queryFn: () => fetchAlerts(),
-  refetchInterval: 5000,
-});
