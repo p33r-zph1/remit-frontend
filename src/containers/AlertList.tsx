@@ -1,12 +1,12 @@
-import AlertItem from './Item';
+import AlertItem from '../components/Alert/Item';
 
-import useAlerts from '../../hooks/useAlerts';
+// import useAlerts from '../hooks/api/useAlerts';
 
 export default function AlertList() {
-  const alertsQuery = useAlerts();
-  const alerts = alertsQuery.data;
+  // const alertsQuery = useAlerts();
+  // const alerts = alertsQuery.data;
 
-  console.log({ alerts });
+  // console.log({ alerts });
 
   // TODO: wip
 

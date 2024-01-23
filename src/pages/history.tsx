@@ -3,7 +3,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import TransactionSkeleton from '../components/Transaction/Skeleton';
-import TransactionList from '../components/Transaction/List';
+import TransactionList from '../containers/HistoryList';
 import QueryFallback from '../components/QueryFallback';
 import HeaderTitle from '../components/HeaderTitle';
 import Page from '../components/Page';

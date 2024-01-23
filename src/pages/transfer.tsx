@@ -1,9 +1,9 @@
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
 
+import Page from '../components/Page';
 import TransferTimeline from '../components/Transfer/Timeline';
 import TransferDetails from '../components/Transfer/Details';
-import Page from '../components/Page';
 
 function BackButton() {
   return (

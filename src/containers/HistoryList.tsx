@@ -1,12 +1,12 @@
-import TransactionItem from './Item';
+import TransactionItem from '../components/Transaction/Item';
 
-import useHistory from '../../hooks/useHistory';
+// import useHistory from '../hooks/api/useHistory';
 
 export default function TransactionList() {
-  const historyQuery = useHistory();
-  const history = historyQuery.data;
+  // const historyQuery = useHistory();
+  // const history = historyQuery.data;
 
-  console.log({ history });
+  // console.log({ history });
 
   // TODO: wip
 

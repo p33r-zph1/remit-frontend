@@ -1,15 +1,18 @@
 import { z } from 'zod';
+import { makeApiSchema } from './api/fetch';
 
 type Pair = `${string}:${string}`;
 
 const isValidPair = (data: string): data is Pair =>
   data.split(':').length === 2;
 
-const priceOracleSchema = z.object({
+const schema = z.object({
   pair: z.string().refine(isValidPair),
   rate: z.number(),
 });
 
-export type PriceOracle = z.infer<typeof priceOracleSchema>;
+const priceOracleSchema = makeApiSchema(schema);
+
+export type PriceOracle = z.infer<typeof schema>;
 
 export default priceOracleSchema;
