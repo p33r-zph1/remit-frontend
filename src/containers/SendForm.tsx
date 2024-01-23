@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import fiatCurrencies from '../constants/currency';
-import RecipientInput from '../components/Form/RecipientInput';
-import CurrencyInput from '../components/Form/CurrencyInput';
+import RecipientInput from '../components/Input/RecipientInput';
+import CurrencyInput from '../components/Input/CurrencyInput';
 import usePriceOracle from '../hooks/api/usePriceOracle';
 
 // TODO: implement mobx state management

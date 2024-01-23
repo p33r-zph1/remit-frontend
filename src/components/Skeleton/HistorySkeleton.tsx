@@ -18,7 +18,7 @@ function SkeletonItem() {
   );
 }
 
-export default function TransactionSkeleton() {
+export default function HistorySkeleton() {
   return (
     <>
       <SkeletonItem />

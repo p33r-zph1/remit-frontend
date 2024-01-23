@@ -1,4 +1,4 @@
-import AlertItem from '../components/Alert/Item';
+import AlertItem from '../components/Item/AlertItem';
 
 // import useAlerts from '../hooks/api/useAlerts';
 

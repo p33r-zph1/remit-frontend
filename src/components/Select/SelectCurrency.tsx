@@ -6,8 +6,8 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
 
-import { Currency } from '../constants/currency';
-import { cx } from '../utils';
+import { Currency } from '../../constants/currency';
+import { cx } from '../../utils';
 
 interface Props<T> {
   currencies: T[];

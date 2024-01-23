@@ -13,8 +13,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import NavBar from './components/NavBar';
-import BottomNavigation from './components/BottomNavigation';
+import NavBar from './components/Nav/NavBar';
+import BottomNavigation from './components/Nav/BottomNavigation';
 
 import SendMoney from './pages/send-money';
 import Login from './pages/login';

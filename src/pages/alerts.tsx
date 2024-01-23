@@ -5,7 +5,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import Page from '../components/Page';
 import AlertList from '../containers/AlertList';
 import QueryFallback from '../components/QueryFallback';
-import AlertSkeleton from '../components/Alert/Skeleton';
+import AlertSkeleton from '../components/Skeleton/AlertSkeleton';
 import HeaderTitle from '../components/HeaderTitle';
 
 export default function Alerts() {

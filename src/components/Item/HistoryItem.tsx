@@ -1,5 +1,5 @@
 import { Status } from '../../constants/types';
-import TransactionIcon from './Icon';
+import StatusIcon from '../Icon/StatusIcon';
 
 type Item = {
   recipient: string;
@@ -8,7 +8,7 @@ type Item = {
   conversionAmount: string;
 };
 
-export default function TransactionItem({
+export default function HistoryItem({
   recipient,
   status,
   sentAmount,
@@ -18,7 +18,7 @@ export default function TransactionItem({
     <div className="group mb-2 flex flex-row items-center justify-between py-4">
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">
-        <TransactionIcon status={status} />
+        <StatusIcon status={status} />
 
         <div className="flex flex-col items-start justify-center">
           <div className="max-w-sm text-sm font-semibold md:text-lg">

@@ -1,7 +1,7 @@
 import { Bars3Icon, PowerIcon } from '@heroicons/react/20/solid';
 import { Link } from '@tanstack/react-router';
 
-import Brand from './Brand';
+import Brand from '../Brand';
 
 export default function NavBar() {
   return (

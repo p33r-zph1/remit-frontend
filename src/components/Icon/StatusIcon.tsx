@@ -7,7 +7,7 @@ import {
 
 import { Status } from '../../constants/types';
 
-export default function TransactionIcon({ status }: { status: Status }) {
+export default function StatusIcon({ status }: { status: Status }) {
   switch (status) {
     case 'SENT':
       return (

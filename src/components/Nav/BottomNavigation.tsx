@@ -4,7 +4,7 @@ import { ArrowUpCircleIcon } from '@heroicons/react/24/outline';
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { BellAlertIcon } from '@heroicons/react/24/outline';
 
-import { cx } from '../utils';
+import { cx } from '../../utils';
 
 type LinkItem = {
   title: string;

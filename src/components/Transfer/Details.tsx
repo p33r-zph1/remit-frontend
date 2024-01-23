@@ -1,5 +1,5 @@
 import { Status } from '../../constants/types';
-import TransactionIcon from '../Transaction/Icon';
+import StatusIcon from '../Icon/StatusIcon';
 
 type Props = {
   status: Status;
@@ -51,7 +51,7 @@ export default function TransferDetails({ status, recipient, amount }: Props) {
         <div className="max-w-sm text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
           {amount}
         </div>
-        <TransactionIcon status={status} />
+        <StatusIcon status={status} />
       </div>
 
       <div className="text-base text-sleep-200 md:text-lg">
