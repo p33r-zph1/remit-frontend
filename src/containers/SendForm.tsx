@@ -70,7 +70,7 @@ export default function SendForm() {
   console.log({ data: priceOracleQuery.data });
 
   return (
-    <form className="space-y-8">
+    <form className="mt-12 space-y-14 sm:mt-16">
       <RecipientInput />
 
       <div>

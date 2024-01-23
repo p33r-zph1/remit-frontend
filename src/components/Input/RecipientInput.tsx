@@ -2,7 +2,7 @@ import { NumericFormat } from 'react-number-format';
 
 export default function RecipientInput() {
   return (
-    <label className="mt-4 flex flex-col sm:mt-16">
+    <label className="flex flex-col">
       <span className="label-text text-base text-sleep-100">Recipient</span>
       <NumericFormat
         inputMode="numeric"
