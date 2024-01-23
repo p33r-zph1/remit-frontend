@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
-import fiatCurrencies from '../constants/currency';
 import RecipientInput from '../components/Input/RecipientInput';
 import CurrencyInput from '../components/Input/CurrencyInput';
-import usePriceOracle from '../hooks/api/usePriceOracle';
-
-// TODO: implement mobx state management
-const defaultCurrency = fiatCurrencies[0];
-const secondaryCurrency = fiatCurrencies[1];
+import useSendMoney from '../hooks/useSendMoney';
 
 function Summary() {
   return (
@@ -59,15 +53,24 @@ function Summary() {
 }
 
 export default function SendForm() {
-  const [senderFiat, setSenderFiat] = useState(defaultCurrency);
-  const [recipientFiat, setRecipientFiat] = useState(secondaryCurrency);
+  const {
+    // select currency dropdown
+    senderCurrency,
+    setSenderCurrency,
+    recipientCurrency,
+    setRecipientCurrency,
 
-  const [sendAmount, setSendAmount] = useState('');
-  const [recipientAmount, setRecipientAmount] = useState('');
+    // controlled input state
+    sendAmount,
+    recipientAmount,
+    amountHandler,
+    // setSendAmount,
+    // setRecipientAmount,
 
-  const priceOracleQuery = usePriceOracle({ from: 'INR', to: 'SGD' });
-
-  console.log({ data: priceOracleQuery.data });
+    // list of exhange currencies
+    sender,
+    recipient,
+  } = useSendMoney();
 
   return (
     <form className="mt-12 space-y-14 sm:mt-16">
@@ -77,10 +80,10 @@ export default function SendForm() {
         <CurrencyInput
           label="You send"
           value={sendAmount}
-          onValueChange={values => setSendAmount(values.value)}
-          selected={senderFiat}
-          list={fiatCurrencies}
-          onChange={fiat => setSenderFiat(fiat)}
+          onValueChange={values => amountHandler(values.value)}
+          selected={senderCurrency}
+          list={sender}
+          onChange={fiat => setSenderCurrency(fiat)}
         />
 
         <Summary />
@@ -88,14 +91,13 @@ export default function SendForm() {
         <CurrencyInput
           label="Recipient will get"
           value={recipientAmount}
-          onValueChange={values => setRecipientAmount(values.value)}
-          selected={recipientFiat}
-          list={fiatCurrencies}
-          onChange={fiat => setRecipientFiat(fiat)}
+          onValueChange={() => {}}
+          selected={recipientCurrency}
+          list={recipient}
+          onChange={fiat => setRecipientCurrency(fiat)}
         />
       </div>
 
-      {/* Send Money Button */}
       <div className="mt-10">
         <button className="btn btn-primary btn-block rounded-full text-xl font-semibold">
           Send money

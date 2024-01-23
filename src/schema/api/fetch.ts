@@ -22,7 +22,7 @@ export async function genericFetch<T extends z.ZodSchema>(
     throw new Error(getMessage(json));
   }
 
-  return result;
+  return result.data;
 }
 
 export function makeApiSchema<T extends z.ZodSchema>(schema: T) {

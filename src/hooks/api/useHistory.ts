@@ -1,4 +1,4 @@
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { Options, genericFetch } from '../../schema/api/fetch';
 import alertSchema from '../../schema/alert';
@@ -6,13 +6,11 @@ import alertSchema from '../../schema/alert';
 const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
 export default function useHistory(
-  { refetchInterval }: Options = { refetchInterval: 5000 }
+  { refetchInterval }: Options = { refetchInterval: 5_000 } // 5 seconds
 ) {
-  const historyQueryOptions = queryOptions({
+  return useSuspenseQuery({
     queryKey: ['history'],
     queryFn: () => genericFetch(BASE_URL, alertSchema),
     refetchInterval: refetchInterval,
   });
-
-  return useSuspenseQuery(historyQueryOptions);
 }

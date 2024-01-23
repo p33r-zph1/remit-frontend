@@ -1,1 +1,66 @@
-export default function useSendMoney() {}
+import { useCallback, useEffect, useState } from 'react';
+import { coerce } from 'zod';
+
+import useExchangeCurrency from './api/useExchangeCurrency';
+import usePriceOracle from './api/usePriceOracle';
+
+export default function useSendMoney() {
+  const {
+    data: { sender, recipient },
+  } = useExchangeCurrency();
+
+  const [senderCurrency, setSenderCurrency] = useState(sender[0]);
+  const [recipientCurrency, setRecipientCurrency] = useState(recipient[0]);
+
+  const {
+    data: { rate },
+    isSuccess: pairUpdated,
+  } = usePriceOracle({
+    from: senderCurrency?.currency,
+    to: recipientCurrency?.currency,
+  });
+
+  const [sendAmount, setSendAmount] = useState('');
+  const [recipientAmount, setRecipientAmount] = useState('');
+
+  const conversionHandler = useCallback(
+    (value: string) => {
+      const conversion = coerce.number().parse(value) * rate;
+
+      setRecipientAmount(String(conversion));
+    },
+    [rate]
+  );
+
+  const amountHandler = useCallback(
+    (value: string) => {
+      setSendAmount(value);
+      conversionHandler(value);
+    },
+    [conversionHandler]
+  );
+
+  useEffect(() => {
+    // re-calculates the conversion amount when the pair gets ypdated
+    if (pairUpdated) conversionHandler(sendAmount);
+  }, [conversionHandler, pairUpdated, sendAmount]);
+
+  return {
+    // select currency dropdown
+    senderCurrency,
+    setSenderCurrency,
+    recipientCurrency,
+    setRecipientCurrency,
+
+    // controlled input state
+    sendAmount,
+    recipientAmount,
+    amountHandler,
+    // setSendAmount,
+    // setRecipientAmount,
+
+    // list of exhange currencies
+    sender,
+    recipient,
+  };
+}

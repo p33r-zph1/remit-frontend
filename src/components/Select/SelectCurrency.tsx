@@ -6,8 +6,8 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
 
-import { Currency } from '../../constants/currency';
 import { cx } from '../../utils';
+import { Currency } from '../../schema/currency';
 
 interface Props<T> {
   currencies: T[];
@@ -42,11 +42,11 @@ export default function SelectCurrency<T extends Currency>({
               src={selected.icon}
               width={24}
               height={24}
-              alt={`${selected.symbol} symbol`}
+              alt={`${selected.currency} currency`}
               className="mr-2"
             />
           )}
-          <span className="lg:text-md text-sm">{selected.symbol}</span>
+          <span className="lg:text-md text-sm">{selected.currency}</span>
           {hideChevron ? (
             <span className="mr-8" />
           ) : (
@@ -61,7 +61,7 @@ export default function SelectCurrency<T extends Currency>({
           leaveTo="opacity-0"
         >
           <Listbox.Options className="absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {currencies.map((currency, idx) => (
+            {currencies.map((c, idx) => (
               <Listbox.Option
                 key={idx}
                 className={({ active }) =>
@@ -70,7 +70,7 @@ export default function SelectCurrency<T extends Currency>({
                     'relative cursor-default select-none py-2 pl-10 pr-4'
                   )
                 }
-                value={currency}
+                value={c}
               >
                 {({ selected }) => (
                   <>
@@ -80,7 +80,7 @@ export default function SelectCurrency<T extends Currency>({
                         'block truncate'
                       )}
                     >
-                      {currency.symbol}
+                      {c.currency}
                     </span>
 
                     {selected && (

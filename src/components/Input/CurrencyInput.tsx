@@ -1,7 +1,7 @@
 import { NumericFormat, OnValueChange } from 'react-number-format';
 
 import SelectCurrency from '../Select/SelectCurrency';
-import { Currency } from '../../constants/currency';
+import { Currency } from '../../schema/currency';
 
 type Props = {
   label: string;

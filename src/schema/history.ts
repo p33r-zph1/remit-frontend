@@ -12,4 +12,4 @@ const historySchema = makeApiSchema(schema);
 
 export type History = z.infer<typeof schema>;
 
-export default makeApiSchema(historySchema);
+export default historySchema;
