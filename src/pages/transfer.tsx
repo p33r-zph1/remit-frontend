@@ -1,24 +1,11 @@
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { Link } from '@tanstack/react-router';
-
 import Page from '../components/Page';
-import TransferTimeline from '../components/Transfer/Timeline';
-import TransferDetails from '../components/Transfer/Details';
-
-function BackButton() {
-  return (
-    <Link to="/" className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16">
-      <ArrowLeftIcon className="h-4 w-4 text-black md:h-6 md:w-6" />
-    </Link>
-  );
-}
+import TransferTimeline from '../components/Timeline/TransferTimeline';
+import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 
 export default function Transfer() {
   return (
     <Page className="mx-auto max-w-3xl">
-      <BackButton />
-
-      <TransferDetails
+      <TransferDetailsNav
         status="IN_PROGRESS"
         amount="12,497,549.47 PHP"
         recipient="123456789"
