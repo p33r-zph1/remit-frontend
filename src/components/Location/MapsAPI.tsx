@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import type { GoogleMapProps, Libraries } from '@react-google-maps/api';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -14,6 +13,7 @@ export default function TransferMap() {
   const [range, setRange] = useState('100');
 
   const [meetUpLocation, setMeetUpLocation] = useState<LatLng>();
+  console.log({ meetUpLocation });
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
