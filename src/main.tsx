@@ -27,7 +27,7 @@ const rootRoute = rootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
   component: () => (
-    <main className="flex min-h-dvh flex-col pb-16">
+    <main className="flex min-h-svh flex-col pb-16">
       <Outlet />
 
       {import.meta.env.DEV && <TanStackRouterDevtools />}
