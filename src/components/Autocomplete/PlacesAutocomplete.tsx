@@ -17,7 +17,7 @@ export default function PlacesAutocomplete({ onSelect }: Props) {
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete({
-    debounce: 300,
+    debounce: 500,
   });
 
   const handleSelect = useCallback(
@@ -49,8 +49,15 @@ export default function PlacesAutocomplete({ onSelect }: Props) {
               description,
               structured_formatting: { main_text, secondary_text },
             }) => (
-              <Combobox.Option key={place_id} value={description}>
-                <strong>{main_text}</strong> <small>{secondary_text}</small>
+              <Combobox.Option
+                className="cursor-pointer select-none text-sm  hover:text-primary md:text-base"
+                key={place_id}
+                value={description}
+              >
+                {main_text}{' '}
+                <small className="text-xs font-semibold md:text-sm">
+                  {secondary_text}
+                </small>
               </Combobox.Option>
             )
           )}

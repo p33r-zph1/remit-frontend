@@ -1,18 +1,21 @@
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import {
-  add,
+  addMonths,
   eachDayOfInterval,
   endOfMonth,
+  endOfWeek,
   format,
   getDay,
   isEqual,
   isSameMonth,
   isToday,
   parse,
+  startOfWeek,
 } from 'date-fns';
-import { useState } from 'react';
-import { cx } from '../utils';
+import { Dispatch, SetStateAction, useState } from 'react';
+
+import { cx } from '../../utils';
 
 const colStartClasses: Record<number, string> = {
   0: '', // sunday
@@ -26,26 +29,26 @@ const colStartClasses: Record<number, string> = {
 
 type Props = {
   today: Date;
-  onChange: (date: Date) => void;
+  onChange: Dispatch<SetStateAction<Date>>;
 };
 
-export default function Calendar({ today, onChange }: Props) {
+export default function DateCalendar({ today, onChange }: Props) {
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
 
   const days = eachDayOfInterval({
-    start: firstDayCurrentMonth,
-    end: endOfMonth(firstDayCurrentMonth),
+    start: startOfWeek(firstDayCurrentMonth),
+    end: endOfWeek(endOfMonth(firstDayCurrentMonth)),
   });
 
   function previousMonth() {
-    const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+    const firstDayPreviousMonth = addMonths(firstDayCurrentMonth, -1);
+    setCurrentMonth(format(firstDayPreviousMonth, 'MMM-yyyy'));
   }
 
   function nextMonth() {
-    const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
+    const firstDayNextMonth = addMonths(firstDayCurrentMonth, 1);
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
   }
 
@@ -53,7 +56,7 @@ export default function Calendar({ today, onChange }: Props) {
     <div className="mx-auto w-full max-w-sm">
       {/* Header */}
       <div className="flex items-center justify-stretch">
-        <h2 className="flex-auto font-semibold text-gray-900">
+        <h2 className="flex-auto font-semibold">
           {format(firstDayCurrentMonth, 'MMMM yyyy')}
         </h2>
 
@@ -106,7 +109,7 @@ export default function Calendar({ today, onChange }: Props) {
                 }}
                 className={cx(
                   isEqual(day, selectedDay) && 'text-white',
-                  !isEqual(day, selectedDay) && isToday(day) && 'text-accent',
+                  !isEqual(day, selectedDay) && isToday(day) && 'text-primary',
                   !isEqual(day, selectedDay) &&
                     !isToday(day) &&
                     isSameMonth(day, firstDayCurrentMonth) &&
@@ -115,8 +118,8 @@ export default function Calendar({ today, onChange }: Props) {
                     !isToday(day) &&
                     !isSameMonth(day, firstDayCurrentMonth) &&
                     'text-gray-400',
-                  isEqual(day, selectedDay) && isToday(day) && 'bg-primary',
-                  isEqual(day, selectedDay) && !isToday(day) && 'bg-accent',
+                  isEqual(day, selectedDay) && isToday(day) && 'bg-neutral/80',
+                  isEqual(day, selectedDay) && !isToday(day) && 'bg-primary',
                   !isEqual(day, selectedDay) && 'hover:bg-gray-200',
                   (isEqual(day, selectedDay) || isToday(day)) &&
                     'font-semibold',

@@ -1,13 +1,18 @@
 import { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { CalendarIcon } from '@heroicons/react/20/solid';
-import { format, startOfToday } from 'date-fns';
+import { addHours, format, startOfHour } from 'date-fns';
 
-import Calendar from '../Calendar';
 import { cx } from '../../utils';
+import DateCalendar from '../Date/DateCalendar';
+import DateTime from '../Date/DateTime';
 
 export default function CalendarPopover() {
-  const [date, setDate] = useState(startOfToday());
+  const [startDate, setStartDate] = useState(startOfHour(new Date()));
+  const [durationInHr, setDurationInHr] = useState(1); // 1 hour
+
+  // Calculate end date based on duration
+  const endDate = addHours(startDate, durationInHr);
 
   return (
     <div className="my-2">
@@ -25,7 +30,14 @@ export default function CalendarPopover() {
               />
 
               <span className="font-semibold">
-                {format(date, 'MMMM dd, yyyy h:mm a')}
+                {format(startDate, 'MMMM dd, yyyy')}
+                {` `}
+                <span className="tracking-tighter">
+                  {format(startDate, 'h:mm a')}
+                  {' - '}
+                  {format(endDate, 'h:mm a')}{' '}
+                  <small className="text-gray-400">{`(${durationInHr}hr)`}</small>
+                </span>
               </span>
             </Popover.Button>
 
@@ -40,7 +52,17 @@ export default function CalendarPopover() {
             >
               <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform rounded-md bg-zinc-50 lg:max-w-md">
                 <div className="overflow-hidden rounded-lg p-4 shadow-lg ring-1 ring-black/5">
-                  <Calendar today={date} onChange={setDate} />
+                  <DateCalendar today={startDate} onChange={setStartDate} />
+
+                  <div className="divider" />
+
+                  <DateTime
+                    title="Time & Duration"
+                    today={startDate}
+                    onChange={setStartDate}
+                    durationInHr={durationInHr}
+                    setDurationInHr={setDurationInHr}
+                  />
                 </div>
               </Popover.Panel>
             </Transition>
