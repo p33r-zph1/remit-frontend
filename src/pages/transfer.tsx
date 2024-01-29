@@ -3,6 +3,7 @@ import TransferTimeline from '../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 import TransferMap from '../components/Location/MapsAPI';
 import HeaderTitle from '../components/HeaderTitle';
+import CalendarPopover from '../components/Popover/CalendarPopover';
 
 export default function Transfer() {
   return (
@@ -13,15 +14,27 @@ export default function Transfer() {
         recipient="123456789"
       />
 
-      <div className="divider my-8" />
+      <div className="divider -mb-2 md:-mb-6" />
 
-      <HeaderTitle>Delivery</HeaderTitle>
+      <div>
+        <HeaderTitle>Delivery</HeaderTitle>
 
-      <div className="text-sm font-semibold text-gray-400">
-        Set delivery area
+        <div>
+          <div className="text-sm font-semibold text-gray-400">
+            Set delivery date and time
+          </div>
+
+          <CalendarPopover />
+        </div>
+
+        <div>
+          <div className="text-sm font-semibold text-gray-400">
+            Set delivery area
+          </div>
+
+          <TransferMap />
+        </div>
       </div>
-
-      <TransferMap />
 
       <TransferTimeline
         timeline={[
