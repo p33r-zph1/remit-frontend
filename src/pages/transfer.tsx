@@ -1,6 +1,8 @@
 import Page from '../components/Page';
 import TransferTimeline from '../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
+import TransferMap from '../components/Location/MapsAPI';
+import HeaderTitle from '../components/HeaderTitle';
 
 export default function Transfer() {
   return (
@@ -10,6 +12,16 @@ export default function Transfer() {
         amount="12,497,549.47 PHP"
         recipient="123456789"
       />
+
+      <div className="divider my-8" />
+
+      <HeaderTitle>Delivery</HeaderTitle>
+
+      <div className="text-sm font-semibold text-gray-400">
+        Set delivery area
+      </div>
+
+      <TransferMap />
 
       <TransferTimeline
         timeline={[
