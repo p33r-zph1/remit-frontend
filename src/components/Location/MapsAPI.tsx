@@ -1,4 +1,4 @@
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import type { GoogleMapProps, Libraries } from '@react-google-maps/api';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import PlacesAutocomplete from '../Autocomplete/PlacesAutocomplete';
@@ -80,7 +80,9 @@ export default function TransferMap() {
         mapContainerClassName="h-56 md:h-[50vh] w-full"
         options={options}
         onLoad={onload}
-      ></GoogleMap>
+      >
+        {meetUpLocation && <Marker position={meetUpLocation} />}
+      </GoogleMap>
     </div>
   );
 }
