@@ -89,7 +89,13 @@ const routeTree = rootRoute.addChildren([
   mainRoute.addChildren([indexRoute, transferRoute, historyRoute, alertsRoute]),
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 const router = new Router({
   routeTree,

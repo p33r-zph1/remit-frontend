@@ -5,12 +5,10 @@ import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
 
 export default function useSendMoney() {
-  const {
-    data: { sender, recipient },
-  } = useExchangeCurrency();
+  const { data: currencyList } = useExchangeCurrency();
 
-  const [senderCurrency, setSenderCurrency] = useState(sender[0]);
-  const [recipientCurrency, setRecipientCurrency] = useState(recipient[0]);
+  const [senderCurrency, setSenderCurrency] = useState(currencyList[0]);
+  const [recipientCurrency, setRecipientCurrency] = useState(currencyList[1]);
 
   const {
     data: { rate },
@@ -60,7 +58,6 @@ export default function useSendMoney() {
     // setRecipientAmount,
 
     // list of exhange currencies
-    sender,
-    recipient,
+    currencyList,
   };
 }

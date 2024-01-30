@@ -6,10 +6,7 @@ const currencySchema = z.object({
   currency: z.string(),
 });
 
-const schema = z.object({
-  recipient: z.array(currencySchema),
-  sender: z.array(currencySchema),
-});
+const schema = z.array(currencySchema);
 
 const exchangeCurrencySchema = makeApiSchema(schema);
 

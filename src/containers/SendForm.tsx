@@ -54,7 +54,9 @@ function Summary() {
 
 export default function SendForm() {
   const {
-    // select currency dropdown
+    currencyList,
+
+    // select currency dropdown state & setter
     senderCurrency,
     setSenderCurrency,
     recipientCurrency,
@@ -64,12 +66,6 @@ export default function SendForm() {
     sendAmount,
     recipientAmount,
     amountHandler,
-    // setSendAmount,
-    // setRecipientAmount,
-
-    // list of exhange currencies
-    sender,
-    recipient,
   } = useSendMoney();
 
   return (
@@ -82,7 +78,7 @@ export default function SendForm() {
           value={sendAmount}
           onValueChange={values => amountHandler(values.value)}
           selected={senderCurrency}
-          list={sender}
+          list={currencyList}
           onChange={fiat => setSenderCurrency(fiat)}
         />
 
@@ -93,7 +89,7 @@ export default function SendForm() {
           value={recipientAmount}
           onValueChange={() => {}}
           selected={recipientCurrency}
-          list={recipient}
+          list={currencyList}
           onChange={fiat => setRecipientCurrency(fiat)}
         />
       </div>
