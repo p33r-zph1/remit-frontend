@@ -52,7 +52,7 @@ export default function CalendarPopover() {
             >
               <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform rounded-md bg-zinc-50 lg:max-w-md">
                 <div className="overflow-hidden rounded-lg p-4 shadow-lg ring-1 ring-black/5">
-                  <DateCalendar today={startDate} onChange={setStartDate} />
+                  <DateCalendar day={startDate} onChange={setStartDate} />
 
                   <div className="divider" />
 

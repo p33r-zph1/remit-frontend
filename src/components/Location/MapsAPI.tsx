@@ -85,25 +85,32 @@ export default function TransferMap() {
           <div className="text-sm font-semibold text-gray-400">Radius</div>
         </div>
 
-        <input
-          type="range"
-          min={0}
-          disabled={!meetUpLocation}
-          max={1000}
-          value={radius}
-          onChange={e => setRadius(coerce.number().parse(e.target.value))}
-          className={cx(
-            `range range-sm md:range-md`,
-            meetUpLocation && 'range-primary'
-          )}
-          step="250"
-        />
-        <div className="flex w-full justify-between px-2 text-xs">
-          <span>0m</span>
-          <span>250m</span>
-          <span>500m</span>
-          <span>750m</span>
-          <span>1km</span>
+        <div
+          className={cx('tooltip', !meetUpLocation && 'tooltip-error')}
+          data-tip={
+            meetUpLocation ? 'Select a radius' : 'Select a delivery area first'
+          }
+        >
+          <input
+            type="range"
+            min={0}
+            disabled={!meetUpLocation}
+            max={1000}
+            value={radius}
+            onChange={e => setRadius(coerce.number().parse(e.target.value))}
+            className={cx(
+              `range range-sm md:range-md disabled:hover:cursor-not-allowed`,
+              meetUpLocation && 'range-primary'
+            )}
+            step="250"
+          />
+          <div className="flex w-full justify-between px-2 text-xs">
+            <span>0m</span>
+            <span>250m</span>
+            <span>500m</span>
+            <span>750m</span>
+            <span>1km</span>
+          </div>
         </div>
       </div>
 

@@ -31,8 +31,8 @@ function Container({
         <ChevronUpIcon className="h-5 w-5" />
       </button>
 
-      <div className="rounded-box bg-neutral/80 px-2 py-1 text-neutral-content transition-colors duration-200 hover:text-white">
-        <span className="select-none font-mono text-xl md:text-2xl">
+      <div className="rounded-box bg-neutral/80 px-3 py-1 text-neutral-content transition-colors duration-200 hover:text-white">
+        <span className="select-none font-mono text-sm sm:text-lg">
           <span>{value}</span>
         </span>
       </div>
@@ -107,7 +107,7 @@ export default function DateTime({
     <div className="flex items-center justify-evenly space-x-3">
       <div className="flex space-x-1">
         <ClockIcon className="h-5 w-5 text-neutral/80" />
-        <span className="text-base font-semibold text-neutral/80">
+        <span className="text-xs font-semibold text-neutral/80 sm:text-base">
           {title ? title : 'Select a time'}
         </span>
       </div>

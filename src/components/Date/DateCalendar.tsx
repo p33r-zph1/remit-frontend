@@ -8,14 +8,40 @@ import {
   format,
   getDay,
   isEqual,
+  isPast,
+  isSameDay,
   isSameMonth,
   isToday,
   parse,
+  startOfToday,
   startOfWeek,
 } from 'date-fns';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { cx } from '../../utils';
+
+type Props = {
+  day: Date;
+  onChange: Dispatch<SetStateAction<Date>>;
+};
+
+type Status =
+  | 'SELECTED'
+  | 'SELECTED_NOT_TODAY'
+  | 'TODAY'
+  | 'CURRENT_MONTH'
+  | 'OTHER_MONTH';
+
+const dayStatusBaseClasses =
+  'mx-auto flex h-8 w-8 items-center justify-center rounded-full disabled:cursor-not-allowed transition-colors duration-200';
+
+const dayStatusClasses: Record<Status, string> = {
+  SELECTED: 'text-neutral-content bg-neutral/80 font-semibold hover:text-white',
+  SELECTED_NOT_TODAY: 'text-white bg-primary/80 hover:bg-primary',
+  TODAY: 'text-primary font-semibold hover:bg-gray-200',
+  CURRENT_MONTH: 'text-gray-900 hover:bg-gray-200',
+  OTHER_MONTH: 'text-gray-400 hover:bg-gray-200',
+};
 
 const colStartClasses: Record<number, string> = {
   0: '', // sunday
@@ -27,15 +53,26 @@ const colStartClasses: Record<number, string> = {
   6: 'col-start-7',
 };
 
-type Props = {
-  today: Date;
-  onChange: Dispatch<SetStateAction<Date>>;
+const getDayStatus = (
+  day: Date,
+  selectedDay: Date,
+  firstDayCurrentMonth: Date
+): Status => {
+  if (isSameDay(day, selectedDay) && isToday(day)) return 'SELECTED';
+  if (isEqual(day, selectedDay)) return 'SELECTED_NOT_TODAY';
+  if (isToday(day)) return 'TODAY';
+  if (isSameMonth(day, firstDayCurrentMonth)) return 'CURRENT_MONTH';
+  if (!isSameMonth(day, firstDayCurrentMonth)) return 'OTHER_MONTH';
+
+  return 'OTHER_MONTH';
 };
 
-export default function DateCalendar({ today, onChange }: Props) {
-  const [selectedDay, setSelectedDay] = useState(today);
-  const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
-  const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
+export default function DateCalendar({ day, onChange }: Props) {
+  const today = startOfToday();
+
+  const [selectedDay, setSelectedDay] = useState(day);
+  const [currentMonth, setCurrentMonth] = useState(format(day, 'MMM-yyyy'));
+  const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', day);
 
   const days = eachDayOfInterval({
     start: startOfWeek(firstDayCurrentMonth),
@@ -50,6 +87,12 @@ export default function DateCalendar({ today, onChange }: Props) {
   function nextMonth() {
     const firstDayNextMonth = addMonths(firstDayCurrentMonth, 1);
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+  }
+
+  function setToday() {
+    setSelectedDay(today);
+    setCurrentMonth(format(startOfToday(), 'MMM-yyyy'));
+    onChange(today);
   }
 
   return (
@@ -67,6 +110,14 @@ export default function DateCalendar({ today, onChange }: Props) {
         >
           <span className="sr-only">Previous month</span>
           <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+        </button>
+
+        <button
+          type="button"
+          onClick={setToday}
+          className="text-xs font-semibold text-gray-500 hover:text-gray-900"
+        >
+          today
         </button>
 
         <button
@@ -103,33 +154,28 @@ export default function DateCalendar({ today, onChange }: Props) {
             >
               <button
                 type="button"
+                disabled={isPast(day) && !isToday(day)}
                 onClick={() => {
                   setSelectedDay(day);
                   onChange(day);
                 }}
                 className={cx(
-                  isEqual(day, selectedDay) && 'text-white',
-                  !isEqual(day, selectedDay) && isToday(day) && 'text-primary',
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    isSameMonth(day, firstDayCurrentMonth) &&
-                    'text-gray-900',
-                  !isEqual(day, selectedDay) &&
-                    !isToday(day) &&
-                    !isSameMonth(day, firstDayCurrentMonth) &&
-                    'text-gray-400',
-                  isEqual(day, selectedDay) && isToday(day) && 'bg-neutral/80',
-                  isEqual(day, selectedDay) && !isToday(day) && 'bg-primary',
-                  !isEqual(day, selectedDay) && 'hover:bg-gray-200',
-                  (isEqual(day, selectedDay) || isToday(day)) &&
-                    'font-semibold',
-                  'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
+                  dayStatusBaseClasses,
+                  dayStatusClasses[
+                    getDayStatus(day, selectedDay, firstDayCurrentMonth)
+                  ]
                 )}
               >
                 <time dateTime={format(day, 'yyyy-MM-dd')}>
                   {format(day, 'd')}
                 </time>
               </button>
+
+              {isToday(day) && (
+                <div className="mx-auto mt-1 h-1 w-1">
+                  <div className="h-1 w-1 rounded-full bg-sky-500"></div>
+                </div>
+              )}
             </div>
           );
         })}
