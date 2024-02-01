@@ -1,15 +1,15 @@
 import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 
-const schema = z.object({
+const historySchema = z.object({
   account: z.string(),
   status: z.string(),
   amount: z.string(),
   conversion: z.string(),
 });
 
-const historySchema = makeApiSchema(schema);
+const historyApiSchema = makeApiSchema(historySchema);
 
-export type History = z.infer<typeof schema>;
+export type History = z.infer<typeof historySchema>;
 
-export default historySchema;
+export default historyApiSchema;

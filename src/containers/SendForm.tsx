@@ -1,8 +1,10 @@
+import { FormEvent } from 'react';
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import RecipientInput from '../components/Input/RecipientInput';
 import CurrencyInput from '../components/Input/CurrencyInput';
 import useSendMoney from '../hooks/useSendMoney';
+import useSendOrder from '../hooks/api/useSendOrder';
 
 function Summary() {
   return (
@@ -52,6 +54,14 @@ function Summary() {
   );
 }
 
+const orderData = {
+  recipientId: '12340002',
+  senderAgentId: '43210002',
+  transferAmount: 100000,
+  senderCurrency: 'INR',
+  recipientCurrency: 'SGD',
+};
+
 export default function SendForm() {
   const {
     currencyList,
@@ -68,8 +78,22 @@ export default function SendForm() {
     amountHandler,
   } = useSendMoney();
 
+  const {
+    data: order,
+    mutateAsync: sendOrder,
+    isPending,
+  } = useSendOrder(orderData);
+
+  console.log({ order });
+
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    sendOrder();
+  }
+
   return (
-    <form className="mt-12 space-y-14 sm:mt-16">
+    <form onSubmit={onSubmit} className="mt-12 space-y-14 sm:mt-16">
       <RecipientInput />
 
       <div>
@@ -80,6 +104,7 @@ export default function SendForm() {
           selected={senderCurrency}
           list={currencyList}
           onChange={fiat => setSenderCurrency(fiat)}
+          disabled={isPending}
         />
 
         <Summary />
@@ -91,11 +116,17 @@ export default function SendForm() {
           selected={recipientCurrency}
           list={currencyList}
           onChange={fiat => setRecipientCurrency(fiat)}
+          disabled={isPending}
         />
       </div>
 
       <div className="mt-10">
-        <button className="btn btn-primary btn-block rounded-full text-xl font-semibold">
+        <button
+          type="submit"
+          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          disabled={isPending}
+        >
+          {isPending && <span className="loading loading-spinner"></span>}
           Send money
         </button>
       </div>

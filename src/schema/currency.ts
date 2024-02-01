@@ -1,17 +1,24 @@
 import { z } from 'zod';
+
 import { makeApiSchema } from './api/fetch';
+import { priceOracleSchema } from './price-oracle';
 
 const currencySchema = z.object({
   icon: z.string(),
   currency: z.string(),
 });
 
-const schema = z.array(currencySchema);
+export const exchangeCurrencySchema = z.object({
+  supportedCurrencies: z.array(currencySchema),
+  defaultSenderCurrency: currencySchema,
+  defaultRecipientCurrency: currencySchema,
+  priceOracle: priceOracleSchema,
+});
 
-const exchangeCurrencySchema = makeApiSchema(schema);
+const exchangeCurrencyApiSchema = makeApiSchema(exchangeCurrencySchema);
 
 export type Currency = z.infer<typeof currencySchema>;
 
-export type ExchangeCurrency = z.infer<typeof schema>;
+export type ExchangeCurrency = z.infer<typeof exchangeCurrencySchema>;
 
-export default exchangeCurrencySchema;
+export default exchangeCurrencyApiSchema;

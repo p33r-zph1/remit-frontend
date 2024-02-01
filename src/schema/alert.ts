@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 
-const schema = z.object({
+const alertSchema = z.object({
   title: z.string(),
   description: z.string(),
   timestamp: z.string(),
 });
 
-const alertSchema = makeApiSchema(schema);
+const alertApiSchema = makeApiSchema(alertSchema);
 
-export type Alert = z.infer<typeof schema>;
+export type Alert = z.infer<typeof alertSchema>;
 
-export default alertSchema;
+export default alertApiSchema;

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { errorMap } from 'zod-validation-error';
 
 import Brand from '../components/Brand';
 import Page from '../components/Page';
 import useAuth from '../hooks/useAuth';
-import { z } from 'zod';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -20,7 +21,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema, { errorMap }),
   });
 
   const { authenticate } = useAuth();

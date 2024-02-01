@@ -11,6 +11,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:react/jsx-runtime', // Runtime prefers to be at the last
     'prettier', // Prettier must be last
   ],

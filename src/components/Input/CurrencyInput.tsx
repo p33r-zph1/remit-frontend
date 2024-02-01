@@ -10,6 +10,7 @@ type Props = {
   selected: Currency | undefined;
   list: Currency[];
   onChange: (currency: Currency) => void;
+  disabled?: boolean;
 };
 
 export default function CurrencyInput({
@@ -19,6 +20,7 @@ export default function CurrencyInput({
   selected,
   list,
   onChange,
+  disabled,
 }: Props) {
   return (
     <div className="relative flex flex-col">
@@ -31,6 +33,7 @@ export default function CurrencyInput({
         inputMode="decimal"
         value={value}
         onValueChange={onValueChange}
+        disabled={disabled}
         className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
         placeholder="0.00"
       />
@@ -39,7 +42,7 @@ export default function CurrencyInput({
         <SelectCurrency<Currency>
           selected={selected}
           currencies={list}
-          disabled={false}
+          disabled={disabled}
           hideChevron={false}
           onChange={onChange}
         />
