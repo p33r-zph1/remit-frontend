@@ -1,4 +1,4 @@
-import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { MinusIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import type { SubmitHandler } from 'react-hook-form';
 
 import useSendMoney, { SendMoney } from '../hooks/useSendMoney';
@@ -88,7 +88,7 @@ export default function SendForm() {
     },
   } = useSendMoney();
 
-  const { mutateAsync: sendOrderAsync } = useSendOrder();
+  const { mutateAsync: sendOrderAsync, error } = useSendOrder();
 
   const onSubmit: SubmitHandler<SendMoney> = async ({
     recipientId,
@@ -110,13 +110,12 @@ export default function SendForm() {
   // renderCount++;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-12 space-y-14 sm:mt-16"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4 sm:mt-16">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <RecipientInput name="recipientId" control={control} />
+      <div className="mb-10">
+        <RecipientInput name="recipientId" control={control} />
+      </div>
 
       <div>
         <CurrencyInput
@@ -141,6 +140,16 @@ export default function SendForm() {
           readOnly
         />
       </div>
+
+      {error?.message && (
+        <div role="alert" className="alert shadow-lg">
+          <XCircleIcon className="h-5 w-5 text-error" />
+          <div>
+            <h3 className="font-bold text-error">Error</h3>
+            <div className="text-xs text-error">{error.message}</div>
+          </div>
+        </div>
+      )}
 
       <button
         type="submit"

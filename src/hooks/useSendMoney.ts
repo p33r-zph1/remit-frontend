@@ -7,9 +7,9 @@ import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
 
 const formSchema = z.object({
-  recipientId: z.string(),
-  sendAmount: z.string(),
-  recipientAmount: z.string(),
+  recipientId: z.string().min(1, 'Please enter a valid recipient'),
+  sendAmount: z.string().min(1, 'Please enter a valid amount'),
+  recipientAmount: z.string().min(1),
 });
 
 export type SendMoney = z.infer<typeof formSchema>;
