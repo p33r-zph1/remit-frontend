@@ -6,7 +6,7 @@ import CurrencyInput from '../components/Input/CurrencyInput';
 import useSendMoney from '../hooks/useSendMoney';
 import useSendOrder from '../hooks/api/useSendOrder';
 
-function Summary() {
+function Summary({ disabled }: { disabled: boolean }) {
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-8 w-0.5 bg-[#E7E9EB]" />
@@ -36,8 +36,9 @@ function Summary() {
           </div>
           <select
             value="default"
+            disabled={disabled}
             onChange={() => {}}
-            className="select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none"
+            className="select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none disabled:border-slate-400"
           >
             <option disabled value="default">
               Select agent commision
@@ -107,7 +108,7 @@ export default function SendForm() {
           disabled={isPending}
         />
 
-        <Summary />
+        <Summary disabled={isPending} />
 
         <CurrencyInput
           label="Recipient will get"
@@ -117,6 +118,7 @@ export default function SendForm() {
           list={currencyList}
           onChange={fiat => setRecipientCurrency(fiat)}
           disabled={isPending}
+          readOnly
         />
       </div>
 

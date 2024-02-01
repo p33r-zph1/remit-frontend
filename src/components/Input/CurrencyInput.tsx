@@ -11,6 +11,7 @@ type Props = {
   list: Currency[];
   onChange: (currency: Currency) => void;
   disabled?: boolean;
+  readOnly?: boolean;
 };
 
 export default function CurrencyInput({
@@ -21,6 +22,7 @@ export default function CurrencyInput({
   list,
   onChange,
   disabled,
+  readOnly,
 }: Props) {
   return (
     <div className="relative flex flex-col">
@@ -34,7 +36,8 @@ export default function CurrencyInput({
         value={value}
         onValueChange={onValueChange}
         disabled={disabled}
-        className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200"
+        readOnly={readOnly}
+        className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200 disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100"
         placeholder="0.00"
       />
 

@@ -31,9 +31,14 @@ export default function useSendMoney() {
 
   const conversionHandler = useCallback(
     (value: string) => {
-      const conversion = coerce.number().parse(value) * rate;
+      const result = coerce.number().safeParse(value);
 
-      setRecipientAmount(String(conversion));
+      if (!result.success) return;
+
+      const conversion = result.data * rate;
+      const formatConversion = String(conversion === 0 ? '' : conversion);
+
+      setRecipientAmount(formatConversion);
     },
     [rate]
   );

@@ -36,7 +36,7 @@ export default function SelectCurrency<T extends Currency>({
   return (
     <Listbox value={selected} onChange={onChange} disabled={disabled}>
       <div className="relative">
-        <Listbox.Button className="rounded-4xl inline-flex items-center justify-center px-4 py-2 font-bold">
+        <Listbox.Button className="rounded-4xl inline-flex items-center justify-center px-4 py-2 font-bold disabled:cursor-not-allowed">
           {selected.icon && (
             <img
               src={selected.icon}
