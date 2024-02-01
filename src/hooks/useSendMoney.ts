@@ -10,6 +10,12 @@ const formSchema = z.object({
   recipientId: z.string().min(1, 'Please enter a valid recipient'),
   sendAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
+  agentId: z
+    .string()
+    .min(1)
+    .refine(value => value !== 'default', {
+      message: 'Please select an agent',
+    }),
 });
 
 export type SendMoney = z.infer<typeof formSchema>;
@@ -21,7 +27,7 @@ export default function useSendMoney() {
       defaultSenderCurrency,
       supportedCurrencies,
     },
-  } = useExchangeCurrency();
+  } = useExchangeCurrency({ refetchInterval: 20_000 });
 
   const [senderCurrency, setSenderCurrency] = useState(defaultSenderCurrency);
   const [recipientCurrency, setRecipientCurrency] = useState(
@@ -38,6 +44,9 @@ export default function useSendMoney() {
 
   const formProps = useForm<SendMoney>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      agentId: 'default',
+    },
   });
 
   const { setValue, getValues } = formProps;

@@ -10,7 +10,8 @@ export default function RecipientInput<T extends FieldValues>(
 ) {
   const {
     field: { ref, onChange, ...otherFields },
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
+    fieldState: { error },
   } = useController(props);
 
   return (
@@ -18,9 +19,9 @@ export default function RecipientInput<T extends FieldValues>(
       <div className="label">
         <span className="label-text text-base text-zinc-400">Recipient</span>
 
-        {errors[props.name] && (
+        {error?.message && (
           <span className="label-text text-xs font-bold  text-error">
-            {errors[props.name]?.message?.toString()}
+            {error.message}
           </span>
         )}
       </div>
