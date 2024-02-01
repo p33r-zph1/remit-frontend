@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { errorMap } from 'zod-validation-error';
 
 import Brand from '../components/Brand';
 import Page from '../components/Page';
@@ -21,7 +20,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(loginSchema, { errorMap }),
+    resolver: zodResolver(loginSchema),
   });
 
   const { authenticate } = useAuth();

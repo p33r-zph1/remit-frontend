@@ -1,29 +1,36 @@
-import { NumericFormat, OnValueChange } from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
+import {
+  FieldValues,
+  UseControllerProps,
+  useController,
+} from 'react-hook-form';
 
 import SelectCurrency from '../Select/SelectCurrency';
 import { Currency } from '../../schema/currency';
 
-type Props = {
+type Props<T extends FieldValues> = UseControllerProps<T> & {
   label: string;
-  value: number | string | null;
-  onValueChange: OnValueChange;
-  selected: Currency | undefined;
   list: Currency[];
-  onChange: (currency: Currency) => void;
-  disabled?: boolean;
+  selected: Currency | undefined;
+  onCurrencyChange: (currency: Currency) => void;
+  onValueChange?: (value: string) => void;
   readOnly?: boolean;
 };
 
-export default function CurrencyInput({
+export default function CurrencyInput<T extends FieldValues>({
   label,
-  value,
-  onValueChange,
-  selected,
   list,
-  onChange,
-  disabled,
+  selected,
+  onCurrencyChange,
+  onValueChange,
   readOnly,
-}: Props) {
+  ...controllerProps
+}: Props<T>) {
+  const {
+    field: { ref, onChange, ...otherFields },
+    formState: { isSubmitting },
+  } = useController(controllerProps);
+
   return (
     <div className="relative flex flex-col">
       <span className="absolute left-8 top-3 text-sm text-sleep-200">
@@ -32,22 +39,27 @@ export default function CurrencyInput({
 
       <NumericFormat
         thousandSeparator
+        autoComplete="off"
         inputMode="decimal"
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        readOnly={readOnly}
         className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200 disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100"
         placeholder="0.00"
+        readOnly={readOnly}
+        disabled={isSubmitting}
+        {...otherFields}
+        getInputRef={ref}
+        onValueChange={values => {
+          onChange(values.value);
+          onValueChange?.(values.value);
+        }}
       />
 
       <div className="absolute inset-y-0 right-0 flex items-center border-l">
         <SelectCurrency<Currency>
           selected={selected}
           currencies={list}
-          disabled={disabled}
+          disabled={isSubmitting}
           hideChevron={false}
-          onChange={onChange}
+          onChange={onCurrencyChange}
         />
       </div>
     </div>

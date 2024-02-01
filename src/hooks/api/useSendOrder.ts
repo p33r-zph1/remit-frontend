@@ -17,10 +17,10 @@ const orderBodySchema = z.object({
 
 export type OrderBody = z.infer<typeof orderBodySchema>;
 
-export default function useSendOrder(data: OrderBody) {
+export default function useSendOrder() {
   return useMutation({
     mutationKey: ['send-order'],
-    mutationFn: () =>
+    mutationFn: (data: OrderBody) =>
       genericFetch(BASE_URL, orderApiSchema, {
         method: 'post',
         body: JSON.stringify(orderBodySchema.parse(data)),

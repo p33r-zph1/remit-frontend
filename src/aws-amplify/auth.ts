@@ -15,9 +15,9 @@ export async function currentSession() {
   try {
     const authSession = await fetchAuthSession();
 
-    const { accessToken, idToken } = authSession.tokens || {};
+    // const { accessToken, idToken } = authSession.tokens || {};
 
-    console.log({ accessToken, idToken });
+    // console.log({ accessToken, idToken });
 
     return authSession;
   } catch (err) {

@@ -1,8 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
-import { coerce } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { coerce, z } from 'zod';
 
 import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
+
+const formSchema = z.object({
+  recipientId: z.string(),
+  sendAmount: z.string(),
+  recipientAmount: z.string(),
+});
+
+export type SendMoney = z.infer<typeof formSchema>;
 
 export default function useSendMoney() {
   const {
@@ -26,51 +36,47 @@ export default function useSendMoney() {
     to: recipientCurrency?.currency,
   });
 
-  const [sendAmount, setSendAmount] = useState('');
-  const [recipientAmount, setRecipientAmount] = useState('');
+  const formProps = useForm<SendMoney>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const { setValue, getValues } = formProps;
 
   const conversionHandler = useCallback(
-    (value: string) => {
+    (value: number | string | null) => {
       const result = coerce.number().safeParse(value);
 
-      if (!result.success) return;
+      if (!result.success) return '';
 
       const conversion = result.data * rate;
       const formatConversion = String(conversion === 0 ? '' : conversion);
 
-      setRecipientAmount(formatConversion);
+      setValue('recipientAmount', formatConversion);
     },
-    [rate]
-  );
-
-  const amountHandler = useCallback(
-    (value: string) => {
-      setSendAmount(value);
-      conversionHandler(value);
-    },
-    [conversionHandler]
+    [rate, setValue]
   );
 
   useEffect(() => {
     // re-calculates the conversion amount when the pair gets ypdated
-    if (pairUpdated) conversionHandler(sendAmount);
-  }, [conversionHandler, pairUpdated, sendAmount]);
+    if (pairUpdated) {
+      conversionHandler(getValues('sendAmount'));
+    }
+  }, [conversionHandler, getValues, pairUpdated]);
 
   return {
-    // select currency dropdown
+    // currency dropdown controlled state
     senderCurrency,
     setSenderCurrency,
     recipientCurrency,
     setRecipientCurrency,
 
-    // controlled input state
-    sendAmount,
-    recipientAmount,
-    amountHandler,
-    // setSendAmount,
-    // setRecipientAmount,
+    // callback function for calculating the conversion
+    conversionHandler,
 
-    // list of exhange currencies
-    currencyList: supportedCurrencies,
+    // list of exchange currencies
+    supportedCurrencies,
+
+    // hook form props
+    formProps,
   };
 }

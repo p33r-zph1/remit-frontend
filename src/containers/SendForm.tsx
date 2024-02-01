@@ -1,10 +1,11 @@
-import { FormEvent } from 'react';
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import type { SubmitHandler } from 'react-hook-form';
+
+import useSendMoney, { SendMoney } from '../hooks/useSendMoney';
+import useSendOrder from '../hooks/api/useSendOrder';
 
 import RecipientInput from '../components/Input/RecipientInput';
 import CurrencyInput from '../components/Input/CurrencyInput';
-import useSendMoney from '../hooks/useSendMoney';
-import useSendOrder from '../hooks/api/useSendOrder';
 
 function Summary({ disabled }: { disabled: boolean }) {
   return (
@@ -55,83 +56,100 @@ function Summary({ disabled }: { disabled: boolean }) {
   );
 }
 
-const orderData = {
-  recipientId: '12340002',
-  senderAgentId: '43210002',
-  transferAmount: 100000,
-  senderCurrency: 'INR',
-  recipientCurrency: 'SGD',
-};
+// const orderData = {
+//   recipientId: '12340002',
+//   senderAgentId: '43210002',
+//   transferAmount: 100000,
+//   senderCurrency: 'INR',
+//   recipientCurrency: 'SGD',
+// };
+
+// let renderCount = 0;
 
 export default function SendForm() {
   const {
-    currencyList,
-
-    // select currency dropdown state & setter
+    // currency dropdown controlled state
     senderCurrency,
     setSenderCurrency,
     recipientCurrency,
     setRecipientCurrency,
 
-    // controlled input state
-    sendAmount,
-    recipientAmount,
-    amountHandler,
+    // callback function for calculating the conversion
+    conversionHandler,
+
+    // list of exchange currencies
+    supportedCurrencies,
+
+    // hook form props
+    formProps: {
+      control,
+      handleSubmit,
+      formState: { isSubmitting },
+    },
   } = useSendMoney();
 
-  const {
-    data: order,
-    mutateAsync: sendOrder,
-    isPending,
-  } = useSendOrder(orderData);
+  const { mutateAsync: sendOrderAsync } = useSendOrder();
 
-  console.log({ order });
+  const onSubmit: SubmitHandler<SendMoney> = async ({
+    recipientId,
+    sendAmount,
+  }) => {
+    try {
+      await sendOrderAsync({
+        recipientId,
+        senderCurrency: senderCurrency.currency,
+        recipientCurrency: recipientCurrency.currency,
+        senderAgentId: '43210002',
+        transferAmount: Number(sendAmount),
+      });
+    } catch (e: unknown) {
+      console.log(e);
+    }
+  };
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    sendOrder();
-  }
+  // renderCount++;
 
   return (
-    <form onSubmit={onSubmit} className="mt-12 space-y-14 sm:mt-16">
-      <RecipientInput />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-12 space-y-14 sm:mt-16"
+    >
+      {/* <p>Render count: {renderCount / 2}</p> */}
+
+      <RecipientInput name="recipientId" control={control} />
 
       <div>
         <CurrencyInput
           label="You send"
-          value={sendAmount}
-          onValueChange={values => amountHandler(values.value)}
+          name="sendAmount"
+          control={control}
           selected={senderCurrency}
-          list={currencyList}
-          onChange={fiat => setSenderCurrency(fiat)}
-          disabled={isPending}
+          list={supportedCurrencies}
+          onCurrencyChange={setSenderCurrency}
+          onValueChange={conversionHandler}
         />
 
-        <Summary disabled={isPending} />
+        <Summary disabled={isSubmitting} />
 
         <CurrencyInput
           label="Recipient will get"
-          value={recipientAmount}
-          onValueChange={() => {}}
+          name="recipientAmount"
+          control={control}
           selected={recipientCurrency}
-          list={currencyList}
-          onChange={fiat => setRecipientCurrency(fiat)}
-          disabled={isPending}
+          list={supportedCurrencies}
+          onCurrencyChange={setRecipientCurrency}
           readOnly
         />
       </div>
 
-      <div className="mt-10">
-        <button
-          type="submit"
-          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-          disabled={isPending}
-        >
-          {isPending && <span className="loading loading-spinner"></span>}
-          Send money
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="btn btn-primary btn-block mt-10 rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+        disabled={isSubmitting}
+      >
+        {isSubmitting && <span className="loading loading-spinner"></span>}
+        Send money
+      </button>
     </form>
   );
 }
