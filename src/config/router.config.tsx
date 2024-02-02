@@ -60,6 +60,8 @@ export const loginRoute = createRoute({
     context.auth.status = authSession?.tokens ? 'loggedIn' : 'loggedOut';
 
     if (authSession?.tokens) {
+      context.queryClient.removeQueries();
+
       console.log('already logged in, going to homepage...');
 
       throw redirect({

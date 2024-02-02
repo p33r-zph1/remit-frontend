@@ -41,12 +41,12 @@ export default function Transfer() {
           {
             title: 'Today at 4:23pm',
             description: 'You set up your transfer',
-            status: 'COMPLETE',
+            status: 'COMPLETED',
           },
           {
             title: 'Today at 6:76pm',
             description: 'Agent #5235623 collected your cash',
-            status: 'COMPLETE',
+            status: 'COMPLETED',
           },
           {
             title: 'Waiting for agent in SG to accept request',

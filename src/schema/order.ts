@@ -26,7 +26,7 @@ export const transferTimelineStatusSchema = z.enum([
 
 export const feesSchema = z.object({
   platformFee: z.number(),
-  senderAgentCommission: z.number(),
+  senderAgentCommission: z.string(),
   recipientAgentCommission: z.number().optional(),
 });
 
@@ -83,18 +83,10 @@ export const orderSchema = z.object({
   deliveryDetails: locationDetailsSchema.optional(),
 });
 
-export const paginatedOrdersSchema = z.object({
-  orders: z.array(orderSchema),
-  pageSize: z.number(),
-  pageNumber: z.number(),
-  totalItems: z.number(),
-  totalPages: z.number(),
-  hasNextPage: z.boolean(),
-  hasPreviousPage: z.boolean(),
-});
-
 const orderApiSchema = makeApiSchema(orderSchema);
 
 export type Order = z.infer<typeof orderSchema>;
+
+export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export default orderApiSchema;

@@ -13,7 +13,8 @@ export default function useLogout() {
     return signOut().then(() => {
       auth.logout();
 
+      router.invalidate();
       router.history.push('/login');
     });
-  }, [auth, router.history]);
+  }, [auth, router]);
 }

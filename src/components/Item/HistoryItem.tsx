@@ -1,9 +1,10 @@
-import { Status } from '../../constants/types';
+import type { OrderStatus } from '../../schema/order';
+
 import StatusIcon from '../Icon/StatusIcon';
 
 type Item = {
   recipient: string;
-  status: Status;
+  status: OrderStatus;
   sentAmount: string;
   conversionAmount: string;
 };

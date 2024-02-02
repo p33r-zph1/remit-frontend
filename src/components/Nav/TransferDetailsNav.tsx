@@ -1,38 +1,39 @@
 import { Link } from '@tanstack/react-router';
-import { Status } from '../../constants/types';
-import StatusIcon from '../Icon/StatusIcon';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 
+import StatusIcon from '../Icon/StatusIcon';
+import type { OrderStatus } from '../../schema/order';
+
 type Props = {
-  status: Status;
+  status: OrderStatus;
   recipient: string;
   amount: string;
 };
 
-function getTitleByStatus(status: Status) {
+function getTitleByStatus(status: OrderStatus) {
   switch (status) {
-    case 'SENT':
-      return (
-        <div className="text-base  text-gray-400 md:text-lg">
-          You are sending
-        </div>
-      );
+    // case 'SENT':
+    //   return (
+    //     <div className="text-base  text-gray-400 md:text-lg">
+    //       You are sending
+    //     </div>
+    //   );
     case 'IN_PROGRESS':
       return (
         <div className="text-base  text-gray-400 md:text-lg">
           Your transaction is in-progress
         </div>
       );
-    case 'COMPLETE':
+    case 'COMPLETED':
       return (
         <div className="text-base font-bold text-success md:text-lg">
           You sent
         </div>
       );
-    case 'FAILED':
+    case 'CANCELLED':
       return (
         <div className="text-base font-bold text-error md:text-lg">
-          Failed to send
+          Transaction cancelled
         </div>
       );
     case 'EXPIRED':

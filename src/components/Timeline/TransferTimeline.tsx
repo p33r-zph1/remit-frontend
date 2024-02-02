@@ -4,55 +4,55 @@ import {
   ClockIcon,
 } from '@heroicons/react/20/solid';
 
-import { Status } from '../../constants/types';
+import type { OrderStatus } from '../../schema/order';
 
 export type Timeline = {
   title: string;
   description: string;
-  status: Status;
+  status: OrderStatus;
 };
 
 type Props = {
   timeline: Timeline[];
 };
 
-function getIconByStatus(status: Status) {
+function getIconByStatus(status: OrderStatus) {
   switch (status) {
-    case 'SENT':
+    // case 'SENT':
     case 'IN_PROGRESS':
       return <ClockIcon className="h-6 w-6 text-gray-300" />;
-    case 'COMPLETE':
+    case 'COMPLETED':
       return <CheckCircleIcon className="h-6 w-6 text-primary" />;
-    case 'FAILED':
+    case 'CANCELLED':
       return <XCircleIcon className="h-6 w-6 text-error" />;
     case 'EXPIRED':
       return <XCircleIcon className="h-6 w-6 text-gray-300" />;
   }
 }
 
-function getLineDividerByStatus(status: Status) {
+function getLineDividerByStatus(status: OrderStatus) {
   switch (status) {
-    case 'SENT':
+    // case 'SENT':
     case 'IN_PROGRESS':
       return <hr className="bg-slate-300" />;
-    case 'COMPLETE':
+    case 'COMPLETED':
       return <hr className="bg-primary" />;
-    case 'FAILED':
+    case 'CANCELLED':
       return <hr className="bg-error" />;
     case 'EXPIRED':
       return <hr className="bg-slate-300" />;
   }
 }
 
-function getTooltipByStatus(status: Status) {
+function getTooltipByStatus(status: OrderStatus) {
   switch (status) {
-    case 'SENT':
+    // case 'SENT':
     case 'IN_PROGRESS':
       return 'This step is still pending.';
-    case 'COMPLETE':
+    case 'COMPLETED':
       return 'This step has completed successfully.';
-    case 'FAILED':
-      return 'This step has failed.';
+    case 'CANCELLED':
+      return 'This step has been cancelled.';
     case 'EXPIRED':
       return 'This step has expired.';
   }

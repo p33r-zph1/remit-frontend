@@ -1,51 +1,36 @@
-import HistoryItem from '../components/Item/HistoryItem';
+import useOrderHistory from '../hooks/api/useOrderHistory';
 
-// import useHistory from '../hooks/api/useHistory';
+import HistoryItem from '../components/Item/HistoryItem';
+import { useCallback } from 'react';
+import { Order } from '../schema/order';
 
 export default function HistoryList() {
-  // const historyQuery = useHistory();
-  // const history = historyQuery.data;
+  const { data: orderHistory } = useOrderHistory({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
-  // console.log({ history });
+  console.log({ orderHistory });
 
-  // TODO: wip
+  const conversionAmount = useCallback((order: Order) => {
+    const { amount, currency } = order.transferDetails.recipient;
 
-  return (
-    <>
-      <HistoryItem
-        recipient="1243455"
-        status="SENT"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-      />
+    return `${amount} ${currency}`;
+  }, []);
 
-      <HistoryItem
-        recipient="1243455"
-        status="IN_PROGRESS"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-      />
+  const sentAmount = useCallback((order: Order) => {
+    const { amount, currency } = order.transferDetails.sender;
 
-      <HistoryItem
-        recipient="1243455"
-        status="COMPLETE"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-      />
+    return `${amount} ${currency}`;
+  }, []);
 
-      <HistoryItem
-        recipient="1243455"
-        status="FAILED"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-      />
-
-      <HistoryItem
-        recipient="1243455"
-        status="EXPIRED"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-      />
-    </>
-  );
+  return orderHistory.orders.map(order => (
+    <HistoryItem
+      key={order.orderId}
+      recipient={order.recipientId}
+      status={order.orderStatus}
+      sentAmount={sentAmount(order)}
+      conversionAmount={conversionAmount(order)}
+    />
+  ));
 }
