@@ -7,9 +7,8 @@ import {
 import { QueryClient } from '@tanstack/react-query';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { z } from 'zod';
-
-import { currentSession } from '../aws-amplify/auth';
 
 import NavBar from '../components/Nav/NavBar';
 import BottomNavigation from '../components/Nav/BottomNavigation';
@@ -56,11 +55,11 @@ export const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
   beforeLoad: async ({ context }) => {
-    const session = await currentSession();
+    const authSession = await fetchAuthSession();
 
-    context.auth.status = session?.tokens ? 'loggedIn' : 'loggedOut';
+    context.auth.status = authSession?.tokens ? 'loggedIn' : 'loggedOut';
 
-    if (session?.tokens) {
+    if (authSession?.tokens) {
       console.log('already logged in, going to homepage...');
 
       throw redirect({
@@ -78,7 +77,7 @@ export const authRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'auth',
   beforeLoad: async ({ context, location }) => {
-    const session = await currentSession();
+    const session = await fetchAuthSession();
 
     context.auth.status = session?.tokens ? 'loggedIn' : 'loggedOut';
 

@@ -1,9 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter, useSearch } from '@tanstack/react-router';
-import type { SignInInput } from 'aws-amplify/auth';
+import { signIn, type SignInInput } from 'aws-amplify/auth';
 
 import { loginRoute } from '../config/router.config';
-import { login } from '../aws-amplify/auth';
 
 export default function useAuth() {
   const { auth } = loginRoute.useRouteContext();
@@ -11,18 +10,31 @@ export default function useAuth() {
   const router = useRouter();
   const search = useSearch({ from: loginRoute.fullPath });
 
-  const authenticate = useCallback(
-    (input: SignInInput) => {
-      return login(input).then(() => {
-        auth.login();
+  const [error, setError] = useState('');
 
-        router.history.push(search.redirect ? search.redirect : '/');
-      });
+  const authenticate = useCallback(
+    async (input: SignInInput) => {
+      try {
+        const { isSignedIn, nextStep } = await signIn(input);
+
+        if (isSignedIn && nextStep.signInStep === 'DONE') {
+          auth.login();
+          router.history.push(search.redirect ? search.redirect : '/');
+          return;
+        }
+
+        throw new Error('Unhandled auth step');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        }
+      }
     },
     [auth, router, search]
   );
 
   return {
     authenticate,
+    error,
   };
 }

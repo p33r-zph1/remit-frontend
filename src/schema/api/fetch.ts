@@ -1,7 +1,6 @@
-import { z } from 'zod';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { fromZodError } from 'zod-validation-error';
-
-import { currentSession } from '../../aws-amplify/auth';
+import { z } from 'zod';
 
 export const baseSchema = z.object({
   message: z.string(),
@@ -14,7 +13,7 @@ export async function genericFetch<T extends z.ZodSchema>(
   schema: T,
   fetchOptions?: RequestInit
 ): Promise<z.infer<T>> {
-  const session = await currentSession();
+  const session = await fetchAuthSession();
 
   const response = await fetch(url, {
     ...fetchOptions,

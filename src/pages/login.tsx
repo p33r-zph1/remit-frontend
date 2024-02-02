@@ -6,6 +6,7 @@ import { z } from 'zod';
 import Brand from '../components/Brand';
 import Page from '../components/Page';
 import useAuth from '../hooks/useAuth';
+import { XCircleIcon } from '@heroicons/react/20/solid';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -23,7 +24,7 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { authenticate } = useAuth();
+  const { authenticate, error } = useAuth();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -59,6 +60,7 @@ export default function Login() {
           <input
             {...register('username')}
             type="text"
+            autoComplete="off"
             className="input input-bordered w-full"
             disabled={isSubmitting}
           />
@@ -78,10 +80,21 @@ export default function Login() {
           <input
             {...register('password')}
             type="password"
+            autoComplete="off"
             className="input input-bordered w-full"
             disabled={isSubmitting}
           />
         </label>
+
+        {error && (
+          <div role="alert" className="alert bg-white shadow-lg">
+            <XCircleIcon className="h-5 w-5 text-error" />
+            <div>
+              <h3 className="font-bold text-error">Error</h3>
+              <div className="text-xs text-error">{error}</div>
+            </div>
+          </div>
+        )}
 
         <button
           className="btn btn-primary btn-block rounded-lg text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
