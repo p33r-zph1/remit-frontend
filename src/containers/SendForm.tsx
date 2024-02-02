@@ -1,4 +1,5 @@
 import type { SubmitHandler } from 'react-hook-form';
+import { useNavigate } from '@tanstack/react-router';
 
 import SendDetailsForm from './SendDetailsForm';
 import useSendMoney, { SendMoney } from '../hooks/useSendMoney';
@@ -19,6 +20,8 @@ import ErrorAlert from '../components/Alert/ErrorAlert';
 // let renderCount = 0;
 
 export default function SendForm() {
+  const navigate = useNavigate();
+
   const {
     // currency dropdown controlled state
     senderCurrency,
@@ -31,6 +34,9 @@ export default function SendForm() {
 
     // list of exchange currencies
     supportedCurrencies,
+
+    // agents list
+    agents,
 
     // hook form props
     formProps: {
@@ -48,12 +54,17 @@ export default function SendForm() {
     agentId,
   }) => {
     try {
-      await sendOrderAsync({
+      const { data } = await sendOrderAsync({
         recipientId,
         senderCurrency: senderCurrency.currency,
         recipientCurrency: recipientCurrency.currency,
         senderAgentId: agentId,
         transferAmount: Number(sendAmount),
+      });
+
+      navigate({
+        to: '/transfer/$orderId',
+        params: { orderId: data.orderId },
       });
     } catch (e: unknown) {
       console.log(e);
@@ -82,7 +93,7 @@ export default function SendForm() {
           onValueChange={conversionHandler}
         />
 
-        <SendDetailsForm name="agentId" control={control} />
+        <SendDetailsForm name="agentId" control={control} list={agents} />
 
         <CurrencyInput
           label="Recipient will get"

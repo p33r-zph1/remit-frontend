@@ -5,18 +5,22 @@ import {
   useController,
 } from 'react-hook-form';
 
-import useAgents from '../hooks/api/useAgent';
 import { cx } from '../utils';
+import { Agent } from '../schema/agent';
 
-export default function SendDetailsForm<T extends FieldValues>(
-  props: UseControllerProps<T>
-) {
+type Props<T extends FieldValues> = UseControllerProps<T> & {
+  list: Agent[];
+};
+
+export default function SendDetailsForm<T extends FieldValues>({
+  list,
+  ...controllerProps
+}: Props<T>) {
   const {
     field,
     formState: { isSubmitting },
     fieldState: { error },
-  } = useController(props);
-  const { data: agents } = useAgents('ae', { refetchInterval: 10_000 });
+  } = useController(controllerProps);
 
   return (
     <div className="relative">
@@ -57,14 +61,14 @@ export default function SendDetailsForm<T extends FieldValues>(
               {error?.message ? error?.message : 'Select agent commision'}
             </option>
 
-            {agents.map(agent => (
+            {list.map(item => (
               <option
-                key={agent.agentId}
-                value={agent.agentId}
-                disabled={!agent.isActive}
+                key={item.agentId}
+                value={item.agentId}
+                disabled={!item.isActive}
                 className="text-gray-500"
               >
-                {agent.commission}% - {agent.agentId}
+                {item.commission}% - {item.agentId}
               </option>
             ))}
           </select>

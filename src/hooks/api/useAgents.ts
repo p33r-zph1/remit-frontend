@@ -8,7 +8,7 @@ const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/agents';
 
 export default function useAgents(
-  isoCode: 'in' | 'ae' | 'sg', // TODO: use zod enum
+  isoCode: string,
   { refetchInterval }: Options = defaultOptions
 ) {
   return useSuspenseQuery({

@@ -5,6 +5,7 @@ import { coerce, z } from 'zod';
 
 import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
+import useAgents from './api/useAgents';
 
 const formSchema = z.object({
   recipientId: z.string().min(1, 'Please enter a valid recipient'),
@@ -40,6 +41,10 @@ export default function useSendMoney() {
   } = usePriceOracle({
     from: senderCurrency?.currency,
     to: recipientCurrency?.currency,
+  });
+
+  const { data: agents } = useAgents(senderCurrency.countryIsoCode, {
+    refetchInterval: 15_000,
   });
 
   const formProps = useForm<SendMoney>({
@@ -84,6 +89,9 @@ export default function useSendMoney() {
 
     // list of exchange currencies
     supportedCurrencies,
+
+    // agents list
+    agents,
 
     // hook form props
     formProps,

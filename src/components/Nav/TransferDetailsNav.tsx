@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
+import { numericFormatter } from 'react-number-format';
 
 import StatusIcon from '../Icon/StatusIcon';
 import type { OrderStatus } from '../../schema/order';
@@ -66,8 +67,8 @@ export default function TransferDetailsNav({
         {getTitleByStatus(status)}
 
         <div className="flex flex-row items-center justify-between py-1">
-          <div className="max-w-sm text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
-            {amount}
+          <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
+            {numericFormatter(amount, { thousandSeparator: ',' })}
           </div>
           <StatusIcon status={status} />
         </div>

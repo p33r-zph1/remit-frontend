@@ -1,9 +1,8 @@
-import { useCallback } from 'react';
-
 import useOrderHistory from '../hooks/api/useOrderHistory';
 
 import HistoryItem from '../components/Item/HistoryItem';
-import { Order } from '../schema/order';
+import { selectRecipientValue, selectSenderValue } from '../schema/order';
+import EmptyHistory from '../components/Empty/EmptyHistory';
 
 export default function HistoryList() {
   const { data: orderHistory } = useOrderHistory({
@@ -11,17 +10,7 @@ export default function HistoryList() {
     pageSize: 10,
   });
 
-  const conversionAmount = useCallback((order: Order) => {
-    const { amount, currency } = order.transferDetails.recipient;
-
-    return `${amount} ${currency}`;
-  }, []);
-
-  const sentAmount = useCallback((order: Order) => {
-    const { amount, currency } = order.transferDetails.sender;
-
-    return `${amount} ${currency}`;
-  }, []);
+  if (orderHistory.orders.length === 0) return <EmptyHistory />;
 
   return orderHistory.orders.map(order => (
     <HistoryItem
@@ -29,8 +18,8 @@ export default function HistoryList() {
       orderId={order.orderId}
       recipient={order.recipientId}
       status={order.orderStatus}
-      sentAmount={sentAmount(order)}
-      conversionAmount={conversionAmount(order)}
+      sentAmount={selectSenderValue(order)}
+      conversionAmount={selectRecipientValue(order)}
     />
   ));
 }

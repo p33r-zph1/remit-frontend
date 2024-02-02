@@ -14,20 +14,18 @@ import { makeApiSchema } from './api/fetch';
 //     }
 // ]
 
-const agentSchema = z.array(
-  z.object({
-    isActive: z.boolean(),
-    countryIsoCode: z.string(), // TODO: in, sg, ae
-    contactDetails: z.object({
-      telegram: z.string(),
-    }),
-    commission: z.string(),
-    agentType: z.string(),
-    agentId: z.string(),
-  })
-);
+const agentSchema = z.object({
+  isActive: z.boolean(),
+  countryIsoCode: z.string(),
+  contactDetails: z.object({
+    telegram: z.string(),
+  }),
+  commission: z.string(),
+  agentType: z.string(),
+  agentId: z.string(),
+});
 
-const agentApiSchema = makeApiSchema(agentSchema);
+const agentApiSchema = makeApiSchema(z.array(agentSchema));
 
 export type Agent = z.infer<typeof agentSchema>;
 

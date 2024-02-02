@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import type { OrderStatus } from '../../schema/order';
 
 import StatusIcon from '../Icon/StatusIcon';
+import { numericFormatter } from 'react-number-format';
 
 type Item = {
   orderId: string;
@@ -41,10 +42,10 @@ export default function HistoryItem({
       {/* Amount & Conversion Details */}
       <div className="flex flex-col items-end justify-center">
         <div className="max-w-sm text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
-          {sentAmount}
+          {numericFormatter(sentAmount, { thousandSeparator: ',' })}
         </div>
         <div className="text-sm text-sleep-200 md:text-lg">
-          {conversionAmount}
+          {numericFormatter(conversionAmount, { thousandSeparator: ',' })}
         </div>
       </div>
     </Link>

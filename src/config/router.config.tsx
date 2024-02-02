@@ -108,7 +108,7 @@ const indexRoute = createRoute({
   component: () => <SendMoney />,
 });
 
-const transferRoute = createRoute({
+export const transferRoute = createRoute({
   getParentRoute: () => authRoute,
   path: '/transfer/$orderId',
   component: () => <Transfer />,

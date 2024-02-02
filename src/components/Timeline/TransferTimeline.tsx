@@ -4,17 +4,7 @@ import {
   ClockIcon,
 } from '@heroicons/react/20/solid';
 
-import type { OrderStatus } from '../../schema/order';
-
-export type Timeline = {
-  title: string;
-  description: string;
-  status: OrderStatus;
-};
-
-type Props = {
-  timeline: Timeline[];
-};
+import type { OrderStatus, TransferTimeline } from '../../schema/order';
 
 function getIconByStatus(status: OrderStatus) {
   switch (status) {
@@ -61,19 +51,19 @@ function getTooltipByStatus(status: OrderStatus) {
 function Item({
   title,
   description,
-  status,
+  orderStatus,
   isLastItem,
-}: Timeline & { isLastItem: boolean }) {
+}: TransferTimeline & { isLastItem: boolean }) {
   return (
     <li>
-      {getLineDividerByStatus(status)}
+      {getLineDividerByStatus(orderStatus)}
 
-      <div className="timeline-middle">{getIconByStatus(status)}</div>
+      <div className="timeline-middle">{getIconByStatus(orderStatus)}</div>
 
       <div className="group timeline-end timeline-box">
         <div
           className="tooltip flex select-none flex-col items-baseline"
-          data-tip={getTooltipByStatus(status)}
+          data-tip={getTooltipByStatus(orderStatus)}
         >
           <span className="text-xs font-semibold md:text-sm">{title}</span>
 
@@ -83,10 +73,14 @@ function Item({
         </div>
       </div>
 
-      {!isLastItem && getLineDividerByStatus(status)}
+      {!isLastItem && getLineDividerByStatus(orderStatus)}
     </li>
   );
 }
+
+type Props = {
+  timeline: TransferTimeline[];
+};
 
 export default function TransferTimeline({ timeline }: Props) {
   return (
@@ -98,7 +92,7 @@ export default function TransferTimeline({ timeline }: Props) {
       <ul className="timeline timeline-vertical timeline-compact">
         {timeline.map((item, index) => (
           <Item
-            key={item.title}
+            key={item.dateTime.toString()}
             {...item}
             isLastItem={index === timeline.length - 1}
           />
