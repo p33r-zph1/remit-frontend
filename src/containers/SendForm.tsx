@@ -1,12 +1,12 @@
-import { XCircleIcon } from '@heroicons/react/20/solid';
 import type { SubmitHandler } from 'react-hook-form';
 
+import SendDetailsForm from './SendDetailsForm';
 import useSendMoney, { SendMoney } from '../hooks/useSendMoney';
 import useSendOrder from '../hooks/api/useSendOrder';
 
 import RecipientInput from '../components/Input/RecipientInput';
 import CurrencyInput from '../components/Input/CurrencyInput';
-import SendDetailsForm from './SendDetailsForm';
+import ErrorAlert from '../components/Alert/ErrorAlert';
 
 // const orderData = {
 //   recipientId: '12340002',
@@ -63,12 +63,13 @@ export default function SendForm() {
   // renderCount++;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4 sm:mt-16">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-8 space-y-12 sm:mt-16"
+    >
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <div className="mb-10">
-        <RecipientInput name="recipientId" control={control} />
-      </div>
+      <RecipientInput name="recipientId" control={control} />
 
       <div>
         <CurrencyInput
@@ -94,19 +95,11 @@ export default function SendForm() {
         />
       </div>
 
-      {error?.message && (
-        <div role="alert" className="alert shadow-lg">
-          <XCircleIcon className="h-5 w-5 text-error" />
-          <div>
-            <h3 className="font-bold text-error">Error</h3>
-            <div className="text-xs text-error">{error.message}</div>
-          </div>
-        </div>
-      )}
+      {error?.message && <ErrorAlert message={error.message} />}
 
       <button
         type="submit"
-        className="btn btn-primary btn-block mt-10 rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+        className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         disabled={isSubmitting}
       >
         {isSubmitting && <span className="loading loading-spinner"></span>}
