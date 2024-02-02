@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 
 export default function NotFound() {
   return (
-    <div className="hero flex-1 bg-base-100">
+    <div className="hero min-h-svh w-full bg-base-100">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-3xl font-bold md:text-5xl">Page Not Found</h1>

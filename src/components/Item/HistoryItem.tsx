@@ -1,8 +1,10 @@
+import { Link } from '@tanstack/react-router';
 import type { OrderStatus } from '../../schema/order';
 
 import StatusIcon from '../Icon/StatusIcon';
 
 type Item = {
+  orderId: string;
   recipient: string;
   status: OrderStatus;
   sentAmount: string;
@@ -10,13 +12,18 @@ type Item = {
 };
 
 export default function HistoryItem({
+  orderId,
   recipient,
   status,
   sentAmount,
   conversionAmount,
 }: Item) {
   return (
-    <div className="group mb-2 flex flex-row items-center justify-between py-4">
+    <Link
+      to="/transfer/$orderId"
+      params={{ orderId }}
+      className="group mb-2 flex cursor-pointer flex-row items-center justify-between py-4 hover:bg-zinc-50"
+    >
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">
         <StatusIcon status={status} />
@@ -40,6 +47,6 @@ export default function HistoryItem({
           {conversionAmount}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

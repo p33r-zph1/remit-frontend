@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useRouter, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { signIn, type SignInInput } from 'aws-amplify/auth';
 
 import { loginRoute } from '../config/router.config';
@@ -7,7 +7,7 @@ import { loginRoute } from '../config/router.config';
 export default function useAuth() {
   const { auth } = loginRoute.useRouteContext();
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const search = useSearch({ from: loginRoute.fullPath });
 
   const [error, setError] = useState('');
@@ -19,7 +19,7 @@ export default function useAuth() {
 
         if (isSignedIn && nextStep.signInStep === 'DONE') {
           auth.login();
-          router.history.push(search.redirect ? search.redirect : '/');
+          navigate({ to: search.redirect });
           return;
         }
 
@@ -30,7 +30,7 @@ export default function useAuth() {
         }
       }
     },
-    [auth, router, search]
+    [auth, navigate, search]
   );
 
   return {

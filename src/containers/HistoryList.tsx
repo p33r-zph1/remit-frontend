@@ -1,7 +1,8 @@
+import { useCallback } from 'react';
+
 import useOrderHistory from '../hooks/api/useOrderHistory';
 
 import HistoryItem from '../components/Item/HistoryItem';
-import { useCallback } from 'react';
 import { Order } from '../schema/order';
 
 export default function HistoryList() {
@@ -9,8 +10,6 @@ export default function HistoryList() {
     pageNumber: 1,
     pageSize: 10,
   });
-
-  console.log({ orderHistory });
 
   const conversionAmount = useCallback((order: Order) => {
     const { amount, currency } = order.transferDetails.recipient;
@@ -27,6 +26,7 @@ export default function HistoryList() {
   return orderHistory.orders.map(order => (
     <HistoryItem
       key={order.orderId}
+      orderId={order.orderId}
       recipient={order.recipientId}
       status={order.orderStatus}
       sentAmount={sentAmount(order)}

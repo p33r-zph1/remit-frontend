@@ -57,11 +57,10 @@ export const loginRoute = createRoute({
   beforeLoad: async ({ context }) => {
     const authSession = await fetchAuthSession();
 
+    context.queryClient.removeQueries();
     context.auth.status = authSession?.tokens ? 'loggedIn' : 'loggedOut';
 
     if (authSession?.tokens) {
-      context.queryClient.removeQueries();
-
       console.log('already logged in, going to homepage...');
 
       throw redirect({
@@ -111,7 +110,7 @@ const indexRoute = createRoute({
 
 const transferRoute = createRoute({
   getParentRoute: () => authRoute,
-  path: '/transfer',
+  path: '/transfer/$orderId',
   component: () => <Transfer />,
 });
 
