@@ -1,4 +1,3 @@
-import { transferRoute } from '../config/router.config';
 import useSingleOrder from '../hooks/api/useSingleOrder';
 
 import TransferMap from '../components/Location/MapsAPI';
@@ -7,9 +6,10 @@ import TransferTimeline from '../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 import CalendarPopover from '../components/Popover/CalendarPopover';
 import { selectSenderValue } from '../schema/order';
+import { Route } from '../routes/_auth.transfer.$orderId';
 
 export default function TransferDetails() {
-  const { orderId } = transferRoute.useParams();
+  const { orderId } = Route.useParams();
 
   const { data: order } = useSingleOrder({ orderId });
 

@@ -8,11 +8,12 @@ import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 
+import { routeTree } from './routeTree.gen';
+
 import useAuth from './hooks/useAuth';
 import { AuthProvider } from './contexts/AuthContext';
 
 import { cognitoAuth } from './config/auth.config';
-import { routeTree } from './config/router.config';
 import { queryClient } from './config/query.config';
 
 Amplify.configure({

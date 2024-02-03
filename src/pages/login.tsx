@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
-import { loginRoute } from '../config/router.config';
 
 import Brand from '../components/Brand';
 import Page from '../components/Page';
 import useAuth from '../hooks/useAuth';
 import ErrorAlert from '../components/Alert/ErrorAlert';
+import { Route } from '../routes/login';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -30,7 +29,7 @@ export default function Login() {
   const { authenticate, error } = useAuth();
 
   const navigate = useNavigate();
-  const search = useSearch({ from: loginRoute.fullPath });
+  const search = Route.useSearch();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,7 +39,7 @@ export default function Login() {
     authenticate({ username, password }).then(() => {
       setIsSubmitting(false);
 
-      navigate({ to: search.redirect });
+      navigate({ to: search.redirect || '/' });
     });
   };
 
