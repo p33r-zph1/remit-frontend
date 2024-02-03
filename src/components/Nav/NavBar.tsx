@@ -1,12 +1,22 @@
 import { Bars3Icon, PowerIcon } from '@heroicons/react/20/solid';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate, useRouter } from '@tanstack/react-router';
 
 import Brand from '../Brand';
-import useLogout from '../../hooks/useLogout';
+import useAuth from '../../hooks/useAuth';
+import { useCallback } from 'react';
 
 export default function NavBar() {
-  const logout = useLogout();
-  // function signoff() {}
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
+  const router = useRouter();
+
+  const signout = useCallback(() => {
+    logout().then(() => {
+      navigate({ to: '/login' });
+      router.invalidate();
+    });
+  }, [logout, navigate, router]);
 
   return (
     <div className="navbar sticky top-0 bg-base-100">
@@ -28,7 +38,7 @@ export default function NavBar() {
             className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
           >
             <li>
-              <button onClick={logout}>Logout</button>
+              <button onClick={signout}>Logout</button>
             </li>
           </ul>
         </div>
@@ -68,7 +78,7 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <button onClick={logout} className="btn btn-circle btn-ghost">
+            <button onClick={signout} className="btn btn-circle btn-ghost">
               <PowerIcon className="h-6 w-6 text-gray-500" />
             </button>
           </li>

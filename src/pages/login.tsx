@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+
+import { loginRoute } from '../config/router.config';
 
 import Brand from '../components/Brand';
 import Page from '../components/Page';
@@ -26,6 +29,9 @@ export default function Login() {
 
   const { authenticate, error } = useAuth();
 
+  const navigate = useNavigate();
+  const search = useSearch({ from: loginRoute.fullPath });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit: SubmitHandler<Inputs> = ({ username, password }) => {
@@ -33,6 +39,8 @@ export default function Login() {
 
     authenticate({ username, password }).then(() => {
       setIsSubmitting(false);
+
+      navigate({ to: search.redirect });
     });
   };
 

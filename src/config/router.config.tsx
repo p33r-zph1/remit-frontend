@@ -10,6 +10,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { z } from 'zod';
 
+import { fromJwt } from '../schema/cognito';
+import { AuthContext } from '../contexts/AuthContext';
+
 import NavBar from '../components/Nav/NavBar';
 import BottomNavigation from '../components/Nav/BottomNavigation';
 
@@ -20,25 +23,9 @@ import History from '../pages/history';
 import Alerts from '../pages/alerts';
 import NotFound from '../pages/not-found';
 
-export type Auth = {
-  login: () => void;
-  logout: () => void;
-  status: 'loggedIn' | 'loggedOut';
-};
-
-export const auth: Auth = {
-  status: 'loggedOut',
-  login: () => {
-    auth.status = 'loggedIn';
-  },
-  logout: () => {
-    auth.status = 'loggedOut';
-  },
-};
-
 const rootRoute = createRootRouteWithContext<{
   queryClient: QueryClient;
-  auth: Auth;
+  auth: AuthContext;
 }>()({
   component: () => (
     <main className="flex min-h-svh flex-col pb-16">
@@ -55,13 +42,21 @@ export const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
   beforeLoad: async ({ context }) => {
-    const authSession = await fetchAuthSession();
-
     context.queryClient.removeQueries();
-    context.auth.status = authSession?.tokens ? 'loggedIn' : 'loggedOut';
 
-    if (authSession?.tokens) {
-      console.log('already logged in, going to homepage...');
+    const session = await fetchAuthSession();
+
+    const idToken = session.tokens?.idToken;
+
+    if (idToken) {
+      // console.log('session found...');
+
+      const username = fromJwt(idToken)?.['cognito:username'];
+
+      if (!username) return; // return if no username found, continue with the login process.
+
+      // console.log('already logged in, going to homepage...');
+      context.auth.setUser(username);
 
       throw redirect({
         to: indexRoute.to,
@@ -80,11 +75,10 @@ export const authRoute = createRoute({
   beforeLoad: async ({ context, location }) => {
     const session = await fetchAuthSession();
 
-    context.auth.status = session?.tokens ? 'loggedIn' : 'loggedOut';
+    const idToken = session.tokens?.idToken;
 
-    console.log({ status: context.auth.status });
-
-    if (!session?.tokens) {
+    if (!idToken) {
+      // console.log('redirecting to login page...');
       throw redirect({
         to: loginRoute.to,
         search: {
@@ -92,6 +86,13 @@ export const authRoute = createRoute({
         },
       });
     }
+
+    const username = fromJwt(idToken)?.['cognito:username'];
+
+    if (!username) return; // return if no username found, continue with the login process.
+
+    // console.log('already logged in, hydrating...');
+    context.auth.setUser(username);
   },
   component: () => (
     <>
