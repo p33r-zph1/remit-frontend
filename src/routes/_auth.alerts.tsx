@@ -1,7 +1,28 @@
+import { Suspense } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { ErrorBoundary } from 'react-error-boundary';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
-import Alerts from '../pages/alerts';
+import Page from '../components/Page';
+import AlertList from '../containers/AlertList';
+import QueryFallback from '../components/QueryFallback';
+import AlertSkeleton from '../components/Skeleton/AlertSkeleton';
+import HeaderTitle from '../components/HeaderTitle';
 
 export const Route = createFileRoute('/_auth/alerts')({
-  component: () => <Alerts />,
+  component: () => (
+    <Page className="mx-auto max-w-3xl">
+      <HeaderTitle>Alerts</HeaderTitle>
+
+      <QueryErrorResetBoundary>
+        {({ reset }) => (
+          <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
+            <Suspense fallback={<AlertSkeleton />}>
+              <AlertList />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+      </QueryErrorResetBoundary>
+    </Page>
+  ),
 });

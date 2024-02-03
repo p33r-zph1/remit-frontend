@@ -4,7 +4,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { AuthContext } from '../contexts/AuthContext';
-import NotFound from '../pages/not-found';
+import HeroNotFound from '../components/Hero/HeroNotFound';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -18,5 +18,5 @@ export const Route = createRootRouteWithContext<{
       {import.meta.env.DEV && <ReactQueryDevtools />}
     </main>
   ),
-  notFoundComponent: () => <NotFound />,
+  notFoundComponent: () => <HeroNotFound />,
 });

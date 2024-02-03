@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
 
-export default function NotFound() {
+export default function HeroNotFound() {
   return (
-    <div className="hero min-h-svh w-full bg-base-100">
+    <div className="hero min-h-svh bg-slate-100">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-3xl font-bold md:text-5xl">Page Not Found</h1>
