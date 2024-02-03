@@ -12,7 +12,7 @@ import HeaderTitle from '../components/HeaderTitle';
 export const Route = createFileRoute('/_auth/alerts')({
   component: () => (
     <Page className="mx-auto max-w-3xl">
-      <HeaderTitle>Alerts</HeaderTitle>
+      <HeaderTitle className="md:text-center">Alerts</HeaderTitle>
 
       <QueryErrorResetBoundary>
         {({ reset }) => (

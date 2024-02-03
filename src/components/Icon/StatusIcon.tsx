@@ -1,25 +1,33 @@
 import {
   XMarkIcon,
   ArrowDownIcon,
-  // ArrowUpIcon,
   CheckIcon,
+  ArrowUpIcon,
 } from '@heroicons/react/20/solid';
 
 import type { OrderStatus } from '../../schema/order';
 
-export default function StatusIcon({ status }: { status: OrderStatus }) {
+type Props = {
+  status: OrderStatus;
+  isRecipient: boolean;
+};
+
+export default function StatusIcon({ status, isRecipient }: Props) {
   switch (status) {
-    // case 'SENT':
-    //   return (
-    //     <ArrowUpIcon className="h-12 w-12 rounded-full bg-success p-3 text-white shadow-md" />
-    //   );
-    case 'IN_PROGRESS':
+    case 'IN_PROGRESS': {
+      if (isRecipient)
+        return (
+          <ArrowUpIcon className="h-12 w-12 rounded-full bg-accent p-3 text-white shadow-md" />
+        );
+
       return (
-        <ArrowDownIcon className="h-12 w-12 rounded-full bg-accent p-3 text-white shadow-md" />
+        <ArrowDownIcon className="h-12 w-12 rounded-full bg-primary p-3 text-white shadow-md" />
       );
+    }
+
     case 'COMPLETED':
       return (
-        <CheckIcon className="h-12 w-12 rounded-full bg-primary p-3 text-white shadow-md" />
+        <CheckIcon className="h-12 w-12 rounded-full bg-success p-3 text-white shadow-md" />
       );
     case 'CANCELLED':
       return (

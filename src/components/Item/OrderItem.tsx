@@ -14,7 +14,7 @@ type Item = {
   isRecipient: boolean;
 };
 
-export default function HistoryItem({
+export default function OrderItem({
   orderId,
   recipient,
   status,

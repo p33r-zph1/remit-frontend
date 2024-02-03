@@ -1,9 +1,10 @@
 import type { JWT } from 'aws-amplify/auth';
 import { z } from 'zod';
 
-const cognitoGroupSchema = z
-  .tuple([z.literal('customer')])
-  .or(z.tuple([z.literal('recipient')]));
+const cognitoGroupSchema = z.union([
+  z.tuple([z.literal('customer')]),
+  z.tuple([z.literal('agent')]),
+]);
 
 const cognitoPayloadSchema = z.object({
   payload: z.object({
@@ -21,3 +22,5 @@ export function fromJwt(jwt: JWT | undefined) {
 export type CognitoPayload = z.infer<typeof cognitoPayloadSchema>;
 
 export type CognitoGroup = z.infer<typeof cognitoGroupSchema>;
+
+export type Group = ExtractSingleElementType<CognitoGroup>;

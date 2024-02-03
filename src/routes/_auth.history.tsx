@@ -12,7 +12,7 @@ import Page from '../components/Page';
 export const Route = createFileRoute('/_auth/history')({
   component: () => (
     <Page className="mx-auto max-w-3xl">
-      <HeaderTitle>Transaction History</HeaderTitle>
+      <HeaderTitle className="md:text-center">Transaction History</HeaderTitle>
 
       <QueryErrorResetBoundary>
         {({ reset }) => (

@@ -1,6 +1,5 @@
 import daisyui from 'daisyui';
 import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -15,9 +14,13 @@ export default {
         'sleep-100': '#9CA3AF',
         'sleep-200': '#757F87',
       },
+      backgroundImage: {
+        'card-gradient':
+          'linear-gradient(180.11deg, #2F80ED 1.73%, rgba(94, 132, 184, 0.78) 99.9%)',
+      },
     },
   },
-  plugins: [forms, daisyui],
+  plugins: [daisyui],
   daisyui: {
     /** @see https://daisyui.com/docs/themes/#-7 */
     themes: [

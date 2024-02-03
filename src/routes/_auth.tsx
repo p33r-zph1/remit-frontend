@@ -22,14 +22,18 @@ export const Route = createFileRoute('/_auth')({
       });
     }
 
+    console.log({ idToken });
+
     const username = fromJwt(idToken)?.['cognito:username'];
     const groups = fromJwt(idToken)?.['cognito:groups'];
+
+    console.log({ username, groups });
 
     if (!username) return; // return if no username found (continue with the login process).
 
     // console.log('already logged in, hydrating...');
     context.auth.setUser(username);
-    context.auth.setRole(groups);
+    context.auth.setGroup(groups);
   },
   component: () => (
     <>

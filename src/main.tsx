@@ -24,13 +24,7 @@ Amplify.configure({
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const router = createRouter({
   routeTree,

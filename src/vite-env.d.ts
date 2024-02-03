@@ -9,3 +9,5 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+type ExtractSingleElementType<T> = T extends [infer U] ? U : never;

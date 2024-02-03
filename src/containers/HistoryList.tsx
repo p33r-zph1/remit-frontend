@@ -3,8 +3,11 @@ import useOrderHistory from '../hooks/api/useOrderHistory';
 import HistoryItem from '../components/Item/HistoryItem';
 import { selectRecipientValue, selectSenderValue } from '../schema/order';
 import EmptyHistory from '../components/Empty/EmptyHistory';
+import useAuth from '../hooks/useAuth';
 
 export default function HistoryList() {
+  const { user } = useAuth();
+
   const { data: orderHistory } = useOrderHistory({
     pageNumber: 1,
     pageSize: 10,
@@ -20,6 +23,7 @@ export default function HistoryList() {
       status={order.orderStatus}
       sentAmount={selectSenderValue(order)}
       conversionAmount={selectRecipientValue(order)}
+      isRecipient={user === order.senderId}
     />
   ));
 }

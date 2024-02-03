@@ -1,16 +1,17 @@
 import { createContext, useCallback, useState } from 'react';
 import { SignInInput, signIn, signOut } from 'aws-amplify/auth';
-import { CognitoGroup } from '../schema/cognito';
+import { CognitoGroup, Group } from '../schema/cognito';
 
 export interface AuthContext {
   setUser: (username: string | undefined) => void;
-  setRole: (role: CognitoGroup | undefined) => void;
+  setGroup: (role: CognitoGroup | undefined) => void;
   authenticate: (input: SignInInput) => Promise<void>;
   logout: () => Promise<void>;
+  hasGroup: (group: Group) => boolean;
   readonly isAuthenticated: boolean;
   readonly user: string | undefined;
   readonly error: string | undefined;
-  readonly role: CognitoGroup | undefined;
+  readonly group: CognitoGroup | undefined;
 }
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -22,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = Boolean(user);
 
-  console.log({ user, role: group });
+  // console.log({ user, group });
 
   const authenticate = useCallback(async (input: SignInInput) => {
     try {
@@ -53,17 +54,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const hasGroup = useCallback(
+    (_group: string) => group?.some(g => g === _group) || false,
+    [group]
+  );
+
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
         user,
         setUser,
-        role: group,
-        setRole: setGroup,
+        group,
+        setGroup,
         authenticate,
         logout,
         error,
+        hasGroup,
       }}
     >
       {children}
