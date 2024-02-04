@@ -1,7 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { genericFetch } from '../../schema/api/fetch';
-import { Options, defaultOptions } from '../../schema/api';
 import orderListApiSchema from '../../schema/order-list';
 
 const BASE_URL =
@@ -12,21 +11,20 @@ export type Pair = {
   pageNumber: number;
 };
 
-export default function useOrderHistory(
-  { pageSize, pageNumber }: Partial<Pair>,
-  { refetchInterval }: Options = defaultOptions
-) {
-  return useSuspenseQuery({
-    queryKey: [
-      'order-history',
-      `?pageSize=${pageSize}&pageNumber=${pageNumber}`,
-    ],
+export const ordersQueryOptions = ({ pageSize, pageNumber }: Pair) =>
+  queryOptions({
+    queryKey: ['orders', pageSize, pageNumber],
     queryFn: () =>
       genericFetch(
         `${BASE_URL}?pageSize=${pageSize}&pageNumber=${pageNumber}`,
         orderListApiSchema
       ),
     select: response => response.data,
-    refetchInterval,
+    refetchInterval: 10_000,
   });
+
+export default function useOrders(
+  props: Parameters<typeof ordersQueryOptions>[0]
+) {
+  return useSuspenseQuery(ordersQueryOptions(props));
 }

@@ -9,6 +9,9 @@ import Page from '../components/Page';
 import Brand from '../components/Brand';
 
 export const Route = createFileRoute('/login')({
+  validateSearch: z.object({
+    redirect: z.string().optional(),
+  }),
   beforeLoad: async ({ context, search }) => {
     context.queryClient.removeQueries();
 
@@ -31,9 +34,7 @@ export const Route = createFileRoute('/login')({
       });
     }
   },
-  validateSearch: z.object({
-    redirect: z.string().optional(),
-  }),
+
   component: () => (
     <Page className="mx-auto max-w-sm items-center justify-center space-y-16 p-0 md:max-w-md">
       <Brand />

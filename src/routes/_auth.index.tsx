@@ -16,9 +16,7 @@ export const Route = createFileRoute('/_auth/')({
 });
 
 function IndexComponent() {
-  const { group, hasGroup } = useAuth();
-
-  console.log({ group, hasGroup: hasGroup('customer') });
+  const { hasGroup } = useAuth();
 
   return (
     <Page className="mx-auto md:max-w-lg">

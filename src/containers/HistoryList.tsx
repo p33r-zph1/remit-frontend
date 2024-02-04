@@ -1,4 +1,4 @@
-import useOrderHistory from '../hooks/api/useOrderHistory';
+import useOrders from '../hooks/api/useOrders';
 
 import HistoryItem from '../components/Item/HistoryItem';
 import { selectRecipientValue, selectSenderValue } from '../schema/order';
@@ -8,7 +8,7 @@ import useAuth from '../hooks/useAuth';
 export default function HistoryList() {
   const { user } = useAuth();
 
-  const { data: orderHistory } = useOrderHistory({
+  const { data: orderHistory } = useOrders({
     pageNumber: 1,
     pageSize: 10,
   });

@@ -12,13 +12,13 @@ export type SingleOrder = {
 
 export const orderQueryOptions = ({ orderId }: SingleOrder) =>
   queryOptions({
-    queryKey: ['single-order', orderId],
+    queryKey: ['order', orderId],
     queryFn: () => genericFetch(`${BASE_URL}/${orderId}`, orderApiSchema),
     select: response => response.data,
     refetchInterval: 20_000,
   });
 
-export default function useSingleOrder(
+export default function useOrder(
   props: Parameters<typeof orderQueryOptions>[0]
 ) {
   return useSuspenseQuery(orderQueryOptions(props));

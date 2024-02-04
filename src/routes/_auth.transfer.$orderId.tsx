@@ -7,10 +7,9 @@ import TransferDetails from '../containers/TransferDetails';
 import Page from '../components/Page';
 import QueryFallback from '../components/QueryFallback';
 import LoadingRing from '../components/Spinner/LoadingRing';
-import { orderQueryOptions } from '../hooks/api/useSingleOrder';
+import { orderQueryOptions } from '../hooks/api/useOrder';
 
 export const Route = createFileRoute('/_auth/transfer/$orderId')({
-  // loaderDeps: deps => deps.search,
   loader: opts =>
     opts.context.queryClient.ensureQueryData(
       orderQueryOptions({ orderId: opts.params.orderId })

@@ -1,22 +1,20 @@
-import useSingleOrder from '../hooks/api/useSingleOrder';
+import { selectSenderValue } from '../schema/order';
+import { Route } from '../routes/_auth.transfer.$orderId';
+import useAuth from '../hooks/useAuth';
+import useOrder from '../hooks/api/useOrder';
 
 import TransferMap from '../components/Location/MapsAPI';
 import HeaderTitle from '../components/HeaderTitle';
 import TransferTimeline from '../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 import CalendarPopover from '../components/Popover/CalendarPopover';
-import { selectSenderValue } from '../schema/order';
-import { Route } from '../routes/_auth.transfer.$orderId';
-import { useAuth } from '../utils/auth';
 
 export default function TransferDetails() {
   const { user } = useAuth();
 
   const { orderId } = Route.useParams();
 
-  const { data: order } = useSingleOrder({ orderId });
-
-  // console.log(order);
+  const { data: order } = useOrder({ orderId });
 
   return (
     <>
