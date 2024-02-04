@@ -1,38 +1,23 @@
-// import useAuth from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import OrderItem from '../components/Item/OrderItem';
+import useOrders from '../hooks/api/useOrders';
+import EmptyHistory from '../components/Empty/EmptyHistory';
 
 export default function OrderList() {
-  //   const { user } = useAuth();
+  const { user } = useAuth();
 
-  //   const { data: orderList } = useOrderList({
-  //     pageNumber: 1,
-  //     pageSize: 10,
-  //   });
+  const { data: orderList } = useOrders({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
-  //   if (orderList.orders.length === 0) return <EmptyHistory />;
+  if (orderList.orders.length === 0) return <EmptyHistory isCustomer={false} />;
 
-  //   return orderList.orders.map(order => (
-  //     <HistoryItem
-  //       key={order.orderId}
-  //       orderId={order.orderId}
-  //       recipient={order.recipientId}
-  //       status={order.orderStatus}
-  //       sentAmount={selectSenderValue(order)}
-  //       conversionAmount={selectRecipientValue(order)}
-  //       isRecipient={user === order.senderId}
-  //     />
-  //   ));
-
-  return (
-    <>
-      <OrderItem
-        recipient="1243455"
-        status="IN_PROGRESS"
-        sentAmount="12,497,549.47 SGD"
-        conversionAmount="550,219.65 UA"
-        orderId="1234555"
-        isRecipient
-      />
-    </>
-  );
+  return orderList.orders.map(order => (
+    <OrderItem
+      {...order}
+      key={order.orderId}
+      isRecipient={user === order.senderId}
+    />
+  ));
 }

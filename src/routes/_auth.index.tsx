@@ -10,6 +10,7 @@ import Page from '../components/Page';
 import SendForm from '../containers/SendForm';
 import QueryFallback from '../components/QueryFallback';
 import SendMoneySkeleton from '../components/Skeleton/SendMoneySkeleton';
+import LoadingRing from '../components/Spinner/LoadingRing';
 
 export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,
@@ -23,7 +24,15 @@ function IndexComponent() {
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
-            <Suspense fallback={<SendMoneySkeleton />}>
+            <Suspense
+              fallback={
+                hasGroup('customer') ? (
+                  <SendMoneySkeleton />
+                ) : (
+                  <LoadingRing className="flex-1" />
+                )
+              }
+            >
               {hasGroup('customer') && <SendForm />}
               {hasGroup('agent') && <AgentOrders />}
             </Suspense>

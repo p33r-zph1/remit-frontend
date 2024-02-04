@@ -26,6 +26,6 @@ export default function useSendOrder() {
         method: 'post',
         body: JSON.stringify(orderBodySchema.parse(data)),
       }),
-    onSuccess: () => queryClient.invalidateQueries(),
+    onSuccess: () => queryClient.removeQueries(),
   });
 }

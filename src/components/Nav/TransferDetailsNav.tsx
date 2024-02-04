@@ -80,6 +80,7 @@ export default function TransferDetailsNav({
           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
             {isRecipient ? getAmount(recipient) : getAmount(sender)}
           </div>
+
           <StatusIcon status={orderStatus} isRecipient={isRecipient} />
         </div>
 
