@@ -4,8 +4,8 @@ import {
   UseControllerProps,
   useController,
 } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 
-import { cx } from '../utils';
 import { Agent } from '../schema/agent';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
@@ -50,7 +50,7 @@ export default function SendDetailsForm<T extends FieldValues>({
             />
           </div>
           <select
-            className={cx(
+            className={twMerge(
               error && 'text-error',
               'select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none disabled:border-slate-400'
             )}

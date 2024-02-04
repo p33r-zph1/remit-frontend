@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 import { orderSchema } from './order';
 
-const orderHistorySchema = z.object({
+const orderListSchema = z.object({
   orders: z.array(orderSchema),
   pageSize: z.number(),
   pageNumber: z.number(),
@@ -13,8 +13,8 @@ const orderHistorySchema = z.object({
   hasPreviousPage: z.boolean(),
 });
 
-const orderHistoryApiSchema = makeApiSchema(orderHistorySchema);
+const orderListApiSchema = makeApiSchema(orderListSchema);
 
-export type OrderHistory = z.infer<typeof orderHistorySchema>;
+export type OrderList = z.infer<typeof orderListSchema>;
 
-export default orderHistoryApiSchema;
+export default orderListApiSchema;

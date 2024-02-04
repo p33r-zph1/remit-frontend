@@ -1,40 +1,13 @@
-import { useCallback, useState } from 'react';
-import { useNavigate, useSearch } from '@tanstack/react-router';
-import { signIn, type SignInInput } from 'aws-amplify/auth';
+import { useContext } from 'react';
 
-import { loginRoute } from '../config/router.config';
+import { AuthContext } from '../utils/auth';
 
 export default function useAuth() {
-  const { auth } = loginRoute.useRouteContext();
+  const auth = useContext(AuthContext);
 
-  const navigate = useNavigate();
-  const search = useSearch({ from: loginRoute.fullPath });
+  if (!auth) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
 
-  const [error, setError] = useState('');
-
-  const authenticate = useCallback(
-    async (input: SignInInput) => {
-      try {
-        const { isSignedIn, nextStep } = await signIn(input);
-
-        if (isSignedIn && nextStep.signInStep === 'DONE') {
-          auth.login();
-          navigate({ to: search.redirect });
-          return;
-        }
-
-        throw new Error('Unhandled auth step');
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        }
-      }
-    },
-    [auth, navigate, search]
-  );
-
-  return {
-    authenticate,
-    error,
-  };
+  return auth;
 }

@@ -28,7 +28,7 @@ export default function useSendMoney() {
       defaultSenderCurrency,
       supportedCurrencies,
     },
-  } = useExchangeCurrency({ refetchInterval: 20_000 });
+  } = useExchangeCurrency();
 
   const [senderCurrency, setSenderCurrency] = useState(defaultSenderCurrency);
   const [recipientCurrency, setRecipientCurrency] = useState(
@@ -39,17 +39,18 @@ export default function useSendMoney() {
     data: { rate },
     isSuccess: pairUpdated,
   } = usePriceOracle({
-    from: senderCurrency?.currency,
-    to: recipientCurrency?.currency,
+    from: senderCurrency.currency,
+    to: recipientCurrency.currency,
   });
 
-  const { data: agents } = useAgents(senderCurrency.countryIsoCode, {
-    refetchInterval: 15_000,
-  });
+  const { data: agents } = useAgents(senderCurrency.countryIsoCode);
 
   const formProps = useForm<SendMoney>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      recipientId: '',
+      recipientAmount: '',
+      sendAmount: '',
       agentId: 'default',
     },
   });

@@ -1,27 +1,30 @@
-import { transferRoute } from '../config/router.config';
-import useSingleOrder from '../hooks/api/useSingleOrder';
+import { useMemo } from 'react';
+
+import { Route } from '../routes/_auth.transfer.$orderId';
+import useAuth from '../hooks/useAuth';
+import useOrder from '../hooks/api/useOrder';
 
 import TransferMap from '../components/Location/MapsAPI';
 import HeaderTitle from '../components/HeaderTitle';
 import TransferTimeline from '../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 import CalendarPopover from '../components/Popover/CalendarPopover';
-import { selectSenderValue } from '../schema/order';
 
 export default function TransferDetails() {
-  const { orderId } = transferRoute.useParams();
+  const { user } = useAuth();
 
-  const { data: order } = useSingleOrder({ orderId });
+  const { orderId } = Route.useParams();
 
-  // console.log(order);
+  const { data: order } = useOrder({ orderId });
+
+  const isRecipient = useMemo(
+    () => user === order.recipientId,
+    [order.recipientId, user]
+  );
 
   return (
     <>
-      <TransferDetailsNav
-        status={order.orderStatus}
-        amount={selectSenderValue(order)}
-        recipient={order.recipientId}
-      />
+      <TransferDetailsNav {...order} isRecipient={isRecipient} />
 
       <div className="divider -mb-2 md:-mb-6" />
 

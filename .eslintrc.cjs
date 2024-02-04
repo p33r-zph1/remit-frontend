@@ -22,6 +22,7 @@ module.exports = {
     'tailwind.config.js',
     'postcss.config.js',
     'vite.config.ts',
+    'routeTree.gen.ts',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

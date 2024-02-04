@@ -9,7 +9,7 @@ type Item = Order & {
   isRecipient: boolean;
 };
 
-export default function HistoryItem({
+export default function OrderItem({
   orderId,
   recipientId,
   orderStatus,

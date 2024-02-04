@@ -1,7 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
 import { genericFetch } from '../../schema/api/fetch';
-import { Options, defaultOptions } from '../../schema/api';
 import orderApiSchema from '../../schema/order';
 
 const BASE_URL =
@@ -11,14 +10,16 @@ export type SingleOrder = {
   orderId: string;
 };
 
-export default function useSingleOrder(
-  { orderId }: SingleOrder,
-  { refetchInterval }: Options = defaultOptions
-) {
-  return useSuspenseQuery({
-    queryKey: ['single-order', orderId],
+export const orderQueryOptions = ({ orderId }: SingleOrder) =>
+  queryOptions({
+    queryKey: ['order', orderId],
     queryFn: () => genericFetch(`${BASE_URL}/${orderId}`, orderApiSchema),
     select: response => response.data,
-    refetchInterval,
+    refetchInterval: 20_000,
   });
+
+export default function useOrder(
+  props: Parameters<typeof orderQueryOptions>[0]
+) {
+  return useSuspenseQuery(orderQueryOptions(props));
 }

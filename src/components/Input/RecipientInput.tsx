@@ -3,13 +3,14 @@ import {
   UseControllerProps,
   useController,
 } from 'react-hook-form';
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
 
 export default function RecipientInput<T extends FieldValues>(
   props: UseControllerProps<T>
 ) {
   const {
-    field: { ref, onChange, ...otherFields },
+    // field: { ref, onChange, ...otherFields },
+    field,
     formState: { isSubmitting },
     fieldState: { error },
   } = useController(props);
@@ -26,15 +27,15 @@ export default function RecipientInput<T extends FieldValues>(
         )}
       </div>
 
-      <NumericFormat
+      <input
         inputMode="numeric"
         autoComplete="off"
         placeholder="Enter recipient number"
         className="input input-ghost rounded-lg border-0 p-0 text-2xl font-bold placeholder:text-lg placeholder:opacity-50 focus:outline-none disabled:bg-white"
         disabled={isSubmitting}
-        {...otherFields}
-        getInputRef={ref}
-        onValueChange={values => onChange(values.value)}
+        {...field}
+        // getInputRef={ref}
+        // onValueChange={values => onChange(values.value)}
       />
     </label>
   );

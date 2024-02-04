@@ -3,32 +3,20 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { numericFormatter } from 'react-number-format';
 
 import StatusIcon from '../Icon/StatusIcon';
-import type { OrderStatus } from '../../schema/order';
-
-type Props = {
-  status: OrderStatus;
-  recipient: string;
-  amount: string;
-};
+import type { Order, OrderStatus, TransferInfo } from '../../schema/order';
 
 function getTitleByStatus(status: OrderStatus) {
   switch (status) {
-    // case 'SENT':
-    //   return (
-    //     <div className="text-base  text-gray-400 md:text-lg">
-    //       You are sending
-    //     </div>
-    //   );
     case 'IN_PROGRESS':
       return (
-        <div className="text-base  text-gray-400 md:text-lg">
-          Your transaction is in-progress
+        <div className="text-base text-gray-400 md:text-lg">
+          Transaction is in-progress
         </div>
       );
     case 'COMPLETED':
       return (
         <div className="text-base font-bold text-success md:text-lg">
-          You sent
+          Transaction complete
         </div>
       );
     case 'CANCELLED':
@@ -46,6 +34,12 @@ function getTitleByStatus(status: OrderStatus) {
   }
 }
 
+function getAmount({ amount, currency }: TransferInfo) {
+  return numericFormatter(`${amount} ${currency}`, {
+    thousandSeparator: ',',
+  });
+}
+
 function BackButton() {
   return (
     <Link to="/" className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16">
@@ -54,27 +48,44 @@ function BackButton() {
   );
 }
 
+type Props = Order & {
+  isRecipient: boolean;
+};
+
 export default function TransferDetailsNav({
-  status,
-  recipient,
-  amount,
+  orderStatus,
+  isRecipient,
+  recipientId,
+  senderId,
+  transferDetails,
 }: Props) {
+  const { sender, recipient } = transferDetails;
+
   return (
     <>
       <BackButton />
 
       <div className="flex flex-col space-y-4 py-1">
-        {getTitleByStatus(status)}
+        {isRecipient ? (
+          <div className="text-base font-bold text-gray-400 md:text-lg">
+            Sender {senderId} sent
+          </div>
+        ) : (
+          getTitleByStatus(orderStatus)
+        )}
 
         <div className="flex flex-row items-center justify-between py-1">
           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
-            {numericFormatter(amount, { thousandSeparator: ',' })}
+            {isRecipient ? getAmount(recipient) : getAmount(sender)}
           </div>
-          <StatusIcon status={status} />
+
+          <StatusIcon status={orderStatus} isRecipient={isRecipient} />
         </div>
 
         <div className="text-base text-sleep-200 md:text-lg">
-          Recipient: {recipient}
+          {isRecipient
+            ? 'Is the exact amount to receive'
+            : `Recipient ${recipientId}`}
         </div>
       </div>
     </>

@@ -93,16 +93,6 @@ export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
 
-export function selectSenderValue(order: Order) {
-  const { amount, currency } = order.transferDetails.sender;
-
-  return `${amount} ${currency}`;
-}
-
-export function selectRecipientValue(order: Order) {
-  const { amount, currency } = order.transferDetails.recipient;
-
-  return `${amount} ${currency}`;
-}
+export type TransferInfo = z.infer<typeof transferInfoSchema>;
 
 export default orderApiSchema;

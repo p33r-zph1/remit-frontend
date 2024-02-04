@@ -17,8 +17,7 @@ import {
   startOfWeek,
 } from 'date-fns';
 import { Dispatch, SetStateAction, useState } from 'react';
-
-import { cx } from '../../utils';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   day: Date;
@@ -147,7 +146,7 @@ export default function DateCalendar({ day, onChange }: Props) {
           return (
             <div
               key={day.toString()}
-              className={cx(
+              className={twMerge(
                 dayIdx === 0 && colStartClasses[getDay(day)],
                 'py-1.5'
               )}
@@ -159,7 +158,7 @@ export default function DateCalendar({ day, onChange }: Props) {
                   setSelectedDay(day);
                   onChange(day);
                 }}
-                className={cx(
+                className={twMerge(
                   dayStatusBaseClasses,
                   dayStatusClasses[
                     getDayStatus(day, selectedDay, firstDayCurrentMonth)

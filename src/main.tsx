@@ -8,22 +8,31 @@ import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { cognitoAuth } from './config/auth.config';
-import { auth, routeTree } from './config/router.config';
-import { queryClient } from './config/query.config';
+import { routeTree } from './routeTree.gen';
 
-Amplify.configure({
-  Auth: cognitoAuth,
-});
+import useAuth from './hooks/useAuth';
+import { AuthProvider } from './utils/auth';
+
+import LoadingRing from './components/Spinner/LoadingRing';
+import { authConfig, queryClient } from './utils/config';
+
+Amplify.configure({ Auth: authConfig });
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
 
 const router = createRouter({
   routeTree,
+  defaultPendingComponent: () => <LoadingRing className="flex-1" />,
+
+  // defaultErrorComponent: ({ error }) => {
+  //   return <QueryFallback error={error} resetErrorBoundary={() => {}} />;
+  // },
   context: {
     queryClient,
-    auth,
+    auth: undefined!, // Injected in AuthProvider
   },
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
 });
 
 declare module '@tanstack/react-router' {
@@ -32,10 +41,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+export function App() {
+  const auth = useAuth();
+
+  return <RouterProvider router={router} context={{ auth }} />;
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
 );
