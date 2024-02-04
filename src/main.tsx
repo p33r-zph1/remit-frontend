@@ -23,6 +23,10 @@ cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
 const router = createRouter({
   routeTree,
   defaultPendingComponent: () => <LoadingRing className="flex-1" />,
+
+  // defaultErrorComponent: ({ error }) => {
+  //   return <QueryFallback error={error} resetErrorBoundary={() => {}} />;
+  // },
   context: {
     queryClient,
     auth: undefined!, // Injected in AuthProvider

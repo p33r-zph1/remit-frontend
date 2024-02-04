@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,10 +18,14 @@ export const Route = createFileRoute('/_auth/history')({
         pageSize: 10,
       })
     ),
+  pendingMs: 0,
+  pendingComponent: () => (
+    <HistoryComponent>
+      <HistorySkeleton />
+    </HistoryComponent>
+  ),
   component: () => (
-    <Page className="mx-auto max-w-3xl">
-      <HeaderTitle className="md:text-center">Transaction History</HeaderTitle>
-
+    <HistoryComponent>
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
@@ -31,6 +35,16 @@ export const Route = createFileRoute('/_auth/history')({
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-    </Page>
+    </HistoryComponent>
   ),
 });
+
+function HistoryComponent({ children }: { children: ReactNode }) {
+  return (
+    <Page className="mx-auto max-w-3xl">
+      <HeaderTitle className="md:text-center">Transaction History</HeaderTitle>
+
+      {children}
+    </Page>
+  );
+}
