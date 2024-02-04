@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 
-const agentSchema = z.object({
+export const agentSchema = z.object({
   isActive: z.boolean(),
   countryIsoCode: z.string(),
   contactDetails: z.object({
@@ -11,7 +11,7 @@ const agentSchema = z.object({
   agentId: z.string(),
 });
 
-const agentApiSchema = makeApiSchema(z.array(agentSchema));
+const agentApiSchema = makeApiSchema(agentSchema);
 
 export type Agent = z.infer<typeof agentSchema>;
 

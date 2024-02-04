@@ -1,13 +1,18 @@
-import { useState } from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 import OrderList from './OrderList';
 import HeaderTitle from '../components/HeaderTitle';
 import EmptyOrder from '../components/Empty/EmptyOrder';
+import useAgent from '../hooks/api/useAgent';
+import useAuth from '../hooks/useAuth';
 
-function CommisionCard() {
-  const [checked, setCheked] = useState(false);
-
+function CommisionCard({
+  commision,
+  isActive,
+}: {
+  commision: string;
+  isActive: boolean;
+}) {
   return (
     <div className="flex flex-col items-stretch justify-center space-y-4 rounded-lg bg-card-gradient px-4 py-8 text-primary-content shadow-md duration-200 hover:bg-primary md:p-8">
       <div className="flex items-center justify-between">
@@ -21,15 +26,15 @@ function CommisionCard() {
           <input
             type="checkbox"
             className="toggle toggle-primary toggle-md"
-            checked={checked}
-            onChange={() => setCheked(prev => !prev)}
+            checked={isActive}
+            onChange={() => {}}
           />
         </label>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="group flex items-end space-x-1">
-          <h2 className="text-balance text-3xl font-semibold">0.8%</h2>
+          <h2 className="text-balance text-3xl font-semibold">{commision}%</h2>
           <span className="text-sm">on all orders</span>
         </div>
 
@@ -42,9 +47,13 @@ function CommisionCard() {
 }
 
 export default function AgentOrders() {
+  const { user } = useAuth();
+
+  const { data: agent } = useAgent(user);
+
   return (
     <div className="mt-8 flex flex-col space-y-10 sm:mt-16">
-      <CommisionCard />
+      <CommisionCard commision={agent.commission} isActive={agent.isActive} />
 
       <div>
         <HeaderTitle className="text-xl md:text-2xl">

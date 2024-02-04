@@ -61,8 +61,6 @@ export default function TransferDetailsNav({
 }: Props) {
   const { sender, recipient } = transferDetails;
 
-  console.log(getAmount(recipient));
-
   return (
     <>
       <BackButton />
