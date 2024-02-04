@@ -6,14 +6,15 @@ import EmptyHistory from '../components/Empty/EmptyHistory';
 import useAuth from '../hooks/useAuth';
 
 export default function HistoryList() {
-  const { user } = useAuth();
+  const { user, hasGroup } = useAuth();
 
   const { data: orderHistory } = useOrders({
     pageNumber: 1,
     pageSize: 10,
   });
 
-  if (orderHistory.orders.length === 0) return <EmptyHistory />;
+  if (orderHistory.orders.length === 0)
+    return <EmptyHistory isCustomer={hasGroup('customer')} />;
 
   return orderHistory.orders.map(order => (
     <HistoryItem
