@@ -9,7 +9,7 @@ function CommisionCard() {
   const [checked, setCheked] = useState(false);
 
   return (
-    <div className="flex flex-col items-stretch justify-center space-y-4 rounded-lg bg-card-gradient px-4 py-8 text-primary-content md:p-8">
+    <div className="flex flex-col items-stretch justify-center space-y-4 rounded-lg bg-card-gradient px-4 py-8 text-primary-content shadow-md duration-200 hover:bg-primary md:p-8">
       <div className="flex items-center justify-between">
         <h1 className=" text-2xl font-bold tracking-wide md:text-3xl">
           My Commision

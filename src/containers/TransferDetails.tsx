@@ -1,4 +1,5 @@
-import { selectSenderValue } from '../schema/order';
+import { useMemo } from 'react';
+
 import { Route } from '../routes/_auth.transfer.$orderId';
 import useAuth from '../hooks/useAuth';
 import useOrder from '../hooks/api/useOrder';
@@ -16,14 +17,14 @@ export default function TransferDetails() {
 
   const { data: order } = useOrder({ orderId });
 
+  const isRecipient = useMemo(
+    () => user === order.recipientId,
+    [order.recipientId, user]
+  );
+
   return (
     <>
-      <TransferDetailsNav
-        status={order.orderStatus}
-        amount={selectSenderValue(order)}
-        recipient={order.recipientId}
-        isRecipient={user === order.recipientId}
-      />
+      <TransferDetailsNav {...order} isRecipient={isRecipient} />
 
       <div className="divider -mb-2 md:-mb-6" />
 

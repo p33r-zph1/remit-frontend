@@ -93,6 +93,8 @@ export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
 
+export type TransferInfo = z.infer<typeof transferInfoSchema>;
+
 export function selectSenderValue(order: Order) {
   const { amount, currency } = order.transferDetails.sender;
 
