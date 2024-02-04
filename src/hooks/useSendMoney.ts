@@ -48,6 +48,9 @@ export default function useSendMoney() {
   const formProps = useForm<SendMoney>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      recipientId: '',
+      recipientAmount: '',
+      sendAmount: '',
       agentId: 'default',
     },
   });

@@ -67,7 +67,7 @@ export default function SendForm() {
         params: { orderId: data.orderId },
       });
     } catch (e: unknown) {
-      console.log(e);
+      console.error(e);
     }
   };
 
