@@ -10,10 +10,10 @@ import type {
   Libraries,
 } from '@react-google-maps/api';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 import { coerce } from 'zod';
 
 import PlacesAutocomplete from '../Autocomplete/PlacesAutocomplete';
-import { cx } from '../../utils';
 
 type LatLng = GoogleMapProps['center'];
 type MapOptions = GoogleMapProps['options'];
@@ -86,7 +86,7 @@ export default function TransferMap() {
         </div>
 
         <div
-          className={cx('tooltip', !meetUpLocation && 'tooltip-error')}
+          className={twMerge('tooltip', !meetUpLocation && 'tooltip-error')}
           data-tip={
             meetUpLocation ? 'Select a radius' : 'Select a delivery area first'
           }
@@ -98,7 +98,7 @@ export default function TransferMap() {
             max={1000}
             value={radius}
             onChange={e => setRadius(coerce.number().parse(e.target.value))}
-            className={cx(
+            className={twMerge(
               `range range-sm md:range-md disabled:hover:cursor-not-allowed`,
               meetUpLocation && 'range-primary'
             )}

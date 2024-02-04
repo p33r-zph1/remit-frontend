@@ -3,8 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { ArrowUpCircleIcon } from '@heroicons/react/24/outline';
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { BellAlertIcon } from '@heroicons/react/24/outline';
-
-import { cx } from '../../utils';
+import { twMerge } from 'tailwind-merge';
 
 type LinkItem = {
   title: string;
@@ -16,7 +15,7 @@ type LinkItem = {
 function BtmLink({ title, isActive, icon: Icon }: LinkItem) {
   return (
     <>
-      <Icon className={cx('h-6 w-6', isActive ? 'text-primary' : '')} />
+      <Icon className={twMerge('h-6 w-6', isActive ? 'text-primary' : '')} />
       <span className="btm-nav-label">{title}</span>
     </>
   );

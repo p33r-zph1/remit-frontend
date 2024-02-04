@@ -5,8 +5,8 @@ import {
   ChevronDownIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
+import { twMerge } from 'tailwind-merge';
 
-import { cx } from '../../utils';
 import { Currency } from '../../schema/currency';
 
 interface Props<T> {
@@ -65,7 +65,7 @@ export default function SelectCurrency<T extends Currency>({
               <Listbox.Option
                 key={idx}
                 className={({ active }) =>
-                  cx(
+                  twMerge(
                     active ? ' text-primary' : '',
                     'relative cursor-default select-none py-2 pl-10 pr-4'
                   )
@@ -75,7 +75,7 @@ export default function SelectCurrency<T extends Currency>({
                 {({ selected }) => (
                   <>
                     <span
-                      className={cx(
+                      className={twMerge(
                         selected ? 'font-bold' : 'font-semibold',
                         'block truncate'
                       )}

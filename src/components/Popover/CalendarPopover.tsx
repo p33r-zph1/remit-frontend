@@ -2,8 +2,8 @@ import { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { CalendarIcon } from '@heroicons/react/20/solid';
 import { addHours, format, startOfHour } from 'date-fns';
+import { twMerge } from 'tailwind-merge';
 
-import { cx } from '../../utils';
 import DateCalendar from '../Date/DateCalendar';
 import DateTime from '../Date/DateTime';
 
@@ -19,12 +19,15 @@ export default function CalendarPopover() {
       {({ open }) => (
         <>
           <Popover.Button
-            className={cx(
+            className={twMerge(
               'flex w-full flex-row space-x-2 rounded-md border border-slate-200 px-1 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary md:text-base'
             )}
           >
             <CalendarIcon
-              className={cx(open ? 'text-black' : 'text-black/70', 'h-5 w-5')}
+              className={twMerge(
+                open ? 'text-black' : 'text-black/70',
+                'h-5 w-5'
+              )}
               aria-hidden="true"
             />
 
