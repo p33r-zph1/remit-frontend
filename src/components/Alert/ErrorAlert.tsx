@@ -7,7 +7,7 @@ type Props = {
 
 export default function ErrorAlert({ message, title }: Props) {
   return (
-    <div role="alert" className="alert bg-white shadow-lg">
+    <div role="alert" className="alert bg-white shadow-md">
       <XCircleIcon className="h-5 w-5 text-error" />
       <div>
         <h3 className="font-bold text-error">{title ? title : 'Error'}</h3>

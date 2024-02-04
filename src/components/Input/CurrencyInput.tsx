@@ -4,6 +4,7 @@ import {
   UseControllerProps,
   useController,
 } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 
 import SelectCurrency from '../Select/SelectCurrency';
 import { Currency } from '../../schema/currency';
@@ -29,6 +30,7 @@ export default function CurrencyInput<T extends FieldValues>({
   const {
     field: { ref, onChange, ...otherFields },
     formState: { isSubmitting },
+    fieldState: { error },
   } = useController(controllerProps);
 
   return (
@@ -41,7 +43,12 @@ export default function CurrencyInput<T extends FieldValues>({
         thousandSeparator
         autoComplete="off"
         inputMode="decimal"
-        className="rounded-full border-primary pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200 disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100"
+        className={twMerge(
+          'rounded-full border pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200 disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100 disabled:text-gray-400',
+          error
+            ? 'border-error outline-error'
+            : 'border-primary outline-primary'
+        )}
         placeholder="0.00"
         readOnly={readOnly}
         disabled={isSubmitting}
