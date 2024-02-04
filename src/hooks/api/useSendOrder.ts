@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { genericFetch } from '../../schema/api/fetch';
 import orderApiSchema from '../../schema/order';
+import { queryClient } from '../../utils/config';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -25,5 +26,6 @@ export default function useSendOrder() {
         method: 'post',
         body: JSON.stringify(orderBodySchema.parse(data)),
       }),
+    onSuccess: () => queryClient.invalidateQueries(),
   });
 }

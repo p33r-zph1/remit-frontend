@@ -9,6 +9,7 @@ type Props = {
   status: OrderStatus;
   recipient: string;
   amount: string;
+  isRecipient: boolean;
 };
 
 function getTitleByStatus(status: OrderStatus) {
@@ -58,6 +59,7 @@ export default function TransferDetailsNav({
   status,
   recipient,
   amount,
+  isRecipient,
 }: Props) {
   return (
     <>
@@ -70,7 +72,7 @@ export default function TransferDetailsNav({
           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
             {numericFormatter(amount, { thousandSeparator: ',' })}
           </div>
-          <StatusIcon status={status} />
+          <StatusIcon status={status} isRecipient={isRecipient} />
         </div>
 
         <div className="text-base text-sleep-200 md:text-lg">

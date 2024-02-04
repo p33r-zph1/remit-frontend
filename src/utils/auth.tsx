@@ -23,8 +23,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = Boolean(user);
 
-  // console.log({ user, group });
-
   const authenticate = useCallback(async (input: SignInInput) => {
     try {
       const { isSignedIn, nextStep } = await signIn(input);

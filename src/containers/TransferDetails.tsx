@@ -7,8 +7,11 @@ import TransferDetailsNav from '../components/Nav/TransferDetailsNav';
 import CalendarPopover from '../components/Popover/CalendarPopover';
 import { selectSenderValue } from '../schema/order';
 import { Route } from '../routes/_auth.transfer.$orderId';
+import { useAuth } from '../utils/auth';
 
 export default function TransferDetails() {
+  const { user } = useAuth();
+
   const { orderId } = Route.useParams();
 
   const { data: order } = useSingleOrder({ orderId });
@@ -21,6 +24,7 @@ export default function TransferDetails() {
         status={order.orderStatus}
         amount={selectSenderValue(order)}
         recipient={order.recipientId}
+        isRecipient={user === order.recipientId}
       />
 
       <div className="divider -mb-2 md:-mb-6" />

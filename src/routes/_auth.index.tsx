@@ -3,12 +3,13 @@ import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import useAuth from '../hooks/useAuth';
+import AgentOrders from '../containers/AgentOrders';
+
 import Page from '../components/Page';
 import SendForm from '../containers/SendForm';
 import QueryFallback from '../components/QueryFallback';
 import SendMoneySkeleton from '../components/Skeleton/SendMoneySkeleton';
-import useAuth from '../hooks/useAuth';
-import AgentOrders from '../containers/AgentOrders';
 
 export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,

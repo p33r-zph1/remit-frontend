@@ -17,11 +17,11 @@ export default function StatusIcon({ status, isRecipient }: Props) {
     case 'IN_PROGRESS': {
       if (isRecipient)
         return (
-          <ArrowUpIcon className="h-12 w-12 rounded-full bg-accent p-3 text-white shadow-md" />
+          <ArrowDownIcon className="h-12 w-12 rounded-full bg-primary p-3 text-white shadow-md" />
         );
 
       return (
-        <ArrowDownIcon className="h-12 w-12 rounded-full bg-primary p-3 text-white shadow-md" />
+        <ArrowUpIcon className="h-12 w-12 rounded-full bg-accent p-3 text-white shadow-md" />
       );
     }
 

@@ -23,7 +23,7 @@ export default function HistoryList() {
       status={order.orderStatus}
       sentAmount={selectSenderValue(order)}
       conversionAmount={selectRecipientValue(order)}
-      isRecipient={user === order.senderId}
+      isRecipient={user === order.recipientId}
     />
   ));
 }
