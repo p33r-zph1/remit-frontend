@@ -67,10 +67,8 @@ type Props = {
 
 export default function TransferTimeline({ timeline }: Props) {
   return (
-    <>
-      <div className="mt-12 text-lg font-semibold md:mt-16 md:text-xl">
-        Transfer timeline
-      </div>
+    <div>
+      <div className="text-lg font-semibold md:text-xl">Transfer timeline</div>
 
       <ul className="timeline timeline-vertical timeline-compact">
         {timeline.map((item, index) => (
@@ -81,6 +79,6 @@ export default function TransferTimeline({ timeline }: Props) {
           />
         ))}
       </ul>
-    </>
+    </div>
   );
 }

@@ -9,7 +9,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth/route'
 import { Route as AuthHistoryImport } from './routes/_auth/history'
 import { Route as AuthAlertsImport } from './routes/_auth/alerts'
-import { Route as AuthTransferOrderIdRouteImport } from './routes/_auth/transfer/$orderId/route'
+import { Route as AuthOrderOrderIdRouteImport } from './routes/_auth/order/$orderId/route'
 
 // Create Virtual Routes
 
@@ -42,11 +42,11 @@ const AuthAlertsRoute = AuthAlertsImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
-const AuthTransferOrderIdRouteRoute = AuthTransferOrderIdRouteImport.update({
-  path: '/transfer/$orderId',
+const AuthOrderOrderIdRouteRoute = AuthOrderOrderIdRouteImport.update({
+  path: '/order/$orderId',
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() =>
-  import('./routes/_auth/transfer/$orderId/route.lazy').then((d) => d.Route),
+  import('./routes/_auth/order/$orderId/route.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -73,8 +73,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexLazyImport
       parentRoute: typeof AuthRouteImport
     }
-    '/_auth/transfer/$orderId': {
-      preLoaderRoute: typeof AuthTransferOrderIdRouteImport
+    '/_auth/order/$orderId': {
+      preLoaderRoute: typeof AuthOrderOrderIdRouteImport
       parentRoute: typeof AuthRouteImport
     }
   }
@@ -87,7 +87,7 @@ export const routeTree = rootRoute.addChildren([
     AuthAlertsRoute,
     AuthHistoryRoute,
     AuthIndexLazyRoute,
-    AuthTransferOrderIdRouteRoute,
+    AuthOrderOrderIdRouteRoute,
   ]),
   LoginRoute,
 ])

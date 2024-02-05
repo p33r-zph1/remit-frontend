@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import HeaderTitle from '../components/HeaderTitle';
-import SelectAgent from '../components/Select/SelectAgent';
-import useAcceptOrder from '../hooks/api/useAcceptOrder';
-import useAgents from '../hooks/api/useAgents';
+import HeaderTitle from '../../components/HeaderTitle';
+import SelectAgent from '../../components/Select/SelectAgent';
+import useAcceptOrder from '../../hooks/api/useAcceptOrder';
+import useAgents from '../../hooks/api/useAgents';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import useRejectOrder from '../hooks/api/useRejectOrder';
-import ErrorAlert from '../components/Alert/ErrorAlert';
+import useRejectOrder from '../../hooks/api/useRejectOrder';
+import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const formSchema = z.object({
   agentId: z
@@ -24,7 +24,7 @@ type Props = {
   countryIsoCode: string;
 };
 
-export default function AcceptOrderForm({ orderId, countryIsoCode }: Props) {
+export default function AcceptOrder({ orderId, countryIsoCode }: Props) {
   const {
     register,
     handleSubmit,
@@ -50,8 +50,9 @@ export default function AcceptOrderForm({ orderId, countryIsoCode }: Props) {
   const onSubmit: SubmitHandler<Inputs> = async ({ agentId }) => {
     try {
       const { data } = await acceptOrderAsync({
-        data: { recipientAgentId: agentId },
+        key: 'customer',
         orderId,
+        data: { recipientAgentId: agentId },
       });
 
       console.log({ data });

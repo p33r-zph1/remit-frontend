@@ -16,6 +16,7 @@ export const transferTimelineStatusSchema = z.enum([
   'SENDER_AGENT_REJECTED',
   'RECIPIENT_AGENT_ACCEPTED',
   'RECIPIENT_AGENT_REJECTED',
+  'ORDER_ACCEPTED',
   'COLLECTION_MEETUP_SET',
   'CASH_COLLECTED',
   'ESCROW_DEPOSITED',
@@ -101,6 +102,10 @@ export type Order = z.infer<typeof orderSchema>;
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
+
+export type TransferTimelineStatus = z.infer<
+  typeof transferTimelineStatusSchema
+>;
 
 export type TransferInfo = z.infer<typeof transferInfoSchema>;
 

@@ -5,14 +5,14 @@ import {
   useController,
 } from 'react-hook-form';
 
-import { Agent } from '../schema/agent';
-import SelectAgent from '../components/Select/SelectAgent';
+import { Agent } from '../../schema/agent';
+import SelectAgent from '../../components/Select/SelectAgent';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   list: Agent[];
 };
 
-export default function SendDetailsForm<T extends FieldValues>({
+export default function SendDetails<T extends FieldValues>({
   list,
   ...controllerProps
 }: Props<T>) {

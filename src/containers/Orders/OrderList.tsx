@@ -1,7 +1,7 @@
-import useAuth from '../hooks/useAuth';
-import OrderItem from '../components/Item/OrderItem';
-import useOrders from '../hooks/api/useOrders';
-import EmptyHistory from '../components/Empty/EmptyHistory';
+import useAuth from '../../hooks/useAuth';
+import OrderItem from '../../components/Item/OrderItem';
+import useOrders from '../../hooks/api/useOrders';
+import EmptyHistory from '../../components/Empty/EmptyHistory';
 
 export default function OrderList() {
   const { user } = useAuth();

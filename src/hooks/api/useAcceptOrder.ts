@@ -14,20 +14,31 @@ const acceptorderBodySchema = z.object({
 
 export type AcceptOrderBody = z.infer<typeof acceptorderBodySchema>;
 
-type MutationProps = {
-  orderId: string;
-  data: AcceptOrderBody;
-};
+type MutationProps =
+  | {
+      key: 'customer';
+      orderId: string;
+      data: AcceptOrderBody;
+    }
+  | {
+      key: 'agent';
+      orderId: string;
+    };
 
 export default function useAcceptOrder() {
   return useMutation({
     mutationKey: ['accept-order'],
-    mutationFn: ({ orderId, data }: MutationProps) =>
-      genericFetch(`${BASE_URL}/${orderId}/accept`, orderApiSchema, {
+    mutationFn: (props: MutationProps) => {
+      const { key, orderId } = props;
+
+      return genericFetch(`${BASE_URL}/${orderId}/accept`, orderApiSchema, {
         method: 'PATCH',
-        body: JSON.stringify(acceptorderBodySchema.parse(data)),
-      }),
+        body:
+          key === 'customer'
+            ? JSON.stringify(acceptorderBodySchema.parse(props.data))
+            : null,
+      });
+    },
     onSuccess: () => queryClient.invalidateQueries(),
-    throwOnError: true,
   });
 }

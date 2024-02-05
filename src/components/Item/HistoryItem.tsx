@@ -21,7 +21,7 @@ export default function HistoryItem({
 
   return (
     <Link
-      to="/transfer/$orderId"
+      to="/order/$orderId"
       params={{ orderId }}
       className="group mb-2 flex cursor-pointer flex-row items-center justify-between py-4 hover:bg-zinc-50"
     >
@@ -34,7 +34,7 @@ export default function HistoryItem({
             {recipientId}
           </div>
           <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
-            {transferTimelineStatus.replace('_', ' ').toLowerCase()}
+            {transferTimelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
       </div>

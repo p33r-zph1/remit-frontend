@@ -1,13 +1,13 @@
 import type { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from '@tanstack/react-router';
 
-import SendDetailsForm from './SendDetailsForm';
-import useSendMoney, { SendMoney } from '../hooks/useSendMoney';
-import useSendOrder from '../hooks/api/useSendOrder';
+import SendDetails from './SendDetails';
+import useSendMoney, { SendMoney } from '../../hooks/useSendMoney';
+import useSendOrder from '../../hooks/api/useSendOrder';
 
-import RecipientInput from '../components/Input/RecipientInput';
-import CurrencyInput from '../components/Input/CurrencyInput';
-import ErrorAlert from '../components/Alert/ErrorAlert';
+import RecipientInput from '../../components/Input/RecipientInput';
+import CurrencyInput from '../../components/Input/CurrencyInput';
+import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 // const orderData = {
 //   recipientId: '12340002',
@@ -63,7 +63,7 @@ export default function SendForm() {
       });
 
       navigate({
-        to: '/transfer/$orderId',
+        to: '/order/$orderId',
         params: { orderId: data.orderId },
       });
     } catch (e: unknown) {
@@ -93,7 +93,7 @@ export default function SendForm() {
           onValueChange={conversionHandler}
         />
 
-        <SendDetailsForm name="agentId" control={control} list={agents} />
+        <SendDetails name="agentId" control={control} list={agents} />
 
         <CurrencyInput
           label="Recipient will get"

@@ -67,7 +67,7 @@ export default function TransferDetailsNav({
   const { sender, recipient } = transferDetails;
 
   return (
-    <>
+    <div>
       <BackButton />
 
       <div className="flex flex-col space-y-4 py-1">
@@ -93,6 +93,6 @@ export default function TransferDetailsNav({
             : `Recipient ${recipientId}`}
         </div>
       </div>
-    </>
+    </div>
   );
 }
