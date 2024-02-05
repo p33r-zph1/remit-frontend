@@ -106,7 +106,7 @@ export default function SendForm() {
         />
       </div>
 
-      {error?.message && <ErrorAlert message={error.message} />}
+      {error && <ErrorAlert message={error.message} />}
 
       <button
         type="submit"

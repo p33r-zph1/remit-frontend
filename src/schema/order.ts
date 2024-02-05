@@ -27,12 +27,13 @@ export const transferTimelineStatusSchema = z.enum([
 export const feesSchema = z.object({
   platformFee: z.number(),
   senderAgentCommission: z.string(),
-  recipientAgentCommission: z.string().optional(),
+  recipientAgentCommission: z.string().nullish(),
 });
 
 export const transferInfoSchema = z.object({
   amount: z.number(),
   currency: z.string(),
+  countryIsoCode: z.string(),
 });
 
 export const transferDetailsSchema = z.object({

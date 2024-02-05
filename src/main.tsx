@@ -13,8 +13,9 @@ import { routeTree } from './routeTree.gen';
 import useAuth from './hooks/useAuth';
 import { AuthProvider } from './utils/auth';
 
-import LoadingRing from './components/Spinner/LoadingRing';
 import { authConfig, queryClient } from './utils/config';
+import LoadingRing from './components/Spinner/LoadingRing';
+import DefaultFallback from './components/Fallback/DefaultFallback';
 
 Amplify.configure({ Auth: authConfig });
 
@@ -23,10 +24,7 @@ cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
 const router = createRouter({
   routeTree,
   defaultPendingComponent: () => <LoadingRing className="flex-1" />,
-
-  // defaultErrorComponent: ({ error }) => {
-  //   return <QueryFallback error={error} resetErrorBoundary={() => {}} />;
-  // },
+  defaultErrorComponent: ({ error }) => <DefaultFallback error={error} />,
   context: {
     queryClient,
     auth: undefined!, // Injected in AuthProvider

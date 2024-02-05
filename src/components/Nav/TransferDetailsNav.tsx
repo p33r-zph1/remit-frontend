@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { numericFormatter } from 'react-number-format';
 
@@ -41,10 +41,15 @@ function getAmount({ amount, currency }: TransferInfo) {
 }
 
 function BackButton() {
+  const router = useRouter();
+
   return (
-    <Link to="/" className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16">
+    <button
+      onClick={() => router.history.back()}
+      className="btn btn-circle btn-ghost -ml-3 mb-2 mt-6 sm:mt-16"
+    >
       <ArrowLeftIcon className="h-4 w-4 text-black md:h-6 md:w-6" />
-    </Link>
+    </button>
   );
 }
 

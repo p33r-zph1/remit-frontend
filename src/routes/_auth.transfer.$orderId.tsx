@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import OrderDetails from '../containers/OrderDetails';
 import Page from '../components/Page';
-import QueryFallback from '../components/QueryFallback';
+import QueryFallback from '../components/Fallback/QueryFallback';
 import LoadingRing from '../components/Spinner/LoadingRing';
 import { orderQueryOptions } from '../hooks/api/useOrder';
 
@@ -14,6 +14,7 @@ export const Route = createFileRoute('/_auth/transfer/$orderId')({
     opts.context.queryClient.ensureQueryData(
       orderQueryOptions({ orderId: opts.params.orderId })
     ),
+  wrapInSuspense: true,
   component: () => (
     <Page className="mx-auto max-w-3xl">
       <QueryErrorResetBoundary>

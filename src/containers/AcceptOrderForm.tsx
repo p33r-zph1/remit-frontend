@@ -6,6 +6,7 @@ import useAgents from '../hooks/api/useAgents';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import useRejectOrder from '../hooks/api/useRejectOrder';
+import ErrorAlert from '../components/Alert/ErrorAlert';
 
 const formSchema = z.object({
   agentId: z
@@ -18,7 +19,12 @@ const formSchema = z.object({
 
 type Inputs = z.infer<typeof formSchema>;
 
-export default function AcceptOrderForm({ orderId }: { orderId: string }) {
+type Props = {
+  orderId: string;
+  countryIsoCode: string;
+};
+
+export default function AcceptOrderForm({ orderId, countryIsoCode }: Props) {
   const {
     register,
     handleSubmit,
@@ -30,11 +36,16 @@ export default function AcceptOrderForm({ orderId }: { orderId: string }) {
     },
   });
 
-  const { data: agents } = useAgents('in');
+  const { data: agents } = useAgents(countryIsoCode);
 
-  const { mutateAsync: acceptOrderAsync } = useAcceptOrder();
-  const { mutateAsync: rejectOrderAsync, isPending: isRejecting } =
-    useRejectOrder();
+  const { mutateAsync: acceptOrderAsync, error: acceptOrderError } =
+    useAcceptOrder();
+
+  const {
+    mutateAsync: rejectOrderAsync,
+    isPending: isRejecting,
+    error: rejectOrderError,
+  } = useRejectOrder();
 
   const onSubmit: SubmitHandler<Inputs> = async ({ agentId }) => {
     try {
@@ -60,6 +71,10 @@ export default function AcceptOrderForm({ orderId }: { orderId: string }) {
           disabled={isSubmitting || isRejecting}
           {...register('agentId')}
         />
+
+        {acceptOrderError && <ErrorAlert message={acceptOrderError.message} />}
+
+        {rejectOrderError && <ErrorAlert message={rejectOrderError.message} />}
 
         <button
           type="submit"

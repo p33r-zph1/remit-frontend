@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { genericFetch } from '../../schema/api/fetch';
-// import orderApiSchema from '../../schema/order';
+import orderApiSchema from '../../schema/order';
 import { queryClient } from '../../utils/config';
 
 const BASE_URL =
@@ -23,10 +23,11 @@ export default function useAcceptOrder() {
   return useMutation({
     mutationKey: ['accept-order'],
     mutationFn: ({ orderId, data }: MutationProps) =>
-      genericFetch(`${BASE_URL}/${orderId}/accept`, z.any(), {
-        method: 'patch',
+      genericFetch(`${BASE_URL}/${orderId}/accept`, orderApiSchema, {
+        method: 'PATCH',
         body: JSON.stringify(acceptorderBodySchema.parse(data)),
       }),
-    onSuccess: () => queryClient.removeQueries(),
+    onSuccess: () => queryClient.invalidateQueries(),
+    throwOnError: true,
   });
 }

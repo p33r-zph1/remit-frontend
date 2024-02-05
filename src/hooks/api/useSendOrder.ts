@@ -23,7 +23,7 @@ export default function useSendOrder() {
     mutationKey: ['send-order'],
     mutationFn: (data: OrderBody) =>
       genericFetch(BASE_URL, orderApiSchema, {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify(orderBodySchema.parse(data)),
       }),
     onSuccess: () => queryClient.removeQueries(),

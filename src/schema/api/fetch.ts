@@ -26,9 +26,13 @@ export async function genericFetch<T extends z.ZodSchema>(
   const json = await response.json();
   const result = schema.safeParse(json);
 
+  console.log(url, 'hi');
+
   if (!result.success) {
+    console.log(url, 'ello');
     throw new Error(getMessage(json, result.error, response.ok));
   }
+  console.log(url, 'wow');
 
   return result.data;
 }

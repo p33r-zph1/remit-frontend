@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import HistorySkeleton from '../components/Skeleton/HistorySkeleton';
 import HistoryList from '../containers/HistoryList';
-import QueryFallback from '../components/QueryFallback';
+import QueryFallback from '../components/Fallback/QueryFallback';
 import HeaderTitle from '../components/HeaderTitle';
 import Page from '../components/Page';
 import { ordersQueryOptions } from '../hooks/api/useOrders';

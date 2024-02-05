@@ -15,6 +15,7 @@ export default function HistoryItem({
   orderStatus,
   transferDetails,
   isRecipient,
+  transferTimelineStatus,
 }: Item) {
   const { sender, recipient } = transferDetails;
 
@@ -33,7 +34,7 @@ export default function HistoryItem({
             {recipientId}
           </div>
           <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
-            {orderStatus.replace('_', ' ').toLowerCase()}
+            {transferTimelineStatus.replace('_', ' ').toLowerCase()}
           </div>
         </div>
       </div>
