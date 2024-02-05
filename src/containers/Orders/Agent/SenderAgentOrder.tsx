@@ -21,8 +21,8 @@ export default function SenderAgentOrder({
         />
       );
 
-    case 'ORDER_ACCEPTED':
-      return <CollectCash />;
+    case 'COLLECTION_MEETUP_SET':
+      return <CollectCash orderId={orderId} />;
 
     case 'CASH_COLLECTED':
       return <SendERC20 />;
