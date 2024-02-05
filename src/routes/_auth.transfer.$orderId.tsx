@@ -14,7 +14,6 @@ export const Route = createFileRoute('/_auth/transfer/$orderId')({
     opts.context.queryClient.ensureQueryData(
       orderQueryOptions({ orderId: opts.params.orderId })
     ),
-  wrapInSuspense: true,
   component: () => (
     <Page className="mx-auto max-w-3xl">
       <QueryErrorResetBoundary>
