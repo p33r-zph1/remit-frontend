@@ -39,7 +39,7 @@ export default function CalendarPopover<T extends FieldValues>({
         <>
           <Popover.Button
             className={twMerge(
-              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 px-1 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary md:text-base'
+              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary md:text-base'
             )}
             name={name}
             onBlur={onBlur}

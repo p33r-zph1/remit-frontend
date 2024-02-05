@@ -11,3 +11,5 @@ interface ImportMeta {
 }
 
 type ExtractSingleElementType<T> = T extends [infer U] ? U : never;
+
+type LatLng = google.maps.LatLng | google.maps.LatLngLiteral;

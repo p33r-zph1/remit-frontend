@@ -6,7 +6,7 @@ import { Combobox } from '@headlessui/react';
 import { useCallback } from 'react';
 
 type Props = {
-  onSelect: (position: google.maps.LatLngLiteral) => void;
+  onSelect: (position: LatLng) => void;
 };
 
 export default function PlacesAutocomplete({ onSelect }: Props) {

@@ -65,8 +65,6 @@ export default function DateTime({
 }: Props) {
   const today = value || startOfHour(new Date());
 
-  console.log({ today });
-
   const time = useMemo(() => format(today, 'hh'), [today]);
   const amPm = useMemo(() => format(today, 'aa'), [today]);
 
