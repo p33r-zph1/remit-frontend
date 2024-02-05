@@ -5,7 +5,7 @@ import {
   QrCodeIcon,
 } from '@heroicons/react/20/solid';
 
-import { Route } from '../routes/_auth.transfer.$orderId';
+import { Route } from '../routes/_auth/transfer/$orderId/route';
 import useAuth from '../hooks/useAuth';
 import useOrder from '../hooks/api/useOrder';
 
