@@ -26,7 +26,7 @@ function Container({
       <button
         onClick={onUpClick}
         disabled={disableUp}
-        className="text-gray-400 hover:text-gray-500"
+        className="text-gray-400 hover:text-gray-500 disabled:hover:cursor-not-allowed"
       >
         <ChevronUpIcon className="h-5 w-5" />
       </button>
@@ -40,7 +40,7 @@ function Container({
       <button
         onClick={onDownClick}
         disabled={disableDown}
-        className="text-gray-400 hover:text-gray-500"
+        className="text-gray-400 hover:text-gray-500 disabled:hover:cursor-not-allowed"
       >
         <ChevronDownIcon className="h-5 w-5" />
       </button>
@@ -50,7 +50,7 @@ function Container({
 
 type Props = {
   title?: string;
-  today: Date;
+  value: Date | undefined;
   onChange: Dispatch<SetStateAction<Date>>;
   durationInHr: number;
   setDurationInHr: Dispatch<SetStateAction<number>>;
@@ -58,11 +58,15 @@ type Props = {
 
 export default function DateTime({
   title,
-  today,
+  value,
   onChange,
   durationInHr,
   setDurationInHr,
 }: Props) {
+  const today = value || startOfHour(new Date());
+
+  console.log({ today });
+
   const time = useMemo(() => format(today, 'hh'), [today]);
   const amPm = useMemo(() => format(today, 'aa'), [today]);
 

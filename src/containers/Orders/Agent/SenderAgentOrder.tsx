@@ -3,6 +3,7 @@ import { Order } from '../../../schema/order';
 import TakeOrder from '../TakeOrder';
 import CollectCash from '../CollectCash';
 import SendERC20 from '../SendERC20';
+import SetCollectionMeetup from '../SetCollectionMeetup';
 
 type Props = Order;
 
@@ -20,6 +21,9 @@ export default function SenderAgentOrder({
           recipientAgentCommission={fees.recipientAgentCommission || 'N/A'}
         />
       );
+
+    case 'ORDER_ACCEPTED':
+      return <SetCollectionMeetup />;
 
     case 'COLLECTION_MEETUP_SET':
       return <CollectCash orderId={orderId} />;

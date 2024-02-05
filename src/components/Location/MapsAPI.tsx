@@ -72,7 +72,7 @@ export default function TransferMap() {
 
   return (
     <div className="rounded-lg border border-slate-200">
-      <div className="mt-4 flex flex-col space-y-4 p-4">
+      <div className="mt-2 flex flex-col space-y-4 p-4">
         <PlacesAutocomplete
           onSelect={location => {
             console.log({ location });

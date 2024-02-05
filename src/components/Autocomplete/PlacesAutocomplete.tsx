@@ -38,7 +38,7 @@ export default function PlacesAutocomplete({ onSelect }: Props) {
       <Combobox.Input
         placeholder="Start by typing a place or establishment"
         onChange={e => setValue(e.target.value)}
-        className="w-full rounded-lg border-slate-200 py-2 text-sm font-semibold placeholder:text-xs placeholder:font-semibold"
+        className="w-full rounded-lg border border-slate-200 p-2 text-sm font-semibold outline-primary placeholder:text-xs placeholder:font-semibold"
       />
 
       <Combobox.Options>

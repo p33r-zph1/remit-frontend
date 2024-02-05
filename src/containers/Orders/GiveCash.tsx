@@ -20,7 +20,23 @@ export default function GiveCash({ senderAgentId }: Props) {
         Contact agent
       </button>
 
-      {/* TODO: display more details (meetup area, etc.) */}
+      {/* <div>
+        <div>
+          <div className="text-sm font-semibold text-gray-400">
+            Set delivery date and time
+          </div>
+
+          <CalendarPopover />
+        </div>
+
+        <div>
+          <div className="text-sm font-semibold text-gray-400">
+            Set delivery area
+          </div>
+
+          <TransferMap />
+        </div>
+      </div> */}
     </>
   );
 }

@@ -6,7 +6,11 @@ import {
 
 import type { OrderStatus, TransferTimeline } from '../../schema/order';
 
-function getIconByStatus(status: OrderStatus) {
+function getIconByStatus(status: OrderStatus, isLastItem: boolean = false) {
+  if (status === 'IN_PROGRESS' && isLastItem) {
+    return <ClockIcon className="h-6 w-6 text-gray-300" />;
+  }
+
   switch (status) {
     case 'IN_PROGRESS':
       return <ClockIcon className="h-6 w-6 text-primary" />;
@@ -19,7 +23,14 @@ function getIconByStatus(status: OrderStatus) {
   }
 }
 
-function getLineDividerByStatus(status: OrderStatus) {
+function getLineDividerByStatus(
+  status: OrderStatus,
+  isLastItem: boolean = false
+) {
+  if (status === 'IN_PROGRESS' && isLastItem) {
+    return <hr className="bg-slate-300" />;
+  }
+
   switch (status) {
     case 'IN_PROGRESS':
     case 'COMPLETED':

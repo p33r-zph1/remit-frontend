@@ -37,26 +37,6 @@ export default function CustomerOrderDetails() {
         {isRecipient && <RecipientOrder {...order} />}
       </div>
 
-      {/* <div>
-        <HeaderTitle>Delivery</HeaderTitle>
-
-        <div>
-          <div className="text-sm font-semibold text-gray-400">
-            Set delivery date and time
-          </div>
-
-          <CalendarPopover />
-        </div>
-
-        <div>
-          <div className="text-sm font-semibold text-gray-400">
-            Set delivery area
-          </div>
-
-          <TransferMap />
-        </div>
-      </div> */}
-
       <TransferTimeline timeline={order.transferTimeline} />
     </div>
   );
