@@ -67,6 +67,13 @@ export const locationDetailsSchema = z.object({
   radius: radiusSchema,
 });
 
+export const contactDetailsSchema = z.object({
+  recipient: z.object({ telegram: z.string() }),
+  sender: z.object({ telegram: z.string() }),
+  senderAgent: z.object({ telegram: z.string() }).optional(),
+  recipientAgent: z.object({ telegram: z.string() }).optional(),
+});
+
 export const orderSchema = z.object({
   orderId: z.string(),
   createdAt: z.coerce.date(),
@@ -78,6 +85,7 @@ export const orderSchema = z.object({
   recipientAgentId: z.string().optional(),
   orderStatus: orderStatusSchema,
   transferTimelineStatus: transferTimelineStatusSchema,
+  contactDetails: contactDetailsSchema,
   fees: feesSchema,
   priceOracleRates: z.record(z.string(), z.number()),
   transferDetails: transferDetailsSchema,
