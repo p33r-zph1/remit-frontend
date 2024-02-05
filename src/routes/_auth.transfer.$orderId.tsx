@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import TransferDetails from '../containers/TransferDetails';
+import OrderDetails from '../containers/OrderDetails';
 import Page from '../components/Page';
 import QueryFallback from '../components/QueryFallback';
 import LoadingRing from '../components/Spinner/LoadingRing';
@@ -20,7 +20,7 @@ export const Route = createFileRoute('/_auth/transfer/$orderId')({
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
             <Suspense fallback={<LoadingRing className="flex-1" />}>
-              <TransferDetails />
+              <OrderDetails />
             </Suspense>
           </ErrorBoundary>
         )}
