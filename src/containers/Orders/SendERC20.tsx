@@ -1,13 +1,14 @@
+// import useOrderDetails from '../../hooks/useOrderDetails';
 import HeaderTitle from '../../components/HeaderTitle';
 
-type Props = {
-  title: string;
-};
+export default function SendERC20() {
+  // const { order } = useOrderDetails();
 
-export default function SendERC20({ title }: Props) {
   return (
     <>
-      <HeaderTitle className="text-xl md:text-2xl">{title}</HeaderTitle>
+      <HeaderTitle className="text-xl md:text-2xl">
+        Send USDT x,xxx.xx (AED) xx,xxx.xx to escrow
+      </HeaderTitle>
 
       <div className="flex flex-col space-y-2">
         <button

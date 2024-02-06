@@ -1,30 +1,20 @@
-import { Order } from '../../../schema/order';
+import { TransferTimelineStatus } from '../../../schema/order';
 
 import AcceptOrder from '../AcceptOrder';
 import CollectionMeetup from '../CollectionMeetup';
 
-type Props = Order;
+type Props = {
+  status: TransferTimelineStatus;
+};
 
-export default function RecipientOrder({
-  transferTimelineStatus: status,
-  orderId,
-  transferDetails,
-  senderAgentId,
-}: Props) {
+export default function RecipientOrder({ status }: Props) {
   switch (status) {
     case 'PENDING': {
-      return (
-        <AcceptOrder
-          orderId={orderId}
-          countryIsoCode={transferDetails.recipient.countryIsoCode}
-        />
-      );
+      return <AcceptOrder />;
     }
 
     case 'DELIVERY_MEETUP_SET':
-      return (
-        <CollectionMeetup group="customer" senderAgentId={senderAgentId} />
-      );
+      return <CollectionMeetup group="customer" />;
 
     default:
       return null;

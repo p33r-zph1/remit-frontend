@@ -3,7 +3,7 @@ import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { AuthContext } from '../utils/auth';
+import { AuthContext } from '../contexts/auth';
 import HeroNotFound from '../components/Hero/HeroNotFound';
 
 export const Route = createRootRouteWithContext<{

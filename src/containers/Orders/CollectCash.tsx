@@ -3,13 +3,17 @@ import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 import useCollectCash, { MutationProps } from '../../hooks/api/useCollectCash';
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
+import useOrderDetails from '../../hooks/useOrderDetails';
 
 type Props = {
-  orderId: string;
   meetupType: MutationProps['meetupType'];
 };
 
-export default function CollectCash({ orderId, meetupType }: Props) {
+export default function CollectCash({ meetupType }: Props) {
+  const {
+    order: { orderId },
+  } = useOrderDetails();
+
   const {
     data: order,
     mutateAsync: collectCashAsync,

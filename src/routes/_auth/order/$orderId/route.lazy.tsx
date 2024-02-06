@@ -10,6 +10,7 @@ import AgentOrderDetails from '../../../../containers/Orders/Agent/OrderDetails'
 import Page from '../../../../components/Page';
 import QueryFallback from '../../../../components/Fallback/QueryFallback';
 import LoadingRing from '../../../../components/Spinner/LoadingRing';
+import { OrderDetailsProvider } from '../../../../contexts/order-details';
 
 export const Route = createLazyFileRoute('/_auth/order/$orderId')({
   component: HistoryComponent,
@@ -24,8 +25,10 @@ function HistoryComponent() {
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
             <Suspense fallback={<LoadingRing className="flex-1" />}>
-              {hasGroup('customer') && <CustomerOrderDetails />}
-              {hasGroup('agent') && <AgentOrderDetails />}
+              <OrderDetailsProvider>
+                {hasGroup('customer') && <CustomerOrderDetails />}
+                {hasGroup('agent') && <AgentOrderDetails />}
+              </OrderDetailsProvider>
             </Suspense>
           </ErrorBoundary>
         )}

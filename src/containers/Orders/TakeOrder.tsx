@@ -1,16 +1,13 @@
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 import useAcceptOrder from '../../hooks/api/useAcceptOrder';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
+import useOrderDetails from '../../hooks/useOrderDetails';
 
-type Props = {
-  orderId: string;
-  recipientAgentCommission: string;
-};
+export default function TakeOrder() {
+  const {
+    order: { fees, orderId },
+  } = useOrderDetails();
 
-export default function TakeOrder({
-  orderId,
-  recipientAgentCommission,
-}: Props) {
   const {
     mutateAsync: acceptOrderAsync,
     isPending: isAccepting,
@@ -27,7 +24,7 @@ export default function TakeOrder({
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
         <span className="text-gray-400">
-          Your commission at {recipientAgentCommission}%
+          Your commission at {fees.recipientAgentCommission}%
         </span>
 
         <span className="text-xl font-bold md:text-2xl">~ 748.10 USDT</span>

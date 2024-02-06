@@ -11,7 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { routeTree } from './routeTree.gen';
 
 import useAuth from './hooks/useAuth';
-import { AuthProvider } from './utils/auth';
+import { AuthProvider } from './contexts/auth';
 
 import { authConfig, queryClient } from './utils/config';
 import LoadingRing from './components/Spinner/LoadingRing';

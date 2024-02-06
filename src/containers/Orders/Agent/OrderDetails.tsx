@@ -1,8 +1,4 @@
-import { useMemo } from 'react';
-
-import useOrder from '../../../hooks/api/useOrder';
-import { Route } from '../../../routes/_auth/order/$orderId/route';
-import useAuth from '../../../hooks/useAuth';
+import useOrderDetails from '../../../hooks/useOrderDetails';
 
 import SenderAgentOrder from './SenderAgentOrder';
 import RecipientAgentOrder from './RecipientAgentOrder';
@@ -10,20 +6,10 @@ import TransferDetailsNav from '../../../components/Nav/TransferDetailsNav';
 import TransferTimeline from '../../../components/Timeline/TransferTimeline';
 
 export default function AgentOrderDetails() {
-  const { user } = useAuth();
-  const { orderId } = Route.useParams();
+  const { agent, order } = useOrderDetails();
 
-  const { data: order } = useOrder({ orderId });
-
-  const isSenderAgent = useMemo(
-    () => user === order.senderAgentId,
-    [order.senderAgentId, user]
-  );
-
-  const isRecipientAgent = useMemo(
-    () => user === order.recipientAgentId,
-    [order.recipientAgentId, user]
-  );
+  const { isSender, isRecipient } = agent;
+  const { transferTimeline, transferTimelineStatus } = order;
 
   return (
     <div className="flex flex-col space-y-12">
@@ -32,11 +18,11 @@ export default function AgentOrderDetails() {
       <div>
         <div className="divider -mb-2 md:-mb-6" />
 
-        {isSenderAgent && <SenderAgentOrder {...order} />}
-        {isRecipientAgent && <RecipientAgentOrder {...order} />}
+        {isSender && <SenderAgentOrder status={transferTimelineStatus} />}
+        {isRecipient && <RecipientAgentOrder status={transferTimelineStatus} />}
       </div>
 
-      <TransferTimeline timeline={order.transferTimeline} />
+      <TransferTimeline timeline={transferTimeline} />
     </div>
   );
 }

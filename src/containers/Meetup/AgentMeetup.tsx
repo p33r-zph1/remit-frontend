@@ -13,7 +13,6 @@ import useSetCollection, {
   MutationProps,
 } from '../../hooks/api/useSetCollection';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
-import useOrderDetails from '../../hooks/useOrderDetails';
 
 const deliveryProps = z.object({
   startDate: z.coerce.date(),
@@ -33,14 +32,11 @@ const libraries: Libraries = ['places'];
 // let rerender = 0;
 
 type Props = {
+  orderId: string;
   meetupType: MutationProps['meetupType'];
 };
 
-export default function SetCollectionMeetup({ meetupType }: Props) {
-  const {
-    order: { orderId },
-  } = useOrderDetails();
-
+export default function AgentMeetup({ orderId, meetupType }: Props) {
   const {
     control,
     register,

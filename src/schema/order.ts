@@ -109,4 +109,6 @@ export type TransferTimelineStatus = z.infer<
 
 export type TransferInfo = z.infer<typeof transferInfoSchema>;
 
+export type LocationDetails = z.infer<typeof locationDetailsSchema>;
+
 export default orderApiSchema;

@@ -1,42 +1,24 @@
-import { Order } from '../../../schema/order';
+import { TransferTimelineStatus } from '../../../schema/order';
 import CollectionMeetup from '../CollectionMeetup';
 import SetCollectionMeetup from '../SetCollectionMeetup';
 import TakeOrder from '../TakeOrder';
 
-type Props = Order;
+type Props = {
+  status: TransferTimelineStatus;
+};
 
-export default function RecipientAgentOrder({
-  transferTimelineStatus: status,
-  orderId,
-  fees,
-  collectionDetails,
-}: Props) {
+export default function RecipientAgentOrder({ status }: Props) {
   switch (status) {
     case 'RECIPIENT_ACCEPTED':
     case 'SENDER_AGENT_ACCEPTED':
-      return (
-        <TakeOrder
-          orderId={orderId}
-          recipientAgentCommission={fees.recipientAgentCommission || 'N/A'}
-        />
-      );
+      return <TakeOrder />;
 
     case 'ESCROW_DEPOSITED': {
-      return <SetCollectionMeetup meetupType="delivery" orderId={orderId} />;
+      return <SetCollectionMeetup meetupType="delivery" />;
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      if (!collectionDetails)
-        throw new Error('Collection details is not present.');
-
-      const { areaName } = collectionDetails;
-
-      return (
-        <CollectionMeetup
-          group="agent"
-          collectionMessage={`Collect cash at ${areaName}`}
-        />
-      );
+      return <CollectionMeetup group="agent" />;
     }
 
     default:

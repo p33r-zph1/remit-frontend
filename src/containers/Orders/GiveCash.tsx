@@ -1,11 +1,13 @@
 import { PhoneIcon } from '@heroicons/react/20/solid';
 import HeaderTitle from '../../components/HeaderTitle';
+import CustomerMeetup from '../Meetup/CustomerMeetup';
+import useOrderDetails from '../../hooks/useOrderDetails';
 
-type Props = {
-  senderAgentId: string;
-};
+export default function GiveCash() {
+  const {
+    order: { senderAgentId, collectionDetails },
+  } = useOrderDetails();
 
-export default function GiveCash({ senderAgentId }: Props) {
   return (
     <>
       <HeaderTitle className="text-xl md:text-2xl">
@@ -20,23 +22,7 @@ export default function GiveCash({ senderAgentId }: Props) {
         Contact agent
       </button>
 
-      {/* <div>
-        <div>
-          <div className="text-sm font-semibold text-gray-400">
-            Set delivery date and time
-          </div>
-
-          <CalendarPopover />
-        </div>
-
-        <div>
-          <div className="text-sm font-semibold text-gray-400">
-            Set delivery area
-          </div>
-
-          <TransferMap />
-        </div>
-      </div> */}
+      <CustomerMeetup collectionDetails={collectionDetails} />
     </>
   );
 }

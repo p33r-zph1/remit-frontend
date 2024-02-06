@@ -6,7 +6,7 @@ import { coerce } from 'zod';
 type Props = {
   meetUpLocation: LatLng | undefined;
   radius: number;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 const defaultCenter: LatLng = {

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
+import useOrderDetails from '../../hooks/useOrderDetails';
 
 const formSchema = z.object({
   agentId: z
@@ -19,12 +20,11 @@ const formSchema = z.object({
 
 type Inputs = z.infer<typeof formSchema>;
 
-type Props = {
-  orderId: string;
-  countryIsoCode: string;
-};
+export default function AcceptOrder() {
+  const {
+    order: { orderId, transferDetails },
+  } = useOrderDetails();
 
-export default function AcceptOrder({ orderId, countryIsoCode }: Props) {
   const {
     register,
     handleSubmit,
@@ -36,7 +36,7 @@ export default function AcceptOrder({ orderId, countryIsoCode }: Props) {
     },
   });
 
-  const { data: agents } = useAgents(countryIsoCode);
+  const { data: agents } = useAgents(transferDetails.recipient.countryIsoCode);
 
   const { mutateAsync: acceptOrderAsync, error: acceptOrderError } =
     useAcceptOrder();
