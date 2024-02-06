@@ -6,7 +6,7 @@ import orderApiSchema from '../../schema/order';
 import { queryClient } from '../../utils/config';
 
 const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders/:orderId/collection/details';
+  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
 
 const collectionSchema = z.object({
   startDate: z.coerce.date(),
@@ -24,14 +24,23 @@ const collectionSchema = z.object({
 
 export type CollectionBody = z.infer<typeof collectionSchema>;
 
+type MutationProps = {
+  orderId: string;
+  data: CollectionBody;
+};
+
 export default function useSetCollection() {
   return useMutation({
     mutationKey: ['set-collection'],
-    mutationFn: (data: CollectionBody) =>
-      genericFetch(BASE_URL, orderApiSchema, {
-        method: 'PATCH',
-        body: JSON.stringify(collectionSchema.parse(data)),
-      }),
+    mutationFn: ({ orderId, data }: MutationProps) =>
+      genericFetch(
+        `${BASE_URL}/${orderId}/collection/details`,
+        orderApiSchema,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(collectionSchema.parse(data)),
+        }
+      ),
     onSuccess: () => queryClient.invalidateQueries(),
   });
 }

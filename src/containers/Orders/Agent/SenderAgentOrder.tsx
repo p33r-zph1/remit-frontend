@@ -23,7 +23,7 @@ export default function SenderAgentOrder({
       );
 
     case 'ORDER_ACCEPTED':
-      return <SetCollectionMeetup />;
+      return <SetCollectionMeetup orderId={orderId} />;
 
     case 'COLLECTION_MEETUP_SET':
       return <CollectCash orderId={orderId} />;

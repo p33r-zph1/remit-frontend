@@ -29,7 +29,11 @@ const libraries: Libraries = ['places'];
 
 // let rerender = 0;
 
-export default function SetCollectionMeetup() {
+type Props = {
+  orderId: string;
+};
+
+export default function SetCollectionMeetup({ orderId }: Props) {
   const {
     control,
     register,
@@ -64,14 +68,17 @@ export default function SetCollectionMeetup() {
   }) => {
     try {
       await setCollectionAsync({
-        areaName,
-        startDate,
-        endDate,
-        radius: {
-          value: Number(radius),
-          unit: 'm',
+        orderId,
+        data: {
+          areaName,
+          startDate,
+          endDate,
+          radius: {
+            value: Number(radius),
+            unit: 'm',
+          },
+          coordinates,
         },
-        coordinates,
       });
     } catch (err) {
       console.error(err);
