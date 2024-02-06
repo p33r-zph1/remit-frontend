@@ -1,11 +1,7 @@
 import { useRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  useLoadScript,
-  // type GoogleMap,
-  Libraries,
-} from '@react-google-maps/api';
+import { useLoadScript, Libraries } from '@react-google-maps/api';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
@@ -13,7 +9,8 @@ import MapsAPI from '../../components/Location/MapsAPI';
 import CalendarPopover from '../../components/Popover/CalendarPopover';
 import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
 import LoadingRing from '../../components/Spinner/LoadingRing';
-import { delay } from '../../utils';
+import useSetCollection from '../../hooks/api/useSetCollection';
+import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const deliveryProps = z.object({
   startDate: z.coerce.date(),
@@ -21,8 +18,8 @@ const deliveryProps = z.object({
   areaName: z.string(),
   radius: z.string(),
   coordinates: z.object({
-    latitude: z.number(),
-    longitude: z.number(),
+    latitude: z.string(),
+    longitude: z.string(),
   }),
 });
 
@@ -30,7 +27,7 @@ type Delivery = z.infer<typeof deliveryProps>;
 
 const libraries: Libraries = ['places'];
 
-let rerender = 0;
+// let rerender = 0;
 
 export default function SetCollectionMeetup() {
   const {
@@ -49,25 +46,45 @@ export default function SetCollectionMeetup() {
     },
   });
 
+  const mapRef = useRef<google.maps.Map>();
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
     libraries,
   });
 
-  const mapRef = useRef<google.maps.Map>();
+  const { mutateAsync: setCollectionAsync, error } = useSetCollection();
 
-  const onSubmit: SubmitHandler<Delivery> = async props => {
-    console.log('success', { props });
-    await delay(10_000);
+  const onSubmit: SubmitHandler<Delivery> = async ({
+    areaName,
+    coordinates,
+    startDate,
+    endDate,
+    radius,
+  }) => {
+    try {
+      await setCollectionAsync({
+        areaName,
+        startDate,
+        endDate,
+        radius: {
+          value: Number(radius),
+          unit: 'm',
+        },
+        coordinates,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  rerender++;
+  // rerender++;
 
   if (!isLoaded) return <LoadingRing className="h-32" />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-      {rerender / 2}
+      {/* {rerender / 2} */}
 
       <div>
         <div className="text-sm font-semibold text-gray-400">
@@ -95,8 +112,8 @@ export default function SetCollectionMeetup() {
                 console.log({ location });
 
                 setValue('coordinates', {
-                  latitude: Number(location.lat),
-                  longitude: Number(location.lng),
+                  latitude: String(location.lat),
+                  longitude: String(location.lng),
                 });
 
                 mapRef.current?.panTo(location);
@@ -134,8 +151,8 @@ export default function SetCollectionMeetup() {
             ref={mapRef}
             meetUpLocation={
               watch('coordinates') && {
-                lat: getValues('coordinates').latitude,
-                lng: getValues('coordinates').longitude,
+                lat: Number(getValues('coordinates').latitude),
+                lng: Number(getValues('coordinates').longitude),
               }
             }
             radius={Number(watch('radius'))}
@@ -143,6 +160,8 @@ export default function SetCollectionMeetup() {
           />
         </div>
       </div>
+
+      {error && <ErrorAlert message={error.message} />}
 
       <button
         className="btn btn-primary btn-block rounded-lg text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
