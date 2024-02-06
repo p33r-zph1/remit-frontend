@@ -5,6 +5,7 @@ import useOrderDetails from '../../hooks/useOrderDetails';
 
 export default function TakeOrder() {
   const {
+    agent: { isSender },
     order: { fees, orderId },
   } = useOrderDetails();
 
@@ -36,12 +37,20 @@ export default function TakeOrder() {
       <div className="flex flex-col space-y-2">
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            if (isSender) {
+              return acceptOrderAsync({
+                key: 'senderagent',
+                orderId,
+                body: { chain: 'bnb' },
+              });
+            }
+
             acceptOrderAsync({
               key: 'agent',
               orderId,
-            })
-          }
+            });
+          }}
           disabled={isAccepting || isRejecting}
           className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         >
