@@ -4,25 +4,27 @@ import HeaderTitle from '../../components/HeaderTitle';
 
 type Props =
   | {
-      key: 'customer';
+      group: 'customer';
       senderAgentId: string;
     }
   | {
-      key: 'agent';
+      group: 'agent';
       collectionMessage: string;
     };
 
 export default function CollectionMeetup(props: Props) {
-  const { key } = props;
+  const { group } = props;
+
+  console.log({ group });
 
   return (
     <>
       <HeaderTitle className="text-xl md:text-2xl">
-        {key === 'customer' && (
+        {group === 'customer' && (
           <>Collect cash from Agent {props.senderAgentId}</>
         )}
 
-        {key === 'agent' && props.collectionMessage}
+        {group === 'agent' && props.collectionMessage}
       </HeaderTitle>
 
       <div className="flex flex-col space-y-2">
@@ -32,8 +34,8 @@ export default function CollectionMeetup(props: Props) {
           // disabled={order.}
         >
           <QrCodeIcon className="h-6 w-6" />
-          {key === 'customer' && 'Show QR'}
-          {key === 'agent' && 'Scan QR'}
+          {group === 'customer' && 'Show QR'}
+          {group === 'agent' && 'Scan QR'}
         </button>
 
         <button
@@ -41,8 +43,8 @@ export default function CollectionMeetup(props: Props) {
           className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
           // disabled={order.}
         >
-          Contact {key === 'customer' && 'agent'}
-          {key === 'agent' && 'recipient'}
+          Contact {group === 'customer' && 'agent'}
+          {group === 'agent' && 'recipient'}
         </button>
       </div>
 

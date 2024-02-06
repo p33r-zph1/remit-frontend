@@ -55,11 +55,13 @@ export default function SendForm() {
   }) => {
     try {
       const { data } = await sendOrderAsync({
-        recipientId,
-        senderCurrency: senderCurrency.currency,
-        recipientCurrency: recipientCurrency.currency,
-        senderAgentId: agentId,
-        transferAmount: Number(sendAmount),
+        body: {
+          recipientId,
+          senderCurrency: senderCurrency.currency,
+          recipientCurrency: recipientCurrency.currency,
+          senderAgentId: agentId,
+          transferAmount: Number(sendAmount),
+        },
       });
 
       navigate({

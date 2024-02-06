@@ -52,7 +52,7 @@ export default function AcceptOrder({ orderId, countryIsoCode }: Props) {
       const { data } = await acceptOrderAsync({
         key: 'customer',
         orderId,
-        data: { recipientAgentId: agentId },
+        body: { recipientAgentId: agentId },
       });
 
       console.log({ data });

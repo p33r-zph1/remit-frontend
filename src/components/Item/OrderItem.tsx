@@ -15,6 +15,7 @@ export default function OrderItem({
   orderStatus,
   transferDetails,
   isRecipient,
+  transferTimelineStatus,
 }: Item) {
   const { sender, recipient } = transferDetails;
 
@@ -33,7 +34,7 @@ export default function OrderItem({
             {recipientId}
           </div>
           <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
-            {orderStatus.replace(/_/g, ' ').toLowerCase()}
+            {transferTimelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
       </div>

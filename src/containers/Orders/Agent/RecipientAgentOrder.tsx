@@ -12,6 +12,7 @@ export default function RecipientAgentOrder({
   collectionDetails,
 }: Props) {
   switch (status) {
+    case 'RECIPIENT_ACCEPTED':
     case 'SENDER_AGENT_ACCEPTED':
       return (
         <TakeOrder
@@ -21,7 +22,7 @@ export default function RecipientAgentOrder({
       );
 
     case 'ESCROW_DEPOSITED': {
-      return <SetCollectionMeetup orderId={orderId} />;
+      return <SetCollectionMeetup meetupType="delivery" orderId={orderId} />;
     }
 
     case 'DELIVERY_MEETUP_SET': {
@@ -32,7 +33,7 @@ export default function RecipientAgentOrder({
 
       return (
         <CollectionMeetup
-          key="agent"
+          group="agent"
           collectionMessage={`Collect cash at ${areaName}`}
         />
       );

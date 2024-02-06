@@ -9,7 +9,9 @@ import MapsAPI from '../../components/Location/MapsAPI';
 import CalendarPopover from '../../components/Popover/CalendarPopover';
 import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
 import LoadingRing from '../../components/Spinner/LoadingRing';
-import useSetCollection from '../../hooks/api/useSetCollection';
+import useSetCollection, {
+  MutationProps,
+} from '../../hooks/api/useSetCollection';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const deliveryProps = z.object({
@@ -31,9 +33,10 @@ const libraries: Libraries = ['places'];
 
 type Props = {
   orderId: string;
+  meetupType: MutationProps['meetupType'];
 };
 
-export default function SetCollectionMeetup({ orderId }: Props) {
+export default function SetCollectionMeetup({ orderId, meetupType }: Props) {
   const {
     control,
     register,
@@ -69,7 +72,8 @@ export default function SetCollectionMeetup({ orderId }: Props) {
     try {
       await setCollectionAsync({
         orderId,
-        data: {
+        meetupType,
+        body: {
           areaName,
           startDate,
           endDate,

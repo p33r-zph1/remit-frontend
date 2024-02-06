@@ -1,14 +1,15 @@
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 
-import useCollectCash from '../../hooks/api/useCollectCash';
+import useCollectCash, { MutationProps } from '../../hooks/api/useCollectCash';
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 type Props = {
   orderId: string;
+  meetupType: MutationProps['meetupType'];
 };
 
-export default function CollectCash({ orderId }: Props) {
+export default function CollectCash({ orderId, meetupType }: Props) {
   const {
     data: order,
     mutateAsync: collectCashAsync,
@@ -29,7 +30,7 @@ export default function CollectCash({ orderId }: Props) {
       <div className="flex flex-col space-y-2">
         <button
           type="button"
-          onClick={() => collectCashAsync({ orderId })}
+          onClick={() => collectCashAsync({ orderId, meetupType })}
           disabled={isPending}
           className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         >

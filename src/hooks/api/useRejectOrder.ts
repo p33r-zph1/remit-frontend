@@ -7,7 +7,7 @@ import { queryClient } from '../../utils/config';
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
 
-type MutationProps = {
+export type MutationProps = {
   orderId: string;
 };
 

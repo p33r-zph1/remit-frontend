@@ -14,11 +14,11 @@ const acceptorderBodySchema = z.object({
 
 export type AcceptOrderBody = z.infer<typeof acceptorderBodySchema>;
 
-type MutationProps =
+export type MutationProps =
   | {
       key: 'customer';
       orderId: string;
-      data: AcceptOrderBody;
+      body: AcceptOrderBody;
     }
   | {
       key: 'agent';
@@ -35,7 +35,7 @@ export default function useAcceptOrder() {
         method: 'PATCH',
         body:
           key === 'customer'
-            ? JSON.stringify(acceptorderBodySchema.parse(props.data))
+            ? JSON.stringify(acceptorderBodySchema.parse(props.body))
             : null,
       });
     },

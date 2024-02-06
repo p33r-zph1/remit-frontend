@@ -23,10 +23,10 @@ export default function SenderAgentOrder({
       );
 
     case 'ORDER_ACCEPTED':
-      return <SetCollectionMeetup orderId={orderId} />;
+      return <SetCollectionMeetup meetupType="collection" orderId={orderId} />;
 
     case 'COLLECTION_MEETUP_SET':
-      return <CollectCash orderId={orderId} />;
+      return <CollectCash meetupType="collection" orderId={orderId} />;
 
     case 'CASH_COLLECTED':
       return <SendERC20 title="Send USDT x,xxx.xx (AED) xx,xxx.xx to escrow" />;

@@ -7,16 +7,17 @@ import { queryClient } from '../../utils/config';
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
 
-type MutationProps = {
+export type MutationProps = {
   orderId: string;
+  meetupType: 'collection' | 'delivery';
 };
 
 export default function useCollectCash() {
   return useMutation({
     mutationKey: ['collect-cash'],
-    mutationFn: ({ orderId }: MutationProps) =>
+    mutationFn: ({ orderId, meetupType }: MutationProps) =>
       genericFetch(
-        `${BASE_URL}/${orderId}/collection/confirm`,
+        `${BASE_URL}/${orderId}/${meetupType}/confirm`,
         orderApiSchema,
         {
           method: 'PATCH',
