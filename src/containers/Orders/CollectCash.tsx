@@ -11,7 +11,7 @@ type Props = {
 export default function CollectCash({ orderId }: Props) {
   const {
     data: order,
-    mutateAsync: collectCash,
+    mutateAsync: collectCashAsync,
     isPending,
     error,
   } = useCollectCash();
@@ -29,7 +29,7 @@ export default function CollectCash({ orderId }: Props) {
       <div className="flex flex-col space-y-2">
         <button
           type="button"
-          onClick={() => collectCash({ orderId })}
+          onClick={() => collectCashAsync({ orderId })}
           disabled={isPending}
           className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         >

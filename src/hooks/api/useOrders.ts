@@ -6,17 +6,22 @@ import orderListApiSchema from '../../schema/order-list';
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
 
-export type Pair = {
+export type OrdersQueryProps = {
   pageSize: number;
   pageNumber: number;
+  status?: 'active' | 'open';
 };
 
-export const ordersQueryOptions = ({ pageSize, pageNumber }: Pair) =>
+export const ordersQueryOptions = ({
+  pageSize,
+  pageNumber,
+  status,
+}: OrdersQueryProps) =>
   queryOptions({
-    queryKey: ['orders', pageSize, pageNumber],
+    queryKey: ['orders', pageSize, pageNumber, status],
     queryFn: () =>
       genericFetch(
-        `${BASE_URL}?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+        `${BASE_URL}?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}`,
         orderListApiSchema
       ),
     select: response => response.data,
