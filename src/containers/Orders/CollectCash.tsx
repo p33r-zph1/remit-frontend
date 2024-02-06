@@ -41,7 +41,7 @@ export default function CollectCash({ orderId }: Props) {
         <button
           type="button"
           disabled={isPending}
-          className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm"
         >
           Contact sender
         </button>
