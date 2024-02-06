@@ -1,49 +1,52 @@
+import { forwardRef, useCallback, useMemo } from 'react';
 import { Circle, GoogleMap, Marker } from '@react-google-maps/api';
 import type { CircleProps } from '@react-google-maps/api';
-import { forwardRef, useCallback, useMemo } from 'react';
 import { coerce } from 'zod';
 
 type Props = {
   meetUpLocation: LatLng | undefined;
   radius: number;
+  disabled: boolean;
 };
 
+const defaultCenter: LatLng = {
+  lat: 1.2933,
+  lng: 103.8535,
+};
+
+function getRadiusOptions(radius: number) {
+  if (radius <= 250) return closeOptions;
+  if (radius <= 500) return middleOptions;
+
+  return farOptions;
+}
+
+function getZoomLevel(radius: number, isLatLngAvailable: boolean) {
+  if (!isLatLngAvailable) return 10; // zoomed far out
+  if (radius === 0) return 17;
+  if (radius <= 250) return 16.5;
+  if (radius <= 500) return 15;
+  if (radius <= 750) return 14.5;
+  if (radius <= 1000) return 14;
+
+  return 12;
+}
+
 const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
-  ({ meetUpLocation, radius }: Props, ref) => {
-    // const mapRef = useForwardRef<google.maps.Map>(ref);
-
-    const center = useMemo<LatLng>(
-      () => ({
-        lat: 1.2933,
-        lng: 103.8535,
-      }),
-      []
+  ({ meetUpLocation, radius, disabled }: Props, ref) => {
+    const zoomLevel = useMemo(
+      () => getZoomLevel(radius, Boolean(meetUpLocation)),
+      [meetUpLocation, radius]
     );
-    const radiusOptions = useMemo(() => {
-      if (radius <= 250) return closeOptions;
-      if (radius <= 500) return middleOptions;
 
-      return farOptions;
-    }, [radius]);
-
-    const zoomLevel = useMemo(() => {
-      if (!meetUpLocation) return 10;
-      if (radius === 0) return 17;
-      if (radius <= 250) return 16.5;
-      if (radius <= 500) return 16;
-      if (radius <= 750) return 15.5;
-      if (radius <= 1000) return 15;
-
-      return 13;
-    }, [meetUpLocation, radius]);
-
-    const options = useMemo<google.maps.MapOptions>(
+    const mapOptions = useMemo<google.maps.MapOptions>(
       () => ({
         disableDefaultUI: true,
         clickableIcons: false,
         zoom: zoomLevel,
+        gestureHandling: disabled ? 'none' : 'cooperative',
       }),
-      [zoomLevel]
+      [disabled, zoomLevel]
     );
 
     const onload = useCallback(
@@ -60,9 +63,9 @@ const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
     return (
       <GoogleMap
         zoom={10}
-        center={center}
-        mapContainerClassName="h-56 md:h-[50vh] w-full"
-        options={options}
+        center={defaultCenter}
+        mapContainerClassName="h-56 md:h-[40vh] w-full"
+        options={mapOptions}
         onLoad={onload}
       >
         {meetUpLocation && (
@@ -73,7 +76,7 @@ const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
               <Circle
                 center={meetUpLocation}
                 radius={radius}
-                options={radiusOptions}
+                options={getRadiusOptions(radius)}
               />
             )}
           </>

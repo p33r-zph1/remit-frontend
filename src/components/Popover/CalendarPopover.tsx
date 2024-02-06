@@ -22,6 +22,7 @@ export default function CalendarPopover<T extends FieldValues>({
 }: Props<T>) {
   const {
     field: { name, onBlur, onChange, ref, value, disabled },
+    formState: { isSubmitting },
   } = useController(controllerProps);
 
   const [durationInHr, setDurationInHr] = useState(1); // 1 hour
@@ -39,18 +40,15 @@ export default function CalendarPopover<T extends FieldValues>({
         <>
           <Popover.Button
             className={twMerge(
-              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary md:text-base'
+              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:text-slate-400 disabled:hover:cursor-not-allowed md:text-base'
             )}
             name={name}
             onBlur={onBlur}
             ref={ref}
-            disabled={disabled}
+            disabled={isSubmitting || disabled}
           >
             <CalendarIcon
-              className={twMerge(
-                open ? 'text-black' : 'text-black/70',
-                'h-5 w-5'
-              )}
+              className={twMerge(open && 'text-black', 'h-5 w-5')}
               aria-hidden="true"
             />
 

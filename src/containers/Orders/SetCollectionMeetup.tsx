@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -13,35 +13,40 @@ import MapsAPI from '../../components/Location/MapsAPI';
 import CalendarPopover from '../../components/Popover/CalendarPopover';
 import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
 import LoadingRing from '../../components/Spinner/LoadingRing';
+import { delay } from '../../utils';
 
 const deliveryProps = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  // areaName: z.string(),
-  // radius: z.object({
-  //   value: z.number(),
-  //   unit: z.enum(['m', 'km']),
-  // }),
-  // coordinates: z.object({
-  //   latitude: z.string(),
-  //   longitude: z.string(),
-  // }),
+  areaName: z.string(),
+  radius: z.string(),
+  coordinates: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
 });
 
 type Delivery = z.infer<typeof deliveryProps>;
 
 const libraries: Libraries = ['places'];
 
-// let rerender = 0;
+let rerender = 0;
 
 export default function SetCollectionMeetup() {
   const {
     control,
+    register,
     handleSubmit,
     setValue,
+    getValues,
+    watch,
     formState: { isSubmitting },
   } = useForm<Delivery>({
     resolver: zodResolver(deliveryProps),
+    defaultValues: {
+      radius: '0',
+      areaName: '',
+    },
   });
 
   const { isLoaded } = useLoadScript({
@@ -51,21 +56,18 @@ export default function SetCollectionMeetup() {
 
   const mapRef = useRef<google.maps.Map>();
 
-  // TODO: refactor (temporary state)
-  const [radius, setRadius] = useState(0);
-  const [meetUpLocation, setMeetUpLocation] = useState<LatLng>();
-
-  const onSubmit: SubmitHandler<Delivery> = props => {
+  const onSubmit: SubmitHandler<Delivery> = async props => {
     console.log('success', { props });
+    await delay(10_000);
   };
 
-  // rerender++;
+  rerender++;
 
   if (!isLoaded) return <LoadingRing className="h-32" />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-      {/* {rerender / 2} */}
+      {rerender / 2}
 
       <div>
         <div className="text-sm font-semibold text-gray-400">
@@ -87,9 +89,16 @@ export default function SetCollectionMeetup() {
         <div className="rounded-lg border border-slate-200">
           <div className="mt-2 flex flex-col space-y-4 p-4">
             <PlacesAutocomplete
+              control={control}
+              name="areaName"
               onSelect={location => {
                 console.log({ location });
-                setMeetUpLocation(location);
+
+                setValue('coordinates', {
+                  latitude: Number(location.lat),
+                  longitude: Number(location.lng),
+                });
+
                 mapRef.current?.panTo(location);
               }}
             />
@@ -98,26 +107,16 @@ export default function SetCollectionMeetup() {
               <div className="text-sm font-semibold text-gray-400">Radius</div>
             </div>
 
-            <div
-              className={twMerge('tooltip', !meetUpLocation && 'tooltip-error')}
-              data-tip={
-                meetUpLocation
-                  ? 'Select a radius'
-                  : 'Select a delivery area first'
-              }
-            >
+            <div className="tooltip" data-tip="Select a radius">
               <input
+                {...register('radius')}
                 type="range"
                 min={0}
-                disabled={!meetUpLocation}
                 max={1000}
-                value={radius}
-                onChange={e =>
-                  setRadius(z.coerce.number().parse(e.target.value))
-                }
+                disabled={!watch('coordinates') || isSubmitting}
                 className={twMerge(
                   `range range-sm md:range-md disabled:hover:cursor-not-allowed`,
-                  meetUpLocation && 'range-primary'
+                  watch('coordinates') && !isSubmitting && 'range-primary'
                 )}
                 step="250"
               />
@@ -133,8 +132,14 @@ export default function SetCollectionMeetup() {
 
           <MapsAPI
             ref={mapRef}
-            meetUpLocation={meetUpLocation}
-            radius={radius}
+            meetUpLocation={
+              watch('coordinates') && {
+                lat: getValues('coordinates').latitude,
+                lng: getValues('coordinates').longitude,
+              }
+            }
+            radius={Number(watch('radius'))}
+            disabled={isSubmitting}
           />
         </div>
       </div>
