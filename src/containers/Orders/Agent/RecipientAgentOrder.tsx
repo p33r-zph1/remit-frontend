@@ -1,4 +1,6 @@
 import { Order } from '../../../schema/order';
+import CollectionMeetup from '../CollectionMeetup';
+import SetCollectionMeetup from '../SetCollectionMeetup';
 import TakeOrder from '../TakeOrder';
 
 type Props = Order;
@@ -7,6 +9,7 @@ export default function RecipientAgentOrder({
   transferTimelineStatus: status,
   orderId,
   fees,
+  collectionDetails,
 }: Props) {
   switch (status) {
     case 'SENDER_AGENT_ACCEPTED':
@@ -18,11 +21,21 @@ export default function RecipientAgentOrder({
       );
 
     case 'ESCROW_DEPOSITED': {
-      return <div className="text-xs">TODO-display set delivery (maps)</div>;
+      return <SetCollectionMeetup orderId={orderId} />;
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      return <div className="text-xs">TODO-display scan qr</div>;
+      if (!collectionDetails)
+        throw new Error('Collection details is not present.');
+
+      const { areaName } = collectionDetails;
+
+      return (
+        <CollectionMeetup
+          key="agent"
+          collectionMessage={`Collect cash at ${areaName}`}
+        />
+      );
     }
 
     default:

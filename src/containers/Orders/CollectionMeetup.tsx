@@ -2,15 +2,27 @@ import { QrCodeIcon } from '@heroicons/react/20/solid';
 
 import HeaderTitle from '../../components/HeaderTitle';
 
-type Props = {
-  senderAgentId: string;
-};
+type Props =
+  | {
+      key: 'customer';
+      senderAgentId: string;
+    }
+  | {
+      key: 'agent';
+      collectionMessage: string;
+    };
 
-export default function CollectionMeetup({ senderAgentId }: Props) {
+export default function CollectionMeetup(props: Props) {
+  const { key } = props;
+
   return (
     <>
       <HeaderTitle className="text-xl md:text-2xl">
-        Collect cash from Agent {senderAgentId}
+        {key === 'customer' && (
+          <>Collect cash from Agent {props.senderAgentId}</>
+        )}
+
+        {key === 'agent' && props.collectionMessage}
       </HeaderTitle>
 
       <div className="flex flex-col space-y-2">
@@ -20,7 +32,8 @@ export default function CollectionMeetup({ senderAgentId }: Props) {
           // disabled={order.}
         >
           <QrCodeIcon className="h-6 w-6" />
-          Show QR
+          {key === 'customer' && 'Show QR'}
+          {key === 'agent' && 'Scan QR'}
         </button>
 
         <button
@@ -28,7 +41,8 @@ export default function CollectionMeetup({ senderAgentId }: Props) {
           className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
           // disabled={order.}
         >
-          Contact agent
+          Contact {key === 'customer' && 'agent'}
+          {key === 'agent' && 'recipient'}
         </button>
       </div>
 

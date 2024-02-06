@@ -21,8 +21,8 @@ export default function RecipientOrder({
       );
     }
 
-    case 'COLLECTION_MEETUP_SET':
-      return <CollectionMeetup senderAgentId={senderAgentId} />;
+    case 'DELIVERY_MEETUP_SET':
+      return <CollectionMeetup key="customer" senderAgentId={senderAgentId} />;
 
     default:
       return null;

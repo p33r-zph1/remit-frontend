@@ -1,11 +1,13 @@
 import HeaderTitle from '../../components/HeaderTitle';
 
-export default function SendERC20() {
+type Props = {
+  title: string;
+};
+
+export default function SendERC20({ title }: Props) {
   return (
     <>
-      <HeaderTitle className="text-xl md:text-2xl">
-        Send USDT 148,721.63 (AED) 550,219.65 to escrow
-      </HeaderTitle>
+      <HeaderTitle className="text-xl md:text-2xl">{title}</HeaderTitle>
 
       <div className="flex flex-col space-y-2">
         <button

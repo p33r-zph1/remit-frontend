@@ -29,7 +29,7 @@ export default function SenderAgentOrder({
       return <CollectCash orderId={orderId} />;
 
     case 'CASH_COLLECTED':
-      return <SendERC20 />;
+      return <SendERC20 title="Send USDT x,xxx.xx (AED) xx,xxx.xx to escrow" />;
 
     default:
       return null;
