@@ -1,31 +1,23 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import ErrorAlert from '../../components/Alert/ErrorAlert';
-import SelectChain from '../../components/Select/SelectChain';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import chainList, { getCustomChainId } from '../../configs/chains';
 import useAcceptOrder from '../../hooks/api/useAcceptOrder';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
 import useOrderDetails from '../../hooks/useOrderDetails';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import ErrorAlert from '../../components/Alert/ErrorAlert';
+import SelectChain from '../../components/Select/SelectChain';
 
-// TODO: use wagmi
-const chain = [
-  { name: 'BNBChain', id: 'bnb' },
-  { name: 'Polygon', id: 'matic' },
-  { name: 'Ethereum', id: 'eth' },
-];
-
-const formSchema = z.object({
-  chain: z.string().min(1),
+const takeOrderSchema = z.object({
+  chainId: z.number().min(1),
 });
 
-type Inputs = z.infer<typeof formSchema>;
+export type TakeOrder = z.infer<typeof takeOrderSchema>;
 
 export default function TakeOrder() {
-  const { control, handleSubmit } = useForm<Inputs>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      chain: '',
-    },
+  const { control, handleSubmit } = useForm<TakeOrder>({
+    resolver: zodResolver(takeOrderSchema),
   });
 
   const {
@@ -45,19 +37,16 @@ export default function TakeOrder() {
     error: rejectOrderError,
   } = useRejectOrder();
 
-  const onSubmit: SubmitHandler<Inputs> = ({ chain }) => {
-    if (isSender) {
-      return acceptOrderAsync({
+  const onSubmit: SubmitHandler<TakeOrder> = async ({ chainId }) => {
+    try {
+      await acceptOrderAsync({
         key: 'senderagent',
         orderId,
-        body: { chain },
+        body: { chain: getCustomChainId(chainId) },
       });
+    } catch (err) {
+      console.error(err);
     }
-
-    acceptOrderAsync({
-      key: 'agent',
-      orderId,
-    });
   };
 
   return (
@@ -69,13 +58,24 @@ export default function TakeOrder() {
 
         <span className="text-xl font-bold md:text-2xl">~ 748.10 USDT</span>
       </div>
-      {isSender && <SelectChain control={control} name="chain" list={chain} />}
+      {isSender && (
+        <SelectChain control={control} name="chainId" list={chainList} />
+      )}
 
       {acceptOrderError && <ErrorAlert message={acceptOrderError.message} />}
       {rejectOrderError && <ErrorAlert message={rejectOrderError.message} />}
+
       <div className="flex flex-col space-y-2">
         <button
-          type="submit"
+          type={isSender ? 'submit' : 'button'}
+          onClick={async () => {
+            if (!isSender) {
+              await acceptOrderAsync({
+                key: 'agent',
+                orderId,
+              });
+            }
+          }}
           disabled={isAccepting || isRejecting}
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >

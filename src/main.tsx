@@ -7,13 +7,14 @@ import { defaultStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
 
 import { routeTree } from './routeTree.gen';
 
 import useAuth from './hooks/useAuth';
 import { AuthProvider } from './contexts/auth';
 
-import { authConfig, queryClient } from './utils/config';
+import { authConfig, queryClient, wagmiConfig } from './utils/config';
 import LoadingRing from './components/Spinner/LoadingRing';
 import DefaultFallback from './components/Fallback/DefaultFallback';
 
@@ -39,6 +40,12 @@ declare module '@tanstack/react-router' {
   }
 }
 
+declare module 'wagmi' {
+  interface Register {
+    config: typeof wagmiConfig;
+  }
+}
+
 export function App() {
   const auth = useAuth();
 
@@ -47,10 +54,12 @@ export function App() {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </QueryClientProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   </StrictMode>
 );

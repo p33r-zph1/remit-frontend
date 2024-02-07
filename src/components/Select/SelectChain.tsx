@@ -7,12 +7,12 @@ import {
   useController,
 } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+import { Chain } from 'viem';
+
+import { getChainName } from '../../configs/chains';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
-  list: {
-    name: string;
-    id: string;
-  }[]; // TODO: use `Chain` type from wagmi
+  list: Chain[];
 };
 
 export default function SelectChain<T extends FieldValues>({
@@ -36,12 +36,12 @@ export default function SelectChain<T extends FieldValues>({
           <Listbox.Button
             {...otherFields}
             className={twMerge(
-              'relative w-full cursor-default rounded-full border bg-white py-3 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-base',
+              'relative w-full rounded-full border bg-white py-3 pl-3 pr-10 text-left text-sm shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:bg-slate-100 md:text-base',
               error && 'border border-error text-error'
             )}
           >
             <span className="block truncate">
-              {value ? value : 'Select your chain'}
+              {value ? getChainName(value) : 'Select your chain'}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon
