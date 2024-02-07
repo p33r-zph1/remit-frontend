@@ -1,45 +1,72 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { CalendarIcon } from '@heroicons/react/20/solid';
-import { addHours, format, startOfHour } from 'date-fns';
+import {
+  FieldValues,
+  UseControllerProps,
+  useController,
+} from 'react-hook-form';
+import { addHours, format } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
 import DateCalendar from '../Date/DateCalendar';
 import DateTime from '../Date/DateTime';
 
-export default function CalendarPopover() {
-  const [startDate, setStartDate] = useState(startOfHour(new Date()));
+type Props<T extends FieldValues> = UseControllerProps<T> & {
+  setEndDate: (date: Date) => void;
+};
+
+export default function CalendarPopover<T extends FieldValues>({
+  setEndDate,
+  ...controllerProps
+}: Props<T>) {
+  const {
+    field: { name, onBlur, onChange, ref, value, disabled },
+    formState: { isSubmitting },
+  } = useController(controllerProps);
+
   const [durationInHr, setDurationInHr] = useState(1); // 1 hour
 
   // Calculate end date based on duration
-  const endDate = addHours(startDate, durationInHr);
+  const endDate = addHours(value, durationInHr);
+
+  useEffect(() => {
+    if (endDate) setEndDate(endDate);
+  }, [endDate, setEndDate]);
 
   return (
-    <Popover className="my-2">
+    <Popover className="my-1">
       {({ open }) => (
         <>
           <Popover.Button
             className={twMerge(
-              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 px-1 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary md:text-base'
+              'flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary disabled:text-slate-400 disabled:hover:cursor-not-allowed md:text-base'
             )}
+            name={name}
+            onBlur={onBlur}
+            ref={ref}
+            disabled={isSubmitting || disabled}
           >
             <CalendarIcon
-              className={twMerge(
-                open ? 'text-black' : 'text-black/70',
-                'h-5 w-5'
-              )}
+              className={twMerge(open && 'text-black', 'h-5 w-5')}
               aria-hidden="true"
             />
 
             <span className="font-semibold">
-              {format(startDate, 'MMMM dd, yyyy')}
-              {` `}
-              <span className="tracking-tighter">
-                {format(startDate, 'h:mm a')}
-                {' - '}
-                {format(endDate, 'h:mm a')}{' '}
-                <small className="text-gray-400">{`(${durationInHr}hr)`}</small>
-              </span>
+              {value ? (
+                <Fragment>
+                  {format(value, 'MMMM dd, yyyy')}
+                  {` `}
+                  <span className="tracking-tighter">
+                    {format(value, 'h:mm a')}
+                    {' - '}
+                    {format(endDate, 'h:mm a')}{' '}
+                    <small className="text-gray-400">{`(${durationInHr}hr)`}</small>
+                  </span>
+                </Fragment>
+              ) : (
+                'Please select a date'
+              )}
             </span>
           </Popover.Button>
 
@@ -54,17 +81,21 @@ export default function CalendarPopover() {
           >
             <Popover.Panel className="absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform rounded-md bg-zinc-50 lg:max-w-md">
               <div className="overflow-hidden rounded-lg p-4 shadow-lg ring-1 ring-black/5">
-                <DateCalendar day={startDate} onChange={setStartDate} />
+                <DateCalendar value={value} onChange={onChange} />
 
-                <div className="divider" />
+                {value && (
+                  <Fragment>
+                    <div className="divider" />
 
-                <DateTime
-                  title="Time & Duration"
-                  today={startDate}
-                  onChange={setStartDate}
-                  durationInHr={durationInHr}
-                  setDurationInHr={setDurationInHr}
-                />
+                    <DateTime
+                      title="Time & Duration"
+                      value={value}
+                      onChange={onChange}
+                      durationInHr={durationInHr}
+                      setDurationInHr={setDurationInHr}
+                    />
+                  </Fragment>
+                )}
               </div>
             </Popover.Panel>
           </Transition>

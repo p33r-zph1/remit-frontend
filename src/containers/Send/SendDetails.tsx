@@ -4,15 +4,15 @@ import {
   UseControllerProps,
   useController,
 } from 'react-hook-form';
-import { twMerge } from 'tailwind-merge';
 
-import { Agent } from '../schema/agent';
+import { Agent } from '../../schema/agent';
+import SelectAgent from '../../components/Select/SelectAgent';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   list: Agent[];
 };
 
-export default function SendDetailsForm<T extends FieldValues>({
+export default function SendDetails<T extends FieldValues>({
   list,
   ...controllerProps
 }: Props<T>) {
@@ -49,29 +49,13 @@ export default function SendDetailsForm<T extends FieldValues>({
               strokeWidth={2}
             />
           </div>
-          <select
-            className={twMerge(
-              error && 'text-error',
-              'select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none disabled:border-slate-400'
-            )}
+
+          <SelectAgent
+            list={list}
+            error={error}
             disabled={isSubmitting}
             {...field}
-          >
-            <option disabled value="default">
-              {error?.message ? error?.message : 'Select agent commision'}
-            </option>
-
-            {list.map(item => (
-              <option
-                key={item.agentId}
-                value={item.agentId}
-                disabled={!item.isActive}
-                className="text-gray-500"
-              >
-                {item.commission}% - {item.agentId}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       </div>
     </div>

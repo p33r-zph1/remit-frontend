@@ -3,11 +3,11 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
-import Page from '../components/Page';
-import AlertList from '../containers/AlertList';
-import QueryFallback from '../components/QueryFallback';
-import AlertSkeleton from '../components/Skeleton/AlertSkeleton';
-import HeaderTitle from '../components/HeaderTitle';
+import Page from '../../components/Page';
+import AlertList from '../../containers/AlertList';
+import QueryFallback from '../../components/Fallback/QueryFallback';
+import AlertSkeleton from '../../components/Skeleton/AlertSkeleton';
+import HeaderTitle from '../../components/HeaderTitle';
 
 export const Route = createFileRoute('/_auth/alerts')({
   component: () => (

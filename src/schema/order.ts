@@ -16,6 +16,7 @@ export const transferTimelineStatusSchema = z.enum([
   'SENDER_AGENT_REJECTED',
   'RECIPIENT_AGENT_ACCEPTED',
   'RECIPIENT_AGENT_REJECTED',
+  'ORDER_ACCEPTED',
   'COLLECTION_MEETUP_SET',
   'CASH_COLLECTED',
   'ESCROW_DEPOSITED',
@@ -26,13 +27,14 @@ export const transferTimelineStatusSchema = z.enum([
 
 export const feesSchema = z.object({
   platformFee: z.number(),
-  senderAgentCommission: z.string(),
-  recipientAgentCommission: z.string().optional(),
+  senderAgentCommission: z.number(),
+  recipientAgentCommission: z.number().nullish(),
 });
 
 export const transferInfoSchema = z.object({
   amount: z.number(),
   currency: z.string(),
+  countryIsoCode: z.string(),
 });
 
 export const transferDetailsSchema = z.object({
@@ -66,6 +68,13 @@ export const locationDetailsSchema = z.object({
   radius: radiusSchema,
 });
 
+export const contactDetailsSchema = z.object({
+  recipient: z.object({ telegram: z.string() }),
+  sender: z.object({ telegram: z.string() }),
+  senderAgent: z.object({ telegram: z.string() }).optional(),
+  recipientAgent: z.object({ telegram: z.string() }).optional(),
+});
+
 export const orderSchema = z.object({
   orderId: z.string(),
   createdAt: z.coerce.date(),
@@ -77,6 +86,7 @@ export const orderSchema = z.object({
   recipientAgentId: z.string().optional(),
   orderStatus: orderStatusSchema,
   transferTimelineStatus: transferTimelineStatusSchema,
+  contactDetails: contactDetailsSchema,
   fees: feesSchema,
   priceOracleRates: z.record(z.string(), z.number()),
   transferDetails: transferDetailsSchema,
@@ -93,6 +103,12 @@ export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
 
+export type TransferTimelineStatus = z.infer<
+  typeof transferTimelineStatusSchema
+>;
+
 export type TransferInfo = z.infer<typeof transferInfoSchema>;
+
+export type LocationDetails = z.infer<typeof locationDetailsSchema>;
 
 export default orderApiSchema;

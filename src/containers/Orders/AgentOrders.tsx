@@ -1,16 +1,16 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 import OrderList from './OrderList';
-import HeaderTitle from '../components/HeaderTitle';
-import EmptyOrder from '../components/Empty/EmptyOrder';
-import useAgent from '../hooks/api/useAgent';
-import useAuth from '../hooks/useAuth';
+import useAgent from '../../hooks/api/useAgent';
+import useAuth from '../../hooks/useAuth';
+
+import HeaderTitle from '../../components/HeaderTitle';
 
 function CommisionCard({
   commision,
   isActive,
 }: {
-  commision: string;
+  commision: number;
   isActive: boolean;
 }) {
   return (
@@ -59,12 +59,13 @@ export default function AgentOrders() {
         <HeaderTitle className="text-xl md:text-2xl">
           My Active Orders
         </HeaderTitle>
-        <OrderList />
+        <OrderList pageNumber={1} pageSize={10} status="active" />
       </div>
 
       <div>
         <HeaderTitle className="text-xl md:text-2xl">Open Orders</HeaderTitle>
-        <EmptyOrder />
+
+        <OrderList pageNumber={1} pageSize={10} status="open" />
       </div>
     </div>
   );

@@ -6,45 +6,39 @@ import {
 
 import type { OrderStatus, TransferTimeline } from '../../schema/order';
 
-function getIconByStatus(status: OrderStatus) {
+function getIconByStatus(status: OrderStatus, isLastItem: boolean = false) {
+  if (status === 'IN_PROGRESS' && isLastItem) {
+    return <ClockIcon className="h-6 w-6 text-gray-300" />;
+  }
+
   switch (status) {
-    // case 'SENT':
     case 'IN_PROGRESS':
-      return <ClockIcon className="h-6 w-6 text-gray-300" />;
+      return <ClockIcon className="h-6 w-6 text-primary" />;
     case 'COMPLETED':
       return <CheckCircleIcon className="h-6 w-6 text-primary" />;
     case 'CANCELLED':
-      return <XCircleIcon className="h-6 w-6 text-error" />;
+      return <XCircleIcon className="h-6 w-6 text-error/80" />;
     case 'EXPIRED':
       return <XCircleIcon className="h-6 w-6 text-gray-300" />;
   }
 }
 
-function getLineDividerByStatus(status: OrderStatus) {
+function getLineDividerByStatus(
+  status: OrderStatus,
+  isLastItem: boolean = false
+) {
+  if (status === 'IN_PROGRESS' && isLastItem) {
+    return <hr className="bg-slate-300" />;
+  }
+
   switch (status) {
-    // case 'SENT':
     case 'IN_PROGRESS':
-      return <hr className="bg-slate-300" />;
     case 'COMPLETED':
       return <hr className="bg-primary" />;
     case 'CANCELLED':
-      return <hr className="bg-error" />;
+      return <hr className="bg-error/80" />;
     case 'EXPIRED':
       return <hr className="bg-slate-300" />;
-  }
-}
-
-function getTooltipByStatus(status: OrderStatus) {
-  switch (status) {
-    // case 'SENT':
-    case 'IN_PROGRESS':
-      return 'This step is still pending.';
-    case 'COMPLETED':
-      return 'This step has completed successfully.';
-    case 'CANCELLED':
-      return 'This step has been cancelled.';
-    case 'EXPIRED':
-      return 'This step has expired.';
   }
 }
 
@@ -62,8 +56,8 @@ function Item({
 
       <div className="group timeline-end timeline-box">
         <div
-          className="tooltip flex select-none flex-col items-baseline"
-          data-tip={getTooltipByStatus(orderStatus)}
+          className="flex select-none flex-col items-baseline"
+          // data-tip={getTooltipByStatus(orderStatus)}
         >
           <span className="text-xs font-semibold md:text-sm">{title}</span>
 
@@ -84,20 +78,18 @@ type Props = {
 
 export default function TransferTimeline({ timeline }: Props) {
   return (
-    <>
-      <div className="mt-12 text-lg font-semibold md:mt-16 md:text-xl">
-        Transfer timeline
-      </div>
+    <div>
+      <div className="text-lg font-semibold md:text-xl">Transfer timeline</div>
 
       <ul className="timeline timeline-vertical timeline-compact">
         {timeline.map((item, index) => (
           <Item
-            key={item.dateTime.toString()}
+            key={item.description}
             {...item}
             isLastItem={index === timeline.length - 1}
           />
         ))}
       </ul>
-    </>
+    </div>
   );
 }

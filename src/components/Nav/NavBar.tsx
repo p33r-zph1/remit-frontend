@@ -1,4 +1,8 @@
-import { Bars3Icon, PowerIcon } from '@heroicons/react/20/solid';
+import {
+  Bars3Icon,
+  PowerIcon,
+  UserCircleIcon,
+} from '@heroicons/react/20/solid';
 import { Link, useNavigate, useRouter } from '@tanstack/react-router';
 
 import Brand from '../Brand';
@@ -6,7 +10,7 @@ import useAuth from '../../hooks/useAuth';
 import { useCallback } from 'react';
 
 export default function NavBar() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const navigate = useNavigate();
   const router = useRouter();
@@ -19,9 +23,17 @@ export default function NavBar() {
   }, [logout, navigate, router]);
 
   return (
-    <div className="navbar sticky top-0 bg-base-100">
+    <header className="navbar sticky top-0 z-[999] bg-base-100">
       <div className="navbar-start visible md:invisible">
-        <Brand />
+        <div className="flex lg:hidden">
+          <Brand />
+        </div>
+
+        <div className="invisible flex space-x-1 lg:visible">
+          <UserCircleIcon className="h-6 w-6" />
+
+          <span className="font-semibold underline">{user}</span>
+        </div>
       </div>
 
       <div className="navbar-center hidden md:flex">
@@ -84,6 +96,6 @@ export default function NavBar() {
           </li>
         </ul>
       </div>
-    </div>
+    </header>
   );
 }

@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type Props = {
-  day: Date;
+  value: Date | undefined;
   onChange: Dispatch<SetStateAction<Date>>;
 };
 
@@ -66,8 +66,9 @@ const getDayStatus = (
   return 'OTHER_MONTH';
 };
 
-export default function DateCalendar({ day, onChange }: Props) {
+export default function DateCalendar({ value, onChange }: Props) {
   const today = startOfToday();
+  const day = value || today;
 
   const [selectedDay, setSelectedDay] = useState(day);
   const [currentMonth, setCurrentMonth] = useState(format(day, 'MMM-yyyy'));

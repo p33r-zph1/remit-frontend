@@ -1,18 +1,30 @@
+import { useCallback } from 'react';
+import { Combobox } from '@headlessui/react';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete';
-import { Combobox } from '@headlessui/react';
-import { useCallback } from 'react';
+import {
+  FieldValues,
+  UseControllerProps,
+  useController,
+} from 'react-hook-form';
 
-type Props = {
-  onSelect: (position: google.maps.LatLngLiteral) => void;
+type Props<T extends FieldValues> = UseControllerProps<T> & {
+  onSelect: (position: LatLng) => void;
 };
 
-export default function PlacesAutocomplete({ onSelect }: Props) {
+export default function PlacesAutocomplete<T extends FieldValues>({
+  onSelect,
+  ...controllerProps
+}: Props<T>) {
+  const {
+    field: { onChange, value, disabled, ...otherFields },
+    formState: { isSubmitting },
+  } = useController(controllerProps);
+
   const {
     ready,
-    value,
     setValue,
     suggestions: { status, data },
     clearSuggestions,
@@ -27,18 +39,25 @@ export default function PlacesAutocomplete({ onSelect }: Props) {
 
       getGeocode({ address: description }).then(results => {
         const { lat, lng } = getLatLng(results[0]!);
+
+        onChange(description);
         onSelect({ lat, lng });
       });
     },
-    [clearSuggestions, onSelect, setValue]
+    [clearSuggestions, onChange, onSelect, setValue]
   );
 
   return (
-    <Combobox disabled={!ready} value={value} onChange={handleSelect}>
+    <Combobox
+      value={value}
+      onChange={handleSelect}
+      disabled={!ready || disabled || isSubmitting}
+    >
       <Combobox.Input
-        placeholder="Start by typing a place or establishment"
+        {...otherFields}
         onChange={e => setValue(e.target.value)}
-        className="w-full rounded-lg border-slate-200 py-2 text-sm font-semibold placeholder:text-xs placeholder:font-semibold"
+        placeholder="Start by typing a place or establishment"
+        className="w-full rounded-lg border border-slate-200 p-2 text-sm font-semibold outline-primary placeholder:text-xs placeholder:font-semibold disabled:text-gray-400 disabled:hover:cursor-not-allowed"
       />
 
       <Combobox.Options>
