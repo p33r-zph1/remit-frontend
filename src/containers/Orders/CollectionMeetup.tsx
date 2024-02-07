@@ -11,12 +11,12 @@ type Props = {
 
 export default function CollectionMeetup({ group }: Props) {
   const {
-    order: { collectionDetails, senderAgentId },
+    order: { deliveryDetails, senderAgentId },
   } = useOrderDetails();
 
-  if (!collectionDetails) throw new Error('Collection details is not present.');
+  if (!deliveryDetails) throw new Error('Delivery details is not present.');
 
-  const { areaName } = collectionDetails;
+  const { areaName } = deliveryDetails;
 
   return (
     <div className="flex flex-col space-y-12">
@@ -49,7 +49,7 @@ export default function CollectionMeetup({ group }: Props) {
       </div>
 
       {group === 'customer' && (
-        <CustomerMeetup collectionDetails={collectionDetails} />
+        <CustomerMeetup locationDetails={deliveryDetails} />
       )}
     </div>
   );

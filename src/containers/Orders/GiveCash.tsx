@@ -27,7 +27,7 @@ font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:
         </button>
       </div>
 
-      <CustomerMeetup collectionDetails={collectionDetails} />
+      <CustomerMeetup locationDetails={collectionDetails} />
     </div>
   );
 }

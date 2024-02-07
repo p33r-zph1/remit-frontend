@@ -10,11 +10,11 @@ import { format } from 'date-fns';
 const libraries: Libraries = ['places'];
 
 type Props = {
-  collectionDetails: LocationDetails;
+  locationDetails: LocationDetails;
 };
 
 export default function CustomerMeetup({
-  collectionDetails: { areaName, coordinates, radius, startDate, endDate },
+  locationDetails: { areaName, coordinates, radius, startDate, endDate },
 }: Props) {
   const mapRef = useRef<google.maps.Map>();
 
