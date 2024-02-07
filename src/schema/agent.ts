@@ -2,13 +2,15 @@ import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 
 export const agentSchema = z.object({
+  agentId: z.string(),
   isActive: z.boolean(),
   countryIsoCode: z.string(),
+  commission: z.number(),
   contactDetails: z.object({
     telegram: z.string(),
   }),
-  commission: z.string(),
-  agentId: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 const agentApiSchema = makeApiSchema(agentSchema);
