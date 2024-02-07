@@ -8,22 +8,26 @@ export default function GiveCash() {
     order: { senderAgentId, collectionDetails },
   } = useOrderDetails();
 
-  return (
-    <>
-      <HeaderTitle className="text-xl md:text-2xl">
-        Give cash to Agent {senderAgentId}
-      </HeaderTitle>
+  if (!collectionDetails) throw new Error('Collection details is not present.');
 
-      <button
-        type="button"
-        className="btn btn-primary btn-block rounded-full text-base
+  return (
+    <div className="flex flex-col space-y-12">
+      <div>
+        <HeaderTitle className="text-xl md:text-2xl">
+          Give cash to Agent #{senderAgentId}
+        </HeaderTitle>
+
+        <button
+          type="button"
+          className="btn btn-primary btn-block rounded-full text-base
 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-      >
-        <PhoneIcon className="h-6 w-6" />
-        Contact agent
-      </button>
+        >
+          <PhoneIcon className="h-6 w-6" />
+          Contact agent
+        </button>
+      </div>
 
       <CustomerMeetup collectionDetails={collectionDetails} />
-    </>
+    </div>
   );
 }

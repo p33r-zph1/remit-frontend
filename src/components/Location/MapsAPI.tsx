@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useMemo } from 'react';
-import { Circle, GoogleMap, Marker } from '@react-google-maps/api';
+import { CircleF, GoogleMap, MarkerF } from '@react-google-maps/api';
 import type { CircleProps } from '@react-google-maps/api';
 import { coerce } from 'zod';
 
@@ -7,6 +7,7 @@ type Props = {
   meetUpLocation: LatLng | undefined;
   radius: number;
   disabled?: boolean;
+  onLoad?: () => void;
 };
 
 const defaultCenter: LatLng = {
@@ -21,8 +22,7 @@ function getRadiusOptions(radius: number) {
   return farOptions;
 }
 
-function getZoomLevel(radius: number, isLatLngAvailable: boolean) {
-  if (!isLatLngAvailable) return 10; // zoomed far out
+function getZoomLevel(radius: number) {
   if (radius === 0) return 17;
   if (radius <= 250) return 16.5;
   if (radius <= 500) return 15;
@@ -33,20 +33,15 @@ function getZoomLevel(radius: number, isLatLngAvailable: boolean) {
 }
 
 const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
-  ({ meetUpLocation, radius, disabled }: Props, ref) => {
-    const zoomLevel = useMemo(
-      () => getZoomLevel(radius, Boolean(meetUpLocation)),
-      [meetUpLocation, radius]
-    );
-
+  ({ meetUpLocation, radius, disabled, onLoad }: Props, ref) => {
     const mapOptions = useMemo<google.maps.MapOptions>(
       () => ({
         disableDefaultUI: true,
         clickableIcons: false,
-        zoom: zoomLevel,
+        zoom: getZoomLevel(radius),
         gestureHandling: disabled ? 'none' : 'cooperative',
       }),
-      [disabled, zoomLevel]
+      [disabled, radius]
     );
 
     const onload = useCallback(
@@ -56,13 +51,15 @@ const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
 
         if (typeof ref === 'function') ref(mapRef);
         else ref.current = mapRef;
+
+        onLoad?.();
       },
-      [ref]
+      [onLoad, ref]
     );
 
     return (
       <GoogleMap
-        zoom={10}
+        zoom={meetUpLocation ? getZoomLevel(radius) : 10}
         center={defaultCenter}
         mapContainerClassName="h-56 md:h-[40vh] w-full"
         options={mapOptions}
@@ -70,10 +67,10 @@ const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
       >
         {meetUpLocation && (
           <>
-            <Marker position={meetUpLocation} />
+            <MarkerF position={meetUpLocation} />
 
             {coerce.number().safeParse(radius).success && (
-              <Circle
+              <CircleF
                 center={meetUpLocation}
                 radius={radius}
                 options={getRadiusOptions(radius)}

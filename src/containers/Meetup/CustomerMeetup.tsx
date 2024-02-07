@@ -4,18 +4,18 @@ import { useLoadScript, Libraries } from '@react-google-maps/api';
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';
 import { LocationDetails } from '../../schema/order';
+import { CalendarIcon } from '@heroicons/react/20/solid';
+import { format } from 'date-fns';
 
 const libraries: Libraries = ['places'];
 
 type Props = {
-  collectionDetails: LocationDetails | undefined;
+  collectionDetails: LocationDetails;
 };
 
-export default function CustomerMeetup({ collectionDetails }: Props) {
-  if (!collectionDetails) throw new Error('Missing collection details');
-
-  const { areaName, coordinates, radius } = collectionDetails;
-
+export default function CustomerMeetup({
+  collectionDetails: { areaName, coordinates, radius, startDate, endDate },
+}: Props) {
   const mapRef = useRef<google.maps.Map>();
 
   const { isLoaded } = useLoadScript({
@@ -32,7 +32,19 @@ export default function CustomerMeetup({ collectionDetails }: Props) {
           Collection date and time
         </div>
 
-        <span>date and time here</span>
+        <div className="flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm md:text-base">
+          <CalendarIcon className="h-5 w-5" />
+
+          <span className="font-semibold">
+            {format(startDate, 'MMMM dd, yyyy')}
+            {` `}
+            <span className="tracking-tighter">
+              {format(startDate, 'h:mm a')}
+              {' - '}
+              {format(endDate, 'h:mm a')}
+            </span>
+          </span>
+        </div>
       </div>
 
       <div>
@@ -40,7 +52,9 @@ export default function CustomerMeetup({ collectionDetails }: Props) {
 
         <div className="rounded-lg border border-slate-200">
           <div className="mt-2 flex flex-col space-y-4 p-4">
-            <span>{areaName}</span>
+            <span className="w-full rounded-lg border border-slate-200 p-2 text-sm font-semibold">
+              {areaName}
+            </span>
           </div>
 
           <MapsAPI
@@ -50,6 +64,13 @@ export default function CustomerMeetup({ collectionDetails }: Props) {
               lng: Number(coordinates.longitude),
             }}
             radius={radius.value}
+            disabled={false}
+            onLoad={() => {
+              mapRef.current?.panTo({
+                lat: Number(coordinates.latitude),
+                lng: Number(coordinates.longitude),
+              });
+            }}
           />
         </div>
       </div>

@@ -4,8 +4,8 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import useAuth from '../../../../hooks/useAuth';
-import CustomerOrderDetails from '../../../../containers/Orders/Customer/OrderDetails';
-import AgentOrderDetails from '../../../../containers/Orders/Agent/OrderDetails';
+import CustomerOrderDetails from '../../../../containers/Orders/Customer/CustomerOrderDetails';
+import AgentOrderDetails from '../../../../containers/Orders/Agent/AgentOrderDetails';
 
 import Page from '../../../../components/Page';
 import QueryFallback from '../../../../components/Fallback/QueryFallback';

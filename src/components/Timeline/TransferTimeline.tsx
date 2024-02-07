@@ -84,7 +84,7 @@ export default function TransferTimeline({ timeline }: Props) {
       <ul className="timeline timeline-vertical timeline-compact">
         {timeline.map((item, index) => (
           <Item
-            key={item.dateTime.toString()}
+            key={item.description}
             {...item}
             isLastItem={index === timeline.length - 1}
           />

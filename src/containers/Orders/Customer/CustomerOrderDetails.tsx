@@ -1,7 +1,7 @@
 import useOrderDetails from '../../../hooks/useOrderDetails';
 
-import SenderOrder from './SenderOrder';
-import RecipientOrder from './RecipientOrder';
+import SenderOrder from './SenderCustomerOrder';
+import RecipientOrder from './RecipientCustomerOrder';
 import TransferTimeline from '../../../components/Timeline/TransferTimeline';
 import TransferDetailsNav from '../../../components/Nav/TransferDetailsNav';
 
