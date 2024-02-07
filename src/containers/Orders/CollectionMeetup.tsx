@@ -28,7 +28,7 @@ export default function CollectionMeetup({ group }: Props) {
       <div className="flex flex-col space-y-2">
         <button
           type="submit"
-          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
           // disabled={order.}
         >
           <QrCodeIcon className="h-6 w-6" />
@@ -38,7 +38,7 @@ export default function CollectionMeetup({ group }: Props) {
 
         <button
           type="submit"
-          className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
           // disabled={order.}
         >
           Contact {group === 'customer' && 'agent'}

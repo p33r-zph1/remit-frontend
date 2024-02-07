@@ -16,7 +16,8 @@ export default function GiveCash() {
 
       <button
         type="button"
-        className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+        className="btn btn-primary btn-block rounded-full text-base
+font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
       >
         <PhoneIcon className="h-6 w-6" />
         Contact agent

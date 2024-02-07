@@ -79,7 +79,7 @@ export default function AcceptOrder() {
 
         <button
           type="submit"
-          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
           disabled={isSubmitting || isRejecting}
         >
           {isSubmitting && <span className="loading loading-spinner"></span>}
@@ -89,7 +89,7 @@ export default function AcceptOrder() {
         <button
           type="button"
           onClick={() => rejectOrderAsync({ orderId })}
-          className="btn btn-outline btn-error btn-block rounded-full text-xl font-semibold shadow-sm"
+          className="btn btn-outline btn-error btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
           disabled={isSubmitting || isRejecting}
         >
           {isRejecting && <span className="loading loading-spinner"></span>}

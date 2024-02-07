@@ -13,7 +13,7 @@ export default function SendERC20() {
       <div className="flex flex-col space-y-2">
         <button
           type="button"
-          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >
           <img src="/metamask.png" alt="metamask icon" className="h-8 w-8" />
           Transfer

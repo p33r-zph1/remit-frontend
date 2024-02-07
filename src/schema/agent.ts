@@ -9,8 +9,6 @@ export const agentSchema = z.object({
   contactDetails: z.object({
     telegram: z.string(),
   }),
-  createdAt: z.string(),
-  updatedAt: z.string(),
 });
 
 const agentApiSchema = makeApiSchema(agentSchema);

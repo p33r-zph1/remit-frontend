@@ -23,7 +23,7 @@ function BtmLink({ title, isActive, icon: Icon }: LinkItem) {
 
 export default function BottomNavigation() {
   return (
-    <>
+    <footer>
       {/* White Background Filler */}
       <div className="fixed bottom-0 left-0 right-0 h-16 bg-white lg:hidden" />
 
@@ -55,6 +55,6 @@ export default function BottomNavigation() {
           )}
         </Link>
       </div>
-    </>
+    </footer>
   );
 }

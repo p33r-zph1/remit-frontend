@@ -10,7 +10,7 @@ function CommisionCard({
   commision,
   isActive,
 }: {
-  commision: string;
+  commision: number;
   isActive: boolean;
 }) {
   return (

@@ -36,7 +36,7 @@ export default function CollectCash({ meetupType }: Props) {
           type="button"
           onClick={() => collectCashAsync({ orderId, meetupType })}
           disabled={isPending}
-          className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >
           {isPending && <span className="loading loading-spinner"></span>}
           <CurrencyDollarIcon className="h-6 w-6" />
@@ -46,7 +46,7 @@ export default function CollectCash({ meetupType }: Props) {
         <button
           type="button"
           disabled={isPending}
-          className="btn btn-outline btn-primary btn-block rounded-full text-xl font-semibold shadow-sm"
+          className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact sender
         </button>
