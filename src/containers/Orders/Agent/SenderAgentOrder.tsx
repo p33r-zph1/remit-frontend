@@ -1,9 +1,9 @@
 import { TransferTimelineStatus } from '../../../schema/order';
 
 import TakeOrder from '../TakeOrder';
+import AgentMeetup from '../../Meetup/AgentMeetup';
 import CollectCash from '../CollectCash';
 import SendERC20 from '../SendERC20';
-import SetCollectionMeetup from '../SetCollectionMeetup';
 
 type Props = {
   status: TransferTimelineStatus;
@@ -16,7 +16,7 @@ export default function SenderAgentOrder({ status }: Props) {
       return <TakeOrder />;
 
     case 'ORDER_ACCEPTED':
-      return <SetCollectionMeetup meetupType="collection" />;
+      return <AgentMeetup meetupType="collection" />;
 
     case 'COLLECTION_MEETUP_SET':
       return <CollectCash meetupType="collection" />;

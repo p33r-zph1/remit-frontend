@@ -1,6 +1,6 @@
 import { TransferTimelineStatus } from '../../../schema/order';
+import AgentMeetup from '../../Meetup/AgentMeetup';
 import CollectionMeetup from '../CollectionMeetup';
-import SetCollectionMeetup from '../SetCollectionMeetup';
 import TakeOrder from '../TakeOrder';
 
 type Props = {
@@ -14,7 +14,7 @@ export default function RecipientAgentOrder({ status }: Props) {
       return <TakeOrder />;
 
     case 'ESCROW_DEPOSITED': {
-      return <SetCollectionMeetup meetupType="delivery" />;
+      return <AgentMeetup meetupType="delivery" />;
     }
 
     case 'DELIVERY_MEETUP_SET': {

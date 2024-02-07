@@ -5,13 +5,14 @@ import { useLoadScript, Libraries } from '@react-google-maps/api';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
+import useSetCollection, {
+  MutationProps,
+} from '../../hooks/api/useSetCollection';
+import useOrderDetails from '../../hooks/useOrderDetails';
 import MapsAPI from '../../components/Location/MapsAPI';
 import CalendarPopover from '../../components/Popover/CalendarPopover';
 import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
 import LoadingRing from '../../components/Spinner/LoadingRing';
-import useSetCollection, {
-  MutationProps,
-} from '../../hooks/api/useSetCollection';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const deliveryProps = z.object({
@@ -32,11 +33,10 @@ const libraries: Libraries = ['places'];
 // let rerender = 0;
 
 type Props = {
-  orderId: string;
   meetupType: MutationProps['meetupType'];
 };
 
-export default function AgentMeetup({ orderId, meetupType }: Props) {
+export default function AgentMeetup({ meetupType }: Props) {
   const {
     control,
     register,
@@ -59,6 +59,10 @@ export default function AgentMeetup({ orderId, meetupType }: Props) {
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
     libraries,
   });
+
+  const {
+    order: { orderId },
+  } = useOrderDetails();
 
   const { mutateAsync: setCollectionAsync, error } = useSetCollection();
 
