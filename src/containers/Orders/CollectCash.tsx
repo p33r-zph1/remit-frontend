@@ -14,17 +14,10 @@ export default function CollectCash({ meetupType }: Props) {
     order: { orderId },
   } = useOrderDetails();
 
-  const {
-    data: order,
-    mutateAsync: collectCashAsync,
-    isPending,
-    error,
-  } = useCollectCash();
-
-  console.log({ order });
+  const { mutateAsync: collectCashAsync, isPending, error } = useCollectCash();
 
   return (
-    <>
+    <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
         Collect cash on Nov 21 at Central Abu Dhabi, 5-6 pm
       </HeaderTitle>
@@ -51,6 +44,6 @@ export default function CollectCash({ meetupType }: Props) {
           Contact sender
         </button>
       </div>
-    </>
+    </div>
   );
 }

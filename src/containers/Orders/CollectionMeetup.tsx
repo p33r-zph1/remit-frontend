@@ -11,12 +11,12 @@ type Props = {
 
 export default function CollectionMeetup({ group }: Props) {
   const {
-    order: { deliveryDetails, senderAgentId },
+    order: { collectionDetails, senderAgentId },
   } = useOrderDetails();
 
-  if (!deliveryDetails) throw new Error('Delivery details is not present.');
+  if (!collectionDetails) throw new Error('Delivery details is not present.');
 
-  const { areaName } = deliveryDetails;
+  const { areaName } = collectionDetails;
 
   return (
     <div className="flex flex-col space-y-12">
@@ -28,9 +28,8 @@ export default function CollectionMeetup({ group }: Props) {
 
         <div className="flex flex-col space-y-2">
           <button
-            type="submit"
+            type="button"
             className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-            // disabled={order.}
           >
             <QrCodeIcon className="h-6 w-6" />
             {group === 'customer' && 'Show QR'}
@@ -38,9 +37,8 @@ export default function CollectionMeetup({ group }: Props) {
           </button>
 
           <button
-            type="submit"
+            type="button"
             className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-            // disabled={order.}
           >
             Contact {group === 'customer' && 'agent'}
             {group === 'agent' && 'recipient'}
@@ -49,7 +47,7 @@ export default function CollectionMeetup({ group }: Props) {
       </div>
 
       {group === 'customer' && (
-        <CustomerMeetup locationDetails={deliveryDetails} />
+        <CustomerMeetup locationDetails={collectionDetails} />
       )}
     </div>
   );

@@ -3,7 +3,11 @@ import { twMerge } from 'tailwind-merge';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
-export default function ConnectWallet() {
+type Props = {
+  disabled?: boolean;
+};
+
+export default function ConnectWallet({ disabled }: Props) {
   const { isConnected, isConnecting, isDisconnected } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
@@ -17,13 +21,14 @@ export default function ConnectWallet() {
     <div className="flex flex-col space-y-2">
       <button
         type="button"
-        onClick={handleClick}
         className={twMerge(
           'btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg',
           isConnected
             ? 'btn-outline'
             : 'disabled:bg-primary/70 disabled:text-primary-content'
         )}
+        onClick={handleClick}
+        disabled={disabled}
       >
         {isConnecting && <span className="loading loading-spinner"></span>}
 

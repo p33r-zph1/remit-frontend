@@ -18,6 +18,9 @@ export type TakeOrder = z.infer<typeof takeOrderSchema>;
 export default function TakeOrder() {
   const { control, handleSubmit } = useForm<TakeOrder>({
     resolver: zodResolver(takeOrderSchema),
+    defaultValues: {
+      chainId: 0,
+    },
   });
 
   const {
