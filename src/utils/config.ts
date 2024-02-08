@@ -1,7 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { ResourcesConfig } from 'aws-amplify';
 import { http, createConfig } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
+import { bsc, bscTestnet, mainnet, sepolia } from 'wagmi/chains';
+import { injected } from 'wagmi/connectors';
 
 export const queryClient = new QueryClient();
 
@@ -13,9 +14,12 @@ export const authConfig: ResourcesConfig['Auth'] = {
 };
 
 export const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia],
+  chains: [mainnet, sepolia, bsc, bscTestnet],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
+    [bsc.id]: http(),
+    [bscTestnet.id]: http(),
   },
+  connectors: [injected()],
 });

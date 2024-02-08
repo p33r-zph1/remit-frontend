@@ -8,7 +8,7 @@ export default function HeaderTitle({ className, ...otherProps }: HeaderProps) {
     <h1
       {...otherProps}
       className={twMerge(
-        'my-6 text-2xl font-semibold md:mb-6 md:mt-14 md:text-3xl',
+        'my-6 text-balance text-2xl font-semibold md:mb-6 md:mt-14 md:text-3xl',
         className
       )}
     />

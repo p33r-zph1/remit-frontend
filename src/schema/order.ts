@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
+import { isValidAddress } from '../utils';
 
 export const orderStatusSchema = z.enum([
   'COMPLETED',
@@ -75,6 +76,18 @@ export const contactDetailsSchema = z.object({
   recipientAgent: z.object({ telegram: z.string() }).optional(),
 });
 
+export const escrowDetailsSchema = z.object({
+  amount: z.number(),
+  token: z.string(),
+  tokenAddress: z.string().refine(isValidAddress).optional(),
+  tokenDecimals: z.number().optional(),
+  chain: z.string().optional(),
+  escrow: z.string().refine(isValidAddress).optional(),
+  depositTransaction: z.string().refine(isValidAddress).optional(),
+  releaseTransaction: z.string().refine(isValidAddress).optional(),
+  refundTransaction: z.string().refine(isValidAddress).optional(),
+});
+
 export const orderSchema = z.object({
   orderId: z.string(),
   createdAt: z.coerce.date(),
@@ -93,6 +106,7 @@ export const orderSchema = z.object({
   transferTimeline: z.array(transferTimelineSchema),
   collectionDetails: locationDetailsSchema.optional(),
   deliveryDetails: locationDetailsSchema.optional(),
+  escrowDetails: escrowDetailsSchema,
 });
 
 const orderApiSchema = makeApiSchema(orderSchema);
