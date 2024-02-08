@@ -1,8 +1,10 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
+import { useCallback } from 'react';
 
-import HeaderTitle from '../../components/HeaderTitle';
 import { Group } from '../../schema/cognito';
 import useOrderDetails from '../../hooks/useOrderDetails';
+import useGenerateQr from '../../hooks/api/useGenerateQr';
+import HeaderTitle from '../../components/HeaderTitle';
 import CustomerMeetup from '../Meetup/CustomerMeetup';
 
 type Props = {
@@ -11,12 +13,26 @@ type Props = {
 
 export default function CollectionMeetup({ group }: Props) {
   const {
-    order: { collectionDetails, senderAgentId },
+    order: { collectionDetails, senderAgentId, orderId },
   } = useOrderDetails();
 
   if (!collectionDetails) throw new Error('Delivery details is not present.');
 
   const { areaName } = collectionDetails;
+
+  const {
+    mutateAsync: generateQrAsync,
+    isPending: isGeneratingQr,
+    data,
+  } = useGenerateQr();
+
+  console.log({ data });
+
+  const handleQrClick = useCallback(async () => {
+    if (group === 'customer') {
+      return await generateQrAsync({ orderId });
+    }
+  }, [generateQrAsync, group, orderId]);
 
   return (
     <div className="flex flex-col space-y-12">
@@ -30,6 +46,8 @@ export default function CollectionMeetup({ group }: Props) {
           <button
             type="button"
             className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
+            onClick={handleQrClick}
+            disabled={isGeneratingQr}
           >
             <QrCodeIcon className="h-6 w-6" />
             {group === 'customer' && 'Show QR'}
@@ -39,6 +57,7 @@ export default function CollectionMeetup({ group }: Props) {
           <button
             type="button"
             className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
+            disabled={isGeneratingQr}
           >
             Contact {group === 'customer' && 'agent'}
             {group === 'agent' && 'recipient'}
