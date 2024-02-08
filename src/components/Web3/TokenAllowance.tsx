@@ -1,4 +1,4 @@
-import LoadingRing from '../../components/Spinner/LoadingRing';
+import LoadingRing from '../Spinner/LoadingRing';
 import useTokenAllowance, {
   AllowanceProps,
 } from '../../hooks/erc20/useTokenAllowance';
@@ -7,6 +7,7 @@ import ApproveAllowance from './ApproveAllowance';
 type Props = AllowanceProps & {
   symbol: string;
   tokenAmount: string;
+  onApproved: () => void;
 };
 
 export default function TokenAllowance({
@@ -16,6 +17,7 @@ export default function TokenAllowance({
   tokenAmount,
   decimals,
   symbol,
+  onApproved,
 }: Props) {
   const { allowance, isLoading } = useTokenAllowance({
     ownerAddress,
@@ -33,6 +35,7 @@ export default function TokenAllowance({
         tokenAddress={tokenAddress}
         value={tokenAmount}
         decimals={decimals}
+        onApproved={onApproved}
       />
     );
   }

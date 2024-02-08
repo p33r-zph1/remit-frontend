@@ -1,14 +1,17 @@
+import { useCallback } from 'react';
+// import { CheckIcon } from '@heroicons/react/20/solid';
 import { Address, erc20Abi, parseUnits } from 'viem';
-import { useAccount, useWriteContract } from 'wagmi';
-import ErrorAlert from '../../components/Alert/ErrorAlert';
+import { useWriteContract } from 'wagmi';
+
+import ErrorAlert from '../Alert/ErrorAlert';
 import { trimErrorMessage } from '../../utils';
-import { CheckIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   tokenAddress: Address;
   spenderAddress: Address;
   value: string;
   decimals: number;
+  onApproved: () => void;
 };
 
 export default function ApproveAllowance({
@@ -16,15 +19,39 @@ export default function ApproveAllowance({
   spenderAddress,
   value,
   decimals,
+  onApproved,
 }: Props) {
-  const { chain } = useAccount(); // TODO: create a helper function for getting the block explorer
-  const { data: hash, writeContract, error, isPending } = useWriteContract();
+  // const { chain } = useAccount(); // TODO: create a helper function for getting the block explorer
+  const {
+    // data: hash,
+    writeContractAsync,
+    error,
+    isPending,
+  } = useWriteContract();
+
+  const handleApproveTransfer = useCallback(async () => {
+    await writeContractAsync({
+      address: tokenAddress,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [spenderAddress, parseUnits(value, decimals)],
+    });
+
+    onApproved();
+  }, [
+    decimals,
+    onApproved,
+    spenderAddress,
+    tokenAddress,
+    value,
+    writeContractAsync,
+  ]);
 
   return (
     <div className="flex flex-col space-y-2">
       {error && <ErrorAlert message={trimErrorMessage(error.message)} />}
 
-      {hash && (
+      {/* {hash && (
         <div role="alert" className="alert bg-white shadow-md">
           <CheckIcon className="h-6 w-6 text-success" />
 
@@ -48,19 +75,13 @@ export default function ApproveAllowance({
             </button>
           )}
         </div>
-      )}
+      )} */}
 
       <button
         type="button"
         className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-        onClick={() => {
-          writeContract({
-            address: tokenAddress,
-            abi: erc20Abi,
-            functionName: 'approve',
-            args: [spenderAddress, parseUnits(value, decimals)],
-          });
-        }}
+        onClick={handleApproveTransfer}
+        disabled={isPending}
       >
         {isPending ? (
           <span className="loading loading-spinner"></span>

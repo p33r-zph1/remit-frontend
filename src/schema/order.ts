@@ -83,9 +83,9 @@ export const escrowDetailsSchema = z.object({
   tokenDecimals: z.number().optional(),
   chain: z.string().optional(),
   escrow: z.string().refine(isValidAddress).optional(),
-  depositTransaction: z.string().refine(isValidAddress).optional(),
-  releaseTransaction: z.string().refine(isValidAddress).optional(),
-  refundTransaction: z.string().refine(isValidAddress).optional(),
+  depositTransaction: z.string().url().optional(),
+  releaseTransaction: z.string().url().optional(),
+  refundTransaction: z.string().url().optional(),
 });
 
 export const orderSchema = z.object({

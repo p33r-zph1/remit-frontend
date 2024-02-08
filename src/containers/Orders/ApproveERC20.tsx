@@ -2,9 +2,10 @@ import { useAccount } from 'wagmi';
 import { numericFormatter } from 'react-number-format';
 
 import useOrderDetails from '../../hooks/useOrderDetails';
+import useEscrowDeposit from '../../hooks/api/useEscrowDeposit';
 import HeaderTitle from '../../components/HeaderTitle';
-import ConnectWallet from '../Web3/ConnectWallet';
-import TokenAllowance from '../Web3/TokenAllowance';
+import ConnectWallet from '../../components/Web3/ConnectWallet';
+import TokenAllowance from '../../components/Web3/TokenAllowance';
 
 export default function ApproveERC20() {
   const {
@@ -17,6 +18,7 @@ export default function ApproveERC20() {
         tokenDecimals,
       },
       transferDetails: { recipient },
+      orderId,
     },
   } = useOrderDetails();
 
@@ -27,6 +29,7 @@ export default function ApproveERC20() {
     throw new Error('Token address/decimals cannot be missing!');
 
   const { address } = useAccount();
+  const { mutateAsync: escrowDepositAsync, isPending } = useEscrowDeposit();
 
   return (
     <div className="flex flex-col space-y-12">
@@ -51,20 +54,31 @@ export default function ApproveERC20() {
         </code>
       )} */}
 
-      <div className="flex flex-col space-y-2">
-        {address && (
-          <TokenAllowance
-            ownerAddress={address}
-            spenderAddress={escrowAddress}
-            tokenAddress={tokenAddress}
-            tokenAmount={String(tokenAmount)}
-            decimals={tokenDecimals}
-            symbol={tokenSymbol}
-          />
-        )}
+      {isPending && (
+        <div role="alert" className="alert bg-white shadow-md">
+          <span className="loading loading-dots"></span>
 
+          <span className="text-sm font-medium md:text-base">
+            Please wait while we confirm your transaction.
+          </span>
+        </div>
+      )}
+
+      {address ? (
+        <TokenAllowance
+          ownerAddress={address}
+          spenderAddress={escrowAddress}
+          tokenAddress={tokenAddress}
+          tokenAmount={String(tokenAmount)}
+          decimals={tokenDecimals}
+          symbol={tokenSymbol}
+          onApproved={() =>
+            escrowDepositAsync({ orderId, body: { walletAddress: address } })
+          }
+        />
+      ) : (
         <ConnectWallet />
-      </div>
+      )}
     </div>
   );
 }
