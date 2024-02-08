@@ -3,16 +3,28 @@ import { numericFormatter } from 'react-number-format';
 
 import useOrderDetails from '../../hooks/useOrderDetails';
 import HeaderTitle from '../../components/HeaderTitle';
-import ApproveAllowance from '../Web3/ApproveAllowance';
 import ConnectWallet from '../Web3/ConnectWallet';
+import TokenAllowance from '../Web3/TokenAllowance';
 
 export default function ApproveERC20() {
   const {
     order: {
-      escrowDetails: { escrow, amount, token },
+      escrowDetails: {
+        escrow: escrowAddress,
+        amount: tokenAmount,
+        token: tokenSymbol,
+        tokenAddress,
+        tokenDecimals,
+      },
       transferDetails: { recipient },
     },
   } = useOrderDetails();
+
+  if (!escrowAddress)
+    throw new Error('Escrow contract address cannot be missing!');
+
+  if (!tokenAddress || !tokenDecimals)
+    throw new Error('Token address/decimals cannot be missing!');
 
   const { address } = useAccount();
 
@@ -20,7 +32,7 @@ export default function ApproveERC20() {
     <div className="flex flex-col space-y-12">
       <HeaderTitle className="text-xl md:text-2xl">
         <span className="text-gray-400">Send </span>
-        {numericFormatter(`${token} ${amount}`, {
+        {numericFormatter(`${tokenSymbol} ${tokenAmount}`, {
           thousandSeparator: ',',
         })}
         {` `}
@@ -40,12 +52,14 @@ export default function ApproveERC20() {
       )} */}
 
       <div className="flex flex-col space-y-2">
-        {address && escrow && (
-          <ApproveAllowance
-            spenderAddress={escrow}
-            tokenAddress="0x0009dEF2AEef8131628cc02c7e0Ad8354bb1D71C"
-            value="69"
-            decimals={18}
+        {address && (
+          <TokenAllowance
+            ownerAddress={address}
+            spenderAddress={escrowAddress}
+            tokenAddress={tokenAddress}
+            tokenAmount={String(tokenAmount)}
+            decimals={tokenDecimals}
+            symbol={tokenSymbol}
           />
         )}
 

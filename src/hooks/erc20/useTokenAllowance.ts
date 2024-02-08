@@ -3,7 +3,7 @@ import { Address, erc20Abi, formatUnits } from 'viem';
 import { useReadContract } from 'wagmi';
 import { z } from 'zod';
 
-export type Props = {
+export type AllowanceProps = {
   spenderAddress: Address;
   ownerAddress: Address;
   tokenAddress: Address;
@@ -15,7 +15,7 @@ export default function useTokenAllowance({
   ownerAddress,
   tokenAddress,
   decimals,
-}: Props) {
+}: AllowanceProps) {
   const { data, ...readContractProps } = useReadContract({
     abi: erc20Abi,
     address: tokenAddress,
@@ -27,7 +27,10 @@ export default function useTokenAllowance({
     if (data === undefined || data === null) return;
 
     const result = z.coerce.bigint().parse(data);
-    return formatUnits(result, decimals);
+    return {
+      formatted: formatUnits(result, decimals),
+      value: result,
+    };
   }, [data, decimals]);
 
   return {

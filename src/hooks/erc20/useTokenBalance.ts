@@ -3,7 +3,7 @@ import { Address, erc20Abi, formatUnits } from 'viem';
 import { useReadContract } from 'wagmi';
 import { z } from 'zod';
 
-export type Props = {
+export type BalanceProps = {
   address: Address;
   tokenAddress: Address;
   decimals: number;
@@ -13,7 +13,7 @@ export default function useTokenBalance({
   address,
   tokenAddress,
   decimals,
-}: Props) {
+}: BalanceProps) {
   const { data, ...readContractProps } = useReadContract({
     abi: erc20Abi,
     address: tokenAddress,
@@ -25,7 +25,11 @@ export default function useTokenBalance({
     if (data === undefined || data === null) return;
 
     const result = z.coerce.bigint().parse(data);
-    return formatUnits(result, decimals);
+
+    return {
+      formatted: formatUnits(result, decimals),
+      value: result,
+    };
   }, [data, decimals]);
 
   return {

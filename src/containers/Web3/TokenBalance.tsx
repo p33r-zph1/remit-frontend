@@ -1,7 +1,9 @@
-import useTokenBalance, { Props } from '../../hooks/erc20/useTokenBalance';
+import useTokenBalance, {
+  BalanceProps,
+} from '../../hooks/erc20/useTokenBalance';
 
-export default function TokenBalance(props: Props) {
+export default function TokenBalance(props: BalanceProps) {
   const { balance } = useTokenBalance(props);
 
-  return <div>Balance: {balance?.toString()}</div>;
+  return <div>Balance: {balance?.formatted}</div>;
 }
