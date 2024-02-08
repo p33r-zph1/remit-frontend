@@ -9,7 +9,8 @@ export default function ErrorAlert({ message, title }: Props) {
   return (
     <div role="alert" className="alert bg-white shadow-md">
       <XCircleIcon className="h-5 w-5 text-error" />
-      <div>
+
+      <div className="w-full overflow-hidden text-balance break-words">
         <h3 className="font-bold text-error">{title ? title : 'Error'}</h3>
         <div className="text-xs text-error">{message}</div>
       </div>

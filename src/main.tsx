@@ -1,5 +1,6 @@
 import './index.css';
 
+import { Buffer } from 'buffer';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Amplify } from 'aws-amplify';
@@ -21,6 +22,8 @@ import DefaultFallback from './components/Fallback/DefaultFallback';
 Amplify.configure({ Auth: authConfig });
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
+
+globalThis.Buffer = Buffer;
 
 const router = createRouter({
   routeTree,

@@ -1,40 +1,31 @@
 import {
-  mainnet as ethereum,
+  mainnet,
   sepolia,
   bsc,
   bscTestnet,
   polygon,
   polygonMumbai,
-  arbitrum,
-  arbitrumGoerli,
   Chain,
 } from 'wagmi/chains';
 
-const ethChains = [ethereum, sepolia];
-const bnbChains = [bsc, bscTestnet];
-const maticChains = [polygon, polygonMumbai];
-const arbitrumChains = [arbitrum, arbitrumGoerli];
+const ethChains: Chain[] = [mainnet, sepolia] as const;
+const bnbChains: Chain[] = [bsc, bscTestnet] as const;
+const maticChains: Chain[] = [polygon, polygonMumbai] as const;
 
-const mainnetChains: Chain[] = [ethereum, bsc, polygon, arbitrum];
-const testnetChains: Chain[] = [
-  sepolia,
-  bscTestnet,
-  polygonMumbai,
-  arbitrumGoerli,
-];
+const mainnetChains: Chain[] = [mainnet, bsc, polygon] as const;
+const testnetChains: Chain[] = [sepolia, bscTestnet, polygonMumbai] as const;
 
 const chainList = import.meta.env.PROD ? mainnetChains : testnetChains;
 
-export function getCustomChainId(chainId: number) {
+export function getCustomChainId(chainId: number | undefined) {
   if (ethChains.some(c => c.id === chainId)) return 'eth';
   if (bnbChains.some(c => c.id === chainId)) return 'bnb';
   if (maticChains.some(c => c.id === chainId)) return 'matic';
-  if (arbitrumChains.some(c => c.id === chainId)) return 'arb';
 
   return 'unsupported chain';
 }
 
-export function getChainName(chainId: number) {
+export function getChainName(chainId: number | undefined) {
   const result = chainList.find(c => c.id === chainId);
 
   return result ? result.name : 'unsupported chain';
