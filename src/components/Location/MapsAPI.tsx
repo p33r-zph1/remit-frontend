@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useMemo } from 'react';
+import { ElementRef, forwardRef, useCallback, useMemo } from 'react';
 import { CircleF, GoogleMap, MarkerF } from '@react-google-maps/api';
 import type { CircleProps } from '@react-google-maps/api';
 import { coerce } from 'zod';
@@ -32,7 +32,7 @@ function getZoomLevel(radius: number) {
   return 12;
 }
 
-const MapsAPI = forwardRef<google.maps.Map | undefined, Props>(
+const MapsAPI = forwardRef<ElementRef<typeof GoogleMap> | undefined, Props>(
   ({ meetUpLocation, radius, disabled, onLoad }: Props, ref) => {
     const mapOptions = useMemo<google.maps.MapOptions>(
       () => ({

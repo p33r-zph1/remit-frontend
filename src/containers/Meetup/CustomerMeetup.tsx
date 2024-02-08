@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { useLoadScript, Libraries } from '@react-google-maps/api';
+import { ElementRef, useRef } from 'react';
+import { useLoadScript, Libraries, GoogleMap } from '@react-google-maps/api';
 
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';
@@ -16,7 +16,7 @@ type Props = {
 export default function CustomerMeetup({
   locationDetails: { areaName, coordinates, radius, startDate, endDate },
 }: Props) {
-  const mapRef = useRef<google.maps.Map>();
+  const mapRef = useRef<ElementRef<typeof GoogleMap>>();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
