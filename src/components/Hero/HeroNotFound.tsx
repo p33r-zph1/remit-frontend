@@ -1,10 +1,12 @@
-import { Link } from '@tanstack/react-router';
-import type { ComponentPropsWithRef } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import type { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type Props = ComponentPropsWithRef<'div'>;
+type Props = ComponentPropsWithoutRef<'div'>;
 
 export default function HeroNotFound(props: Props) {
+  const navigate = useNavigate();
+
   return (
     <div
       {...props}
@@ -19,9 +21,12 @@ export default function HeroNotFound(props: Props) {
             It might have been removed, had its name changed or is temporarily
             unavailable.
           </p>
-          <Link to="/" className="btn btn-primary btn-block md:btn-wide">
+          <button
+            onClick={() => navigate({ to: '/' })}
+            className="btn btn-primary btn-block md:btn-wide"
+          >
             Go to home
-          </Link>
+          </button>
         </div>
       </div>
     </div>
