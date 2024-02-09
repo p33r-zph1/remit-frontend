@@ -4,7 +4,7 @@ import SelectAgent from '../../components/Select/SelectAgent';
 import useAcceptOrder from '../../hooks/api/useAcceptOrder';
 import useAgents from '../../hooks/api/useAgents';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 import useOrderDetails from '../../hooks/useOrderDetails';

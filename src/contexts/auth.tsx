@@ -1,6 +1,6 @@
 import { createContext, useCallback, useState } from 'react';
-import { SignInInput, signIn, signOut } from 'aws-amplify/auth';
-import { CognitoGroup, Group } from '../schema/cognito';
+import { type SignInInput, signIn, signOut } from 'aws-amplify/auth';
+import type { CognitoGroup, Group } from '../schema/cognito';
 
 export interface AuthContext {
   setUser: (username: string | undefined) => void;

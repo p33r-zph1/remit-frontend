@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { ResourcesConfig } from 'aws-amplify';
+import type { ResourcesConfig } from 'aws-amplify';
 import { http, createConfig } from 'wagmi';
 import { bsc, bscTestnet, mainnet, sepolia } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';

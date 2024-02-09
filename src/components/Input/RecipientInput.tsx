@@ -1,6 +1,6 @@
 import {
   type FieldValues,
-  UseControllerProps,
+  type UseControllerProps,
   useController,
 } from 'react-hook-form';
 // import { NumericFormat } from 'react-number-format';

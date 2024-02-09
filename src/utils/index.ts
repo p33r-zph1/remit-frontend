@@ -1,4 +1,4 @@
-import { Address } from 'viem';
+import type { Address } from 'viem';
 
 export function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

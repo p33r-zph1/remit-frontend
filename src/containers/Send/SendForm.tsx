@@ -2,7 +2,7 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from '@tanstack/react-router';
 
 import SendDetails from './SendDetails';
-import useSendMoney, { SendMoney } from '../../hooks/useSendMoney';
+import useSendMoney, { type SendMoney } from '../../hooks/useSendMoney';
 import useSendOrder from '../../hooks/api/useSendOrder';
 
 import RecipientInput from '../../components/Input/RecipientInput';

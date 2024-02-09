@@ -1,7 +1,7 @@
-import { ReactNode, createContext, useMemo } from 'react';
+import { type ReactNode, createContext, useMemo } from 'react';
 
 import { Route } from '../routes/_auth/order/$orderId/route';
-import { Order } from '../schema/order';
+import type { Order } from '../schema/order';
 import useOrder from '../hooks/api/useOrder';
 import useAuth from '../hooks/useAuth';
 

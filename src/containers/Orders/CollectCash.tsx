@@ -1,6 +1,8 @@
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 
-import useCollectCash, { MutationProps } from '../../hooks/api/useCollectCash';
+import useCollectCash, {
+  type MutationProps,
+} from '../../hooks/api/useCollectCash';
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 import useOrderDetails from '../../hooks/useOrderDetails';

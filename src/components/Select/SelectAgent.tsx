@@ -1,7 +1,7 @@
-import { FieldError } from 'react-hook-form';
+import { type ComponentPropsWithRef, forwardRef } from 'react';
+import type { FieldError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
-import { Agent } from '../../schema/agent';
-import { ComponentPropsWithRef, forwardRef } from 'react';
+import type { Agent } from '../../schema/agent';
 
 type Props = ComponentPropsWithRef<'select'> & {
   list: Agent[];

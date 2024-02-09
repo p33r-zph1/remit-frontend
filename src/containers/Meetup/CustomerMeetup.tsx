@@ -1,9 +1,13 @@
-import { useRef } from 'react';
-import { useLoadScript, Libraries } from '@react-google-maps/api';
+import { type ElementRef, useRef } from 'react';
+import {
+  useLoadScript,
+  type Libraries,
+  GoogleMap,
+} from '@react-google-maps/api';
 
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';
-import { LocationDetails } from '../../schema/order';
+import type { LocationDetails } from '../../schema/order';
 import { CalendarIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 
@@ -16,7 +20,7 @@ type Props = {
 export default function CustomerMeetup({
   locationDetails: { areaName, coordinates, radius, startDate, endDate },
 }: Props) {
-  const mapRef = useRef<google.maps.Map>();
+  const mapRef = useRef<ElementRef<typeof GoogleMap>>();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,

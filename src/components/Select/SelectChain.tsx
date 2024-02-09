@@ -2,12 +2,12 @@ import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import {
-  FieldValues,
-  UseControllerProps,
+  type FieldValues,
+  type UseControllerProps,
   useController,
 } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
-import { Chain } from 'viem';
+import type { Chain } from 'viem';
 
 import { getChainName } from '../../configs/chains';
 

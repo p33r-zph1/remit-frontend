@@ -1,12 +1,16 @@
-import { useRef } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { type ElementRef, useRef } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLoadScript, Libraries } from '@react-google-maps/api';
+import {
+  useLoadScript,
+  type Libraries,
+  GoogleMap,
+} from '@react-google-maps/api';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
 import useSetCollection, {
-  MutationProps,
+  type MutationProps,
 } from '../../hooks/api/useSetCollection';
 import useOrderDetails from '../../hooks/useOrderDetails';
 import MapsAPI from '../../components/Location/MapsAPI';
@@ -53,7 +57,7 @@ export default function AgentMeetup({ meetupType }: Props) {
     },
   });
 
-  const mapRef = useRef<google.maps.Map>();
+  const mapRef = useRef<ElementRef<typeof GoogleMap>>();
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
