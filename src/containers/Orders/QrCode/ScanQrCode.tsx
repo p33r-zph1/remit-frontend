@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import QrScanner from 'qr-scanner';
 
@@ -9,11 +10,12 @@ import ErrorAlert from '../../../components/Alert/ErrorAlert';
 
 export default function ScanQrCode() {
   const {
-    mutate: confirmDelivery,
+    mutateAsync: confirmDeliveryAsync,
     isPending: isConfirmingDelivery,
     error: confirmDeliveryError,
   } = useConfirmDelivery();
 
+  const navigate = useNavigate();
   const { orderId } = Route.useSearch();
 
   const scanner = useRef<QrScanner>();
@@ -33,9 +35,14 @@ export default function ScanQrCode() {
 
   useEffect(() => {
     if (scannedResult) {
-      confirmDelivery({ body: { deliveryCode: scannedResult }, orderId });
+      confirmDeliveryAsync({
+        body: { deliveryCode: scannedResult },
+        orderId,
+      }).then(() => {
+        navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
+      });
     }
-  }, [confirmDelivery, orderId, scannedResult]);
+  }, [confirmDeliveryAsync, navigate, orderId, scannedResult]);
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {
@@ -79,7 +86,12 @@ export default function ScanQrCode() {
         </HeaderTitle>
 
         <div className="mb-4 h-full max-h-96 w-full">
-          <video className="object-cover object-center" ref={videoEl}></video>
+          <video
+            width="100%"
+            height={96}
+            className="object-cover object-center"
+            ref={videoEl}
+          ></video>
         </div>
 
         <div ref={qrBoxEl} className="left-0 w-full">
