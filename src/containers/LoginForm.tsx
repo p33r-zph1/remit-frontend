@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

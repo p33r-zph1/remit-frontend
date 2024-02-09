@@ -5,7 +5,7 @@ import {
   bscTestnet,
   polygon,
   polygonMumbai,
-  Chain,
+  type Chain,
 } from 'wagmi/chains';
 
 const ethChains: Chain[] = [mainnet, sepolia] as const;

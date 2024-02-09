@@ -1,6 +1,6 @@
 import LoadingRing from '../Spinner/LoadingRing';
 import useTokenAllowance, {
-  AllowanceProps,
+  type AllowanceProps,
 } from '../../hooks/erc20/useTokenAllowance';
 import ApproveAllowance from './ApproveAllowance';
 

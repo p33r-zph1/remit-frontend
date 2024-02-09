@@ -1,4 +1,4 @@
-import { ReactNode, Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';

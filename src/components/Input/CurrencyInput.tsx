@@ -1,13 +1,13 @@
 import { NumericFormat } from 'react-number-format';
 import {
-  FieldValues,
-  UseControllerProps,
+  type FieldValues,
+  type UseControllerProps,
   useController,
 } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import SelectCurrency from '../Select/SelectCurrency';
-import { Currency } from '../../schema/currency';
+import type { Currency } from '../../schema/currency';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   label: string;

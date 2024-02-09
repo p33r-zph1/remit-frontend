@@ -1,9 +1,13 @@
-import { ElementRef, useRef } from 'react';
-import { useLoadScript, Libraries, GoogleMap } from '@react-google-maps/api';
+import { type ElementRef, useRef } from 'react';
+import {
+  useLoadScript,
+  type Libraries,
+  GoogleMap,
+} from '@react-google-maps/api';
 
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';
-import { LocationDetails } from '../../schema/order';
+import type { LocationDetails } from '../../schema/order';
 import { CalendarIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 

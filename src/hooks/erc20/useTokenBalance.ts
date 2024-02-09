@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Address, erc20Abi, formatUnits } from 'viem';
+import { type Address, erc20Abi, formatUnits } from 'viem';
 import { useReadContract } from 'wagmi';
 import { z } from 'zod';
 

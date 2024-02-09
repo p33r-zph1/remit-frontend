@@ -4,7 +4,12 @@ import {
   ClockIcon,
 } from '@heroicons/react/20/solid';
 import { addHours, format, isBefore, setHours, startOfHour } from 'date-fns';
-import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useMemo,
+} from 'react';
 
 type ContainerProps = {
   value: string;

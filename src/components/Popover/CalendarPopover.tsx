@@ -2,8 +2,8 @@ import { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { CalendarIcon } from '@heroicons/react/20/solid';
 import {
-  FieldValues,
-  UseControllerProps,
+  type FieldValues,
+  type UseControllerProps,
   useController,
 } from 'react-hook-form';
 import { addHours, format } from 'date-fns';

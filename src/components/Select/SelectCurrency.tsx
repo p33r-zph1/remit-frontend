@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/20/solid';
 import { twMerge } from 'tailwind-merge';
 
-import { Currency } from '../../schema/currency';
+import { type Currency } from '../../schema/currency';
 
 interface Props<T> {
   currencies: T[];

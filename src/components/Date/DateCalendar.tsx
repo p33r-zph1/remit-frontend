@@ -16,7 +16,7 @@ import {
   startOfToday,
   startOfWeek,
 } from 'date-fns';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type Props = {

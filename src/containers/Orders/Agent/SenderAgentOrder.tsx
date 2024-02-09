@@ -1,4 +1,4 @@
-import { TransferTimelineStatus } from '../../../schema/order';
+import { type TransferTimelineStatus } from '../../../schema/order';
 
 import TakeOrder from '../TakeOrder';
 import AgentMeetup from '../../Meetup/AgentMeetup';

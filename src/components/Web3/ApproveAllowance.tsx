@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-// import { CheckIcon } from '@heroicons/react/20/solid';
-import { Address, erc20Abi, parseUnits } from 'viem';
+import { type Address, erc20Abi, parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 
 import ErrorAlert from '../Alert/ErrorAlert';
