@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -12,7 +12,7 @@ import QueryFallback from '../../components/Fallback/QueryFallback';
 import SendMoneySkeleton from '../../components/Skeleton/SendMoneySkeleton';
 import LoadingRing from '../../components/Spinner/LoadingRing';
 
-export const Route = createLazyFileRoute('/_auth/')({
+export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,
 });
 
