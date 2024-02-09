@@ -18,5 +18,5 @@ export const Route = createRootRouteWithContext<{
       {import.meta.env.DEV && <ReactQueryDevtools />}
     </main>
   ),
-  notFoundComponent: () => <HeroNotFound />,
+  notFoundComponent: () => <HeroNotFound className="min-h-svh" />,
 });

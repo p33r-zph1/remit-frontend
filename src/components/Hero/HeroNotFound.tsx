@@ -1,8 +1,15 @@
 import { Link } from '@tanstack/react-router';
+import type { ComponentPropsWithRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export default function HeroNotFound() {
+type Props = ComponentPropsWithRef<'div'>;
+
+export default function HeroNotFound(props: Props) {
   return (
-    <div className="hero min-h-svh bg-slate-100">
+    <div
+      {...props}
+      className={twMerge('hero flex-1 bg-slate-100', props.className)}
+    >
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-3xl font-bold md:text-5xl">Page Not Found</h1>
