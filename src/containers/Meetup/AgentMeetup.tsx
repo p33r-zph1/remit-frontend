@@ -52,7 +52,7 @@ export default function AgentMeetup({ meetupType }: Props) {
   } = useForm<Delivery>({
     resolver: zodResolver(deliveryProps),
     defaultValues: {
-      radius: '0',
+      radius: '200',
       areaName: '',
     },
   });
@@ -147,20 +147,20 @@ export default function AgentMeetup({ meetupType }: Props) {
               <input
                 {...register('radius')}
                 type="range"
-                min={0}
+                min={200}
                 max={1000}
                 disabled={!watch('coordinates') || isSubmitting}
                 className={twMerge(
                   `range range-sm md:range-md disabled:hover:cursor-not-allowed`,
                   watch('coordinates') && !isSubmitting && 'range-primary'
                 )}
-                step="250"
+                step="200"
               />
               <div className="flex w-full justify-between px-2 text-xs">
-                <span>0m</span>
-                <span>250m</span>
-                <span>500m</span>
-                <span>750m</span>
+                <span>200</span>
+                <span>400m</span>
+                <span>600m</span>
+                <span>800m</span>
                 <span>1km</span>
               </div>
             </div>

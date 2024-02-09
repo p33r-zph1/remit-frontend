@@ -16,18 +16,27 @@ const defaultCenter: LatLng = {
 };
 
 function getRadiusOptions(radius: number) {
-  if (radius <= 250) return closeOptions;
-  if (radius <= 500) return middleOptions;
+  // if (radius <= 250) return closeOptions;
+  // if (radius <= 500) return middleOptions;
+
+  if (radius <= 200) return closeOptions;
+  if (radius <= 800) return middleOptions;
 
   return farOptions;
 }
 
 function getZoomLevel(radius: number) {
-  if (radius === 0) return 17;
-  if (radius <= 250) return 16.5;
-  if (radius <= 500) return 15;
-  if (radius <= 750) return 14.5;
-  if (radius <= 1000) return 14;
+  // if (radius === 0) return 17;
+  // if (radius <= 250) return 16.5;
+  // if (radius <= 500) return 15;
+  // if (radius <= 750) return 14.5;
+  // if (radius <= 1000) return 14;
+
+  if (radius === 200) return 16.5;
+  if (radius <= 400) return 16;
+  if (radius <= 600) return 15.5;
+  if (radius <= 800) return 15;
+  if (radius <= 1000) return 14.5;
 
   return 12;
 }
