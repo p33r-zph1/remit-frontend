@@ -46,6 +46,7 @@ export default function CollectionMeetup({ group }: Props) {
     if (group === 'agent') {
       return navigate({
         to: '/order/scanQr',
+        search: { orderId },
       });
     }
   }, [generateQrAsync, group, navigate, orderId]);
