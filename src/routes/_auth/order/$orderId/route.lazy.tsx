@@ -52,5 +52,5 @@ function OrderDetailsComponent() {
     return <AgentOrderDetails />;
   }
 
-  return <HeroNotFound />;
+  return <HeroNotFound className="bg-white" />;
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import QrScanner from 'qr-scanner';
 
@@ -9,11 +10,12 @@ import ErrorAlert from '../../../components/Alert/ErrorAlert';
 
 export default function ScanQrCode() {
   const {
-    mutate: confirmDelivery,
+    mutateAsync: confirmDeliveryAsync,
     isPending: isConfirmingDelivery,
     error: confirmDeliveryError,
   } = useConfirmDelivery();
 
+  const navigate = useNavigate();
   const { orderId } = Route.useSearch();
 
   const scanner = useRef<QrScanner>();
@@ -33,9 +35,14 @@ export default function ScanQrCode() {
 
   useEffect(() => {
     if (scannedResult) {
-      confirmDelivery({ body: { deliveryCode: scannedResult }, orderId });
+      confirmDeliveryAsync({
+        body: { deliveryCode: scannedResult },
+        orderId,
+      }).then(() => {
+        navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
+      });
     }
-  }, [confirmDelivery, orderId, scannedResult]);
+  }, [confirmDeliveryAsync, navigate, orderId, scannedResult]);
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {
@@ -72,16 +79,20 @@ export default function ScanQrCode() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="relative mx-auto min-h-96 w-full sm:max-w-lg">
+      <div className="relative mx-auto h-full w-full sm:max-w-lg">
         <HeaderTitle className="flex items-center justify-center text-center text-xl drop-shadow-lg md:text-2xl">
           <QrCodeIcon className="mr-2 h-6 w-6 sm:h-8 sm:w-8" />
           Place QR Code in frame to scan
         </HeaderTitle>
 
-        <video
-          className="mb-4 h-auto w-full object-center"
-          ref={videoEl}
-        ></video>
+        <div className="mb-4 h-full max-h-96 w-full">
+          <video
+            width="100%"
+            height={96}
+            className="object-cover object-center"
+            ref={videoEl}
+          ></video>
+        </div>
 
         <div ref={qrBoxEl} className="left-0 w-full">
           <img

@@ -4,10 +4,6 @@ import { z } from 'zod';
 
 import { fromJwt } from '../schema/cognito';
 
-import LoginForm from '../containers/LoginForm';
-import Page from '../components/Page';
-import Brand from '../components/Brand';
-
 export const Route = createFileRoute('/login')({
   validateSearch: z.object({
     redirect: z.string().optional(),
@@ -34,12 +30,4 @@ export const Route = createFileRoute('/login')({
       });
     }
   },
-
-  component: () => (
-    <Page className="mx-auto max-w-sm items-center justify-center space-y-16 p-0 md:max-w-md">
-      <Brand />
-
-      <LoginForm />
-    </Page>
-  ),
 });

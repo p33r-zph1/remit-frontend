@@ -8,6 +8,8 @@ import ScanQrCode from '../../../containers/Orders/QrCode/ScanQrCode';
 import Page from '../../../components/Page';
 import QueryFallback from '../../../components/Fallback/QueryFallback';
 import LoadingRing from '../../../components/Spinner/LoadingRing';
+import useAuth from '../../../hooks/useAuth';
+import HeroNotFound from '../../../components/Hero/HeroNotFound';
 
 export const Route = createLazyFileRoute('/_auth/order/scanQr')({
   component: () => (
@@ -16,7 +18,7 @@ export const Route = createLazyFileRoute('/_auth/order/scanQr')({
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
             <Suspense fallback={<LoadingRing className="flex-1" />}>
-              <ScanQrCode />
+              <ScanQrComponent />
             </Suspense>
           </ErrorBoundary>
         )}
@@ -24,3 +26,13 @@ export const Route = createLazyFileRoute('/_auth/order/scanQr')({
     </Page>
   ),
 });
+
+function ScanQrComponent() {
+  const { hasGroup } = useAuth();
+
+  if (hasGroup('agent')) {
+    return <ScanQrCode />;
+  }
+
+  return <HeroNotFound className="bg-white" />;
+}

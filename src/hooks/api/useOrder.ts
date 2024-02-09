@@ -15,7 +15,7 @@ export const orderQueryOptions = ({ orderId }: SingleOrder) =>
     queryKey: ['order', orderId],
     queryFn: () => genericFetch(`${BASE_URL}/${orderId}`, orderApiSchema),
     select: response => response.data,
-    refetchInterval: 20_000,
+    refetchInterval: 10_000,
   });
 
 export default function useOrder(

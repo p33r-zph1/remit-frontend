@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+
 import HeaderTitle from '../../../components/HeaderTitle';
 import useOrderDetails from '../../../hooks/useOrderDetails';
 
@@ -6,9 +9,17 @@ type Props = {
 };
 
 export default function ShowQrCode({ qrCode }: Props) {
+  const navigate = useNavigate();
+
   const {
-    order: { senderAgentId },
+    order: { senderAgentId, transferTimelineStatus: status, orderId },
   } = useOrderDetails();
+
+  useEffect(() => {
+    if (status === 'ESCROW_RELEASED') {
+      navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
+    }
+  }, [navigate, orderId, status]);
 
   return (
     <div className="flex flex-1 flex-col space-y-10">

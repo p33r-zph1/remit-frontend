@@ -47,6 +47,7 @@ export default function CollectionMeetup({ group }: Props) {
       return navigate({
         to: '/order/scanQr',
         search: { orderId },
+        mask: { to: '/order/$orderId', params: { orderId } },
       });
     }
   }, [generateQrAsync, group, navigate, orderId]);

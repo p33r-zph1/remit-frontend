@@ -1,8 +1,17 @@
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import type { ComponentPropsWithoutRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export default function HeroNotFound() {
+type Props = ComponentPropsWithoutRef<'div'>;
+
+export default function HeroNotFound(props: Props) {
+  const navigate = useNavigate();
+
   return (
-    <div className="hero min-h-svh bg-slate-100">
+    <div
+      {...props}
+      className={twMerge('hero flex-1 bg-slate-100', props.className)}
+    >
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-3xl font-bold md:text-5xl">Page Not Found</h1>
@@ -12,9 +21,12 @@ export default function HeroNotFound() {
             It might have been removed, had its name changed or is temporarily
             unavailable.
           </p>
-          <Link to="/" className="btn btn-primary btn-block md:btn-wide">
+          <button
+            onClick={() => navigate({ to: '/' })}
+            className="btn btn-primary btn-block md:btn-wide"
+          >
             Go to home
-          </Link>
+          </button>
         </div>
       </div>
     </div>

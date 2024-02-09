@@ -3,7 +3,6 @@ import { isAddress } from 'viem';
 import { z } from 'zod';
 
 import { genericFetch } from '../../schema/api/fetch';
-import orderApiSchema from '../../schema/order';
 import { queryClient } from '../../utils/config';
 
 const BASE_URL =
@@ -24,7 +23,7 @@ export default function useEscrowDeposit() {
   return useMutation({
     mutationKey: ['escrow-deposit'],
     mutationFn: ({ orderId, body }: MutationProps) =>
-      genericFetch(`${BASE_URL}/${orderId}/escrow/deposit`, orderApiSchema, {
+      genericFetch(`${BASE_URL}/${orderId}/escrow/deposit`, z.null(), {
         method: 'PATCH',
         body: JSON.stringify(escrowDepositBodySchema.parse(body)),
       }),
