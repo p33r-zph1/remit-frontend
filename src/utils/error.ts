@@ -32,3 +32,27 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 export function getErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message;
 }
+
+/**
+ * @description Wrapper around `React.lazy`: If an import fails, it will reload the page once. If it fails again, it will throw an error (error will be handled by `ErrorBoundary`)
+ * @param {unknown} error - Expected to be related to dynamic import or code splitting.
+ */
+export async function maybeLazyError(error: unknown) {
+  // Get the last reload time from local storage and the current time
+  const timeStr = sessionStorage.getItem('last-reload');
+  const time = timeStr ? Number(timeStr) : null;
+  const now = Date.now();
+
+  // If the last reload time is more than 10 seconds ago, reload the page
+  const isReloading = !time || time + 10_000 < now;
+
+  if (isReloading) {
+    console.log('Reloading due to a potential fixable loading error.');
+    sessionStorage.setItem('last-reload', String(now));
+
+    window.location.reload();
+  }
+
+  // We let ErrorBoundary handle the error
+  throw error;
+}

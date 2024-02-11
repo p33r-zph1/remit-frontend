@@ -3,6 +3,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { z } from 'zod';
 
 import { fromJwt } from '../schema/cognito';
+import { maybeLazyError } from '../utils/error';
 
 export const Route = createFileRoute('/login')({
   validateSearch: z.object({
@@ -30,4 +31,5 @@ export const Route = createFileRoute('/login')({
       });
     }
   },
+  onError: maybeLazyError,
 });
