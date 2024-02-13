@@ -36,7 +36,7 @@ export default function useSendMoney() {
   );
 
   const {
-    data: { rate },
+    data: { rate: exchangeRate },
     isSuccess: pairUpdated,
   } = usePriceOracle({
     from: senderCurrency.currency,
@@ -55,7 +55,9 @@ export default function useSendMoney() {
     },
   });
 
-  const { setValue, getValues } = formProps;
+  const { setValue, getValues, watch } = formProps;
+
+  const agentId = watch('agentId');
 
   const conversionHandler = useCallback(
     (value: number | string | null) => {
@@ -63,20 +65,38 @@ export default function useSendMoney() {
 
       if (!result.success) return '';
 
-      const conversion = result.data * rate;
-      const formatConversion = String(conversion === 0 ? '' : conversion);
+      const agent = agents.find(a => a.agentId === agentId);
 
-      setValue('recipientAmount', formatConversion);
+      let recipientAmount = 0;
+
+      if (agent) {
+        // Converting commission percentage to decimal
+        const commissionRate = agent.commission / 100;
+
+        // Calculating fiat value
+        const fiatValue = result.data * exchangeRate;
+
+        // Calculating the amount with commission
+        recipientAmount = fiatValue - fiatValue * commissionRate;
+      } else {
+        // Calculating fiat value without commision
+        recipientAmount = result.data * exchangeRate;
+      }
+
+      // Returns stringified amount (if amount is zero returns empty string)
+      const formatAmount = String(recipientAmount === 0 ? '' : recipientAmount);
+
+      setValue('recipientAmount', formatAmount);
     },
-    [rate, setValue]
+    [agentId, agents, exchangeRate, setValue]
   );
 
   useEffect(() => {
-    // re-calculates the conversion amount when the pair gets ypdated
-    if (pairUpdated) {
+    // re-calculates the conversion amount when the pair(exchange rate) or agent gets ypdated
+    if (pairUpdated || agentId) {
       conversionHandler(getValues('sendAmount'));
     }
-  }, [conversionHandler, getValues, pairUpdated]);
+  }, [agentId, conversionHandler, getValues, pairUpdated]);
 
   return {
     // currency dropdown controlled state
