@@ -83,7 +83,15 @@ export default function SendForm() {
           control={control}
           selected={senderCurrency}
           list={supportedCurrencies}
-          onCurrencyChange={setSenderCurrency}
+          onCurrencyChange={newCurrency =>
+            setSenderCurrency(prevCurrency => {
+              if (newCurrency.currency === recipientCurrency.currency) {
+                setRecipientCurrency(prevCurrency); // swaps currency
+              }
+
+              return newCurrency;
+            })
+          }
           onValueChange={conversionHandler}
         />
 
@@ -95,7 +103,15 @@ export default function SendForm() {
           control={control}
           selected={recipientCurrency}
           list={supportedCurrencies}
-          onCurrencyChange={setRecipientCurrency}
+          onCurrencyChange={newCurrency =>
+            setRecipientCurrency(prevCurrency => {
+              if (newCurrency.currency === senderCurrency.currency) {
+                setSenderCurrency(prevCurrency); // swaps currency
+              }
+
+              return newCurrency;
+            })
+          }
           readOnly
         />
       </div>
