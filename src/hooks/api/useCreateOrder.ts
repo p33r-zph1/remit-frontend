@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { genericFetch } from '../../schema/api/fetch';
 import orderApiSchema from '../../schema/order';
-import { queryClient } from '../../utils/config';
+import queryClient from '../../configs/tansact-query';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -22,14 +22,15 @@ export type MutationProps = {
   body: OrderBody;
 };
 
-export default function useSendOrder() {
+export default function useCreateOrder() {
   return useMutation({
-    mutationKey: ['send-order'],
+    mutationKey: ['create-order'],
     mutationFn: ({ body }: MutationProps) =>
       genericFetch(BASE_URL, orderApiSchema, {
         method: 'POST',
         body: JSON.stringify(orderBodySchema.parse(body)),
       }),
-    onSuccess: () => queryClient.removeQueries(),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['order', 'orders'] }),
   });
 }

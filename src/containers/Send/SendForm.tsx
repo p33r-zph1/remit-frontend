@@ -3,19 +3,11 @@ import { useNavigate } from '@tanstack/react-router';
 
 import SendDetails from './SendDetails';
 import useSendMoney, { type SendMoney } from '../../hooks/useSendMoney';
-import useSendOrder from '../../hooks/api/useSendOrder';
+import useCreateOrder from '../../hooks/api/useCreateOrder';
 
 import RecipientInput from '../../components/Input/RecipientInput';
 import CurrencyInput from '../../components/Input/CurrencyInput';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
-
-// const orderData = {
-//   recipientId: '12340002',
-//   senderAgentId: '43210002',
-//   transferAmount: 100000,
-//   senderCurrency: 'INR',
-//   recipientCurrency: 'SGD',
-// };
 
 // let renderCount = 0;
 
@@ -46,7 +38,7 @@ export default function SendForm() {
     },
   } = useSendMoney();
 
-  const { mutateAsync: sendOrderAsync, error } = useSendOrder();
+  const { mutateAsync: sendOrderAsync, error } = useCreateOrder();
 
   const onSubmit: SubmitHandler<SendMoney> = async ({
     recipientId,

@@ -2,7 +2,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import chainList, { getCustomChainId } from '../../configs/chains';
+import chainList, { getCustomChainId } from '../../constants/chains';
 import useAcceptOrder from '../../hooks/api/useAcceptOrder';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
 import useOrderDetails from '../../hooks/useOrderDetails';

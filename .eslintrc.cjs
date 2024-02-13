@@ -2,8 +2,6 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    commonjs: true,
-    es2021: true,
     node: true,
   },
   extends: [
@@ -15,15 +13,7 @@ module.exports = {
     'plugin:react/jsx-runtime', // Runtime prefers to be at the last
     'prettier', // Prettier must be last
   ],
-  ignorePatterns: [
-    'dist',
-    '.eslintrc.cjs',
-    'prettier.config.cjs',
-    'tailwind.config.js',
-    'postcss.config.js',
-    'vite.config.ts',
-    'routeTree.gen.ts',
-  ],
+
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -48,4 +38,13 @@ module.exports = {
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'prettier/prettier': 'error',
   },
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+    'prettier.config.cjs',
+    'tailwind.config.js',
+    'postcss.config.js',
+    'vite.config.ts',
+    'routeTree.gen.ts',
+  ],
 };

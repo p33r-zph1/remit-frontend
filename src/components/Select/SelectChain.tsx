@@ -9,7 +9,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import type { Chain } from 'viem';
 
-import { getChainName } from '../../configs/chains';
+import { getChainName } from '../../constants/chains';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   list: Chain[];

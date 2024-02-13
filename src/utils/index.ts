@@ -3,6 +3,7 @@ import type { Address } from 'viem';
 export function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 export function isValidAddress(data: string | undefined): data is Address {
   if (!data) return false;
 

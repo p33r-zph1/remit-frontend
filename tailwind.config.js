@@ -1,4 +1,5 @@
 import daisyui from 'daisyui';
+import themes from 'daisyui/src/theming/themes';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
@@ -26,7 +27,7 @@ export default {
     themes: [
       {
         winter: {
-          ...require('daisyui/src/theming/themes')['winter'],
+          ...themes.winter,
           primary: '#1165EF',
           accent: '#de8800',
           success: '#009747',

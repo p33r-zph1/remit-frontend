@@ -13,14 +13,14 @@ const loginSchema = z.object({
   password: z.string().min(1, { message: 'Password is required' }),
 });
 
-type Inputs = z.infer<typeof loginSchema>;
+type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -32,7 +32,7 @@ export default function Login() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit: SubmitHandler<Inputs> = ({ username, password }) => {
+  const onSubmit: SubmitHandler<LoginSchema> = ({ username, password }) => {
     setIsSubmitting(true);
 
     authenticate({ username, password }).then(() => {
@@ -54,7 +54,7 @@ export default function Login() {
         <div className="label">
           <span className="label-text font-bold text-gray-400">ID #</span>
 
-          {errors.username?.message && (
+          {errors.username && (
             <span className="label-text-alt font-semibold text-error">
               {errors.username.message}
             </span>
@@ -74,7 +74,7 @@ export default function Login() {
         <div className="label">
           <span className="label-text font-bold text-gray-400">Password</span>
 
-          {errors.password?.message && (
+          {errors.password && (
             <span className="label-text-alt font-semibold text-error">
               {errors.password.message}
             </span>

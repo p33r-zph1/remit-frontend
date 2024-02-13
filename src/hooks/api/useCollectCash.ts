@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { genericFetch } from '../../schema/api/fetch';
 import orderApiSchema from '../../schema/order';
-import { queryClient } from '../../utils/config';
+import queryClient from '../../configs/tansact-query';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -23,6 +23,7 @@ export default function useCollectCash() {
           method: 'PATCH',
         }
       ),
-    onSuccess: () => queryClient.invalidateQueries(),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['order', 'orders'] }),
   });
 }
