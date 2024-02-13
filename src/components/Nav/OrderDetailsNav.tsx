@@ -57,7 +57,7 @@ type Props = Order & {
   isRecipient: boolean;
 };
 
-export default function TransferDetailsNav({
+export default function OrderDetailsNav({
   orderStatus,
   isRecipient,
   recipientId,

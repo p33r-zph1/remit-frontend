@@ -3,7 +3,7 @@ import useOrderDetails from '../../../hooks/useOrderDetails';
 import SenderOrder from './SenderCustomerOrder';
 import RecipientOrder from './RecipientCustomerOrder';
 import TransferTimeline from '../../../components/Timeline/TransferTimeline';
-import TransferDetailsNav from '../../../components/Nav/TransferDetailsNav';
+import OrderDetailsNav from '../../../components/Nav/OrderDetailsNav';
 
 export default function CustomerOrderDetails() {
   const { customer, order } = useOrderDetails();
@@ -12,8 +12,8 @@ export default function CustomerOrderDetails() {
   const { transferTimeline, transferTimelineStatus } = order;
 
   return (
-    <section className="flex flex-col space-y-6">
-      <TransferDetailsNav {...order} isRecipient={isRecipient} />
+    <section className="flex flex-col space-y-12">
+      <OrderDetailsNav {...order} isRecipient={isRecipient} />
 
       <div className="divider" />
 

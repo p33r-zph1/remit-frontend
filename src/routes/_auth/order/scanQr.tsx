@@ -5,7 +5,7 @@ import { maybeLazyError } from '../../../utils/error';
 
 export const Route = createFileRoute('/_auth/order/scanQr')({
   validateSearch: z.object({
-    orderId: z.string(),
+    orderId: z.string().nullish(),
   }),
   onError: maybeLazyError,
 });

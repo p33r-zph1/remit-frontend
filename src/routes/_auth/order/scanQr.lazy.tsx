@@ -4,11 +4,11 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import ScanQrCode from '../../../containers/Orders/QrCode/ScanQrCode';
+import useAuth from '../../../hooks/useAuth';
 
 import Page from '../../../components/Page';
 import QueryFallback from '../../../components/Fallback/QueryFallback';
 import LoadingRing from '../../../components/Spinner/LoadingRing';
-import useAuth from '../../../hooks/useAuth';
 import HeroNotFound from '../../../components/Hero/HeroNotFound';
 
 export const Route = createLazyFileRoute('/_auth/order/scanQr')({
@@ -29,9 +29,10 @@ export const Route = createLazyFileRoute('/_auth/order/scanQr')({
 
 function ScanQrComponent() {
   const { hasGroup } = useAuth();
+  const { orderId } = Route.useSearch();
 
-  if (hasGroup('agent')) {
-    return <ScanQrCode />;
+  if (hasGroup('agent') && orderId) {
+    return <ScanQrCode orderId={orderId} />;
   }
 
   return <HeroNotFound className="bg-white" />;

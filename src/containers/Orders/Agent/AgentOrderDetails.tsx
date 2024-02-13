@@ -2,7 +2,7 @@ import useOrderDetails from '../../../hooks/useOrderDetails';
 
 import SenderAgentOrder from './SenderAgentOrder';
 import RecipientAgentOrder from './RecipientAgentOrder';
-import TransferDetailsNav from '../../../components/Nav/TransferDetailsNav';
+import OrderDetailsNav from '../../../components/Nav/OrderDetailsNav';
 import TransferTimeline from '../../../components/Timeline/TransferTimeline';
 
 export default function AgentOrderDetails() {
@@ -13,7 +13,7 @@ export default function AgentOrderDetails() {
 
   return (
     <section className="flex flex-col space-y-12">
-      <TransferDetailsNav {...order} isRecipient={false} />
+      <OrderDetailsNav {...order} isRecipient={false} />
 
       <div className="divider" />
 

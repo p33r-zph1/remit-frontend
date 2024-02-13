@@ -3,12 +3,16 @@ import { useNavigate } from '@tanstack/react-router';
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import QrScanner from 'qr-scanner';
 
-import { Route } from '../../../routes/_auth/order/scanQr';
-import HeaderTitle from '../../../components/HeaderTitle';
 import useConfirmDelivery from '../../../hooks/api/useConfirmDelivery';
+
+import HeaderTitle from '../../../components/HeaderTitle';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
 
-export default function ScanQrCode() {
+type Props = {
+  orderId: string;
+};
+
+export default function ScanQrCode({ orderId }: Props) {
   const {
     mutateAsync: confirmDeliveryAsync,
     isPending: isConfirmingDelivery,
@@ -16,7 +20,6 @@ export default function ScanQrCode() {
   } = useConfirmDelivery();
 
   const navigate = useNavigate();
-  const { orderId } = Route.useSearch();
 
   const scanner = useRef<QrScanner>();
   const videoEl = useRef<HTMLVideoElement>(null);
@@ -102,22 +105,24 @@ export default function ScanQrCode() {
           />
         </div>
 
-        {isConfirmingDelivery && (
-          <div role="alert" className="alert bg-white shadow-md">
-            <div className="loading loading-dots"></div>
+        <div className="absolute left-6 right-6 top-1/2">
+          {isConfirmingDelivery && (
+            <div role="alert" className="alert bg-white shadow-md">
+              <div className="loading loading-dots"></div>
 
-            <div>
-              <h3 className="font-bold">QR Code scanned!</h3>
-              <div className="font-medium">
-                Please wait while we verify the transaction...
+              <div>
+                <h3 className="font-bold">QR Code scanned!</h3>
+                <div className="font-medium">
+                  Please wait while we verify the transaction...
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {confirmDeliveryError && (
-          <ErrorAlert message={confirmDeliveryError.message} />
-        )}
+          {confirmDeliveryError && (
+            <ErrorAlert message={confirmDeliveryError.message} />
+          )}
+        </div>
       </div>
     </div>
   );
