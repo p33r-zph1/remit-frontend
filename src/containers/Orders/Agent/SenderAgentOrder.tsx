@@ -19,7 +19,7 @@ export default function SenderAgentOrder({ status }: Props) {
       return <AgentMeetup meetupType="collection" />;
 
     case 'COLLECTION_MEETUP_SET':
-      return <CollectCash meetupType="collection" />;
+      return <CollectCash />;
 
     case 'CASH_COLLECTED':
       return <ApproveERC20 />;

@@ -3,6 +3,7 @@ import { numericFormatter } from 'react-number-format';
 
 import useOrderDetails from '../../hooks/useOrderDetails';
 import useEscrowDeposit from '../../hooks/api/useEscrowDeposit';
+
 import HeaderTitle from '../../components/HeaderTitle';
 import ConnectWallet from '../../components/Web3/ConnectWallet';
 import TokenAllowance from '../../components/Web3/TokenAllowance';

@@ -1,27 +1,27 @@
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 
-import useCollectCash, {
-  type MutationProps,
-} from '../../hooks/api/useCollectCash';
-import HeaderTitle from '../../components/HeaderTitle';
-import ErrorAlert from '../../components/Alert/ErrorAlert';
+import useConfirmCash from '../../hooks/api/useConfirmCash';
 import useOrderDetails from '../../hooks/useOrderDetails';
 
-type Props = {
-  meetupType: MutationProps['meetupType'];
-};
+import HeaderTitle from '../../components/HeaderTitle';
+import ErrorAlert from '../../components/Alert/ErrorAlert';
+import { format } from 'date-fns';
 
-export default function CollectCash({ meetupType }: Props) {
+export default function CollectCash() {
   const {
-    order: { orderId },
+    order: { orderId, collectionDetails },
   } = useOrderDetails();
 
-  const { mutateAsync: collectCashAsync, isPending, error } = useCollectCash();
+  const { mutateAsync: collectCashAsync, isPending, error } = useConfirmCash();
+
+  if (!collectionDetails) throw new Error('Collection details is not present.');
+
+  const { areaName, startDate } = collectionDetails;
 
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Collect cash on Nov 21 at Central Abu Dhabi, 5-6 pm
+        Collect cash on {format(startDate, 'MMMM dd, YYYY')} at {areaName}
       </HeaderTitle>
 
       {error && <ErrorAlert message={error.message} />}
@@ -29,7 +29,7 @@ export default function CollectCash({ meetupType }: Props) {
       <div className="flex flex-col space-y-2">
         <button
           type="button"
-          onClick={() => collectCashAsync({ orderId, meetupType })}
+          onClick={() => collectCashAsync({ orderId })}
           disabled={isPending}
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >

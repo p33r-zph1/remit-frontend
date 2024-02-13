@@ -8,15 +8,14 @@ const BASE_URL =
 
 export type MutationProps = {
   orderId: string;
-  meetupType: 'collection' | 'delivery';
 };
 
-export default function useCollectCash() {
+export default function useConfirmCash() {
   return useMutation({
-    mutationKey: ['collect-cash'],
-    mutationFn: ({ orderId, meetupType }: MutationProps) =>
+    mutationKey: ['confirm-cash'],
+    mutationFn: ({ orderId }: MutationProps) =>
       genericFetch(
-        `${BASE_URL}/${orderId}/${meetupType}/confirm`,
+        `${BASE_URL}/${orderId}/collection/confirm`,
         orderApiSchema,
         {
           method: 'PATCH',

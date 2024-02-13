@@ -1,13 +1,14 @@
-import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useCallback } from 'react';
+import { QrCodeIcon } from '@heroicons/react/20/solid';
+import { useNavigate } from '@tanstack/react-router';
 
-import type { Group } from '../../schema/cognito';
 import useOrderDetails from '../../hooks/useOrderDetails';
 import useGenerateQr from '../../hooks/api/useGenerateQr';
-import HeaderTitle from '../../components/HeaderTitle';
+import type { Group } from '../../schema/cognito';
+
 import CustomerMeetup from '../Meetup/CustomerMeetup';
+import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
-import { useNavigate } from '@tanstack/react-router';
 
 type Props = {
   group: Group;
@@ -17,12 +18,12 @@ export default function CollectionMeetup({ group }: Props) {
   const navigate = useNavigate();
 
   const {
-    order: { collectionDetails, senderAgentId, orderId },
+    order: { deliveryDetails, senderAgentId, orderId },
   } = useOrderDetails();
 
-  if (!collectionDetails) throw new Error('Delivery details is not present.');
+  if (!deliveryDetails) throw new Error('Delivery details is not present.');
 
-  const { areaName } = collectionDetails;
+  const { areaName } = deliveryDetails;
 
   const {
     mutateAsync: generateQrAsync,
@@ -88,7 +89,7 @@ export default function CollectionMeetup({ group }: Props) {
       </div>
 
       {group === 'customer' && (
-        <CustomerMeetup locationDetails={collectionDetails} />
+        <CustomerMeetup locationDetails={deliveryDetails} />
       )}
     </div>
   );
