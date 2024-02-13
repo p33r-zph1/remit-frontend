@@ -3,7 +3,6 @@ import { isAddress } from 'viem';
 import { z } from 'zod';
 
 import { genericFetch } from '../../schema/api/fetch';
-import queryClient from '../../configs/tansact-query';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -27,7 +26,5 @@ export default function useEscrowDeposit() {
         method: 'PATCH',
         body: JSON.stringify(escrowDepositBodySchema.parse(body)),
       }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['order', 'orders'] }),
   });
 }

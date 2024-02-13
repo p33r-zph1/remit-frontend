@@ -15,12 +15,12 @@ export default function AgentOrderDetails() {
     <section className="flex flex-col space-y-12">
       <TransferDetailsNav {...order} isRecipient={false} />
 
-      <div>
-        <div className="divider" />
+      <div className="divider" />
 
+      <main>
         {isSender && <SenderAgentOrder status={transferTimelineStatus} />}
         {isRecipient && <RecipientAgentOrder status={transferTimelineStatus} />}
-      </div>
+      </main>
 
       <TransferTimeline timeline={transferTimeline} />
     </section>

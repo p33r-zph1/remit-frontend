@@ -12,15 +12,15 @@ export default function CustomerOrderDetails() {
   const { transferTimeline, transferTimelineStatus } = order;
 
   return (
-    <section className="flex flex-col space-y-12">
+    <section className="flex flex-col space-y-6">
       <TransferDetailsNav {...order} isRecipient={isRecipient} />
 
-      <div>
-        <div className="divider" />
+      <div className="divider" />
 
+      <main>
         {isSender && <SenderOrder status={transferTimelineStatus} />}
         {isRecipient && <RecipientOrder status={transferTimelineStatus} />}
-      </div>
+      </main>
 
       <TransferTimeline timeline={transferTimeline} />
     </section>

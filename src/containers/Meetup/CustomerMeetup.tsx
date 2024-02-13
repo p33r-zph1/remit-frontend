@@ -4,12 +4,12 @@ import {
   type Libraries,
   GoogleMap,
 } from '@react-google-maps/api';
+import { CalendarIcon } from '@heroicons/react/20/solid';
+import { format } from 'date-fns';
 
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';
 import type { LocationDetails } from '../../schema/order';
-import { CalendarIcon } from '@heroicons/react/20/solid';
-import { format } from 'date-fns';
 
 const libraries: Libraries = ['places'];
 
