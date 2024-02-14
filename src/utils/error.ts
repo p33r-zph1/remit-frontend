@@ -51,6 +51,9 @@ export async function maybeLazyError(error: unknown) {
     sessionStorage.setItem('last-reload', String(now));
 
     window.location.reload();
+
+    // Return an empty module so we do not see the error in the app before reloading
+    return { default: () => null };
   }
 
   // We let ErrorBoundary handle the error
