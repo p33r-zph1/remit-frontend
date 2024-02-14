@@ -29,10 +29,16 @@ export const transferTimelineStatusSchema = z.enum([
   'ESCROW_RELEASED',
 ]);
 
+export const commissionDetailsSchema = z.object({
+  commission: z.number(),
+  amount: z.number(),
+  token: z.string(),
+});
+
 export const feesSchema = z.object({
-  platformFee: z.number(),
-  senderAgentCommission: z.number(),
-  recipientAgentCommission: z.number().nullish(),
+  platform: commissionDetailsSchema,
+  senderAgent: commissionDetailsSchema,
+  recipientAgent: commissionDetailsSchema.nullish(),
 });
 
 export const transferInfoSchema = z.object({

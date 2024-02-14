@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SubmitHandler, useForm } from 'react-hook-form';
+import { numericFormatter } from 'react-number-format';
 import { z } from 'zod';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
@@ -24,7 +25,7 @@ export default function TakeOrder() {
   });
 
   const {
-    agent: { isSender },
+    agent: { isSender, isRecipient },
     order: { fees, orderId },
   } = useOrderDetails();
 
@@ -54,13 +55,43 @@ export default function TakeOrder() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-      <div className="flex flex-col space-y-1">
-        <span className="text-gray-400">
-          Your commission at {fees.recipientAgentCommission}%
-        </span>
+      {/* TODO: refactor code duplication */}
+      {isSender && (
+        <div className="flex flex-col space-y-1">
+          <span className="text-gray-400">
+            Your commission at {fees.senderAgent.commission}%
+          </span>
 
-        <span className="text-xl font-bold md:text-2xl">~ 748.10 USDT</span>
-      </div>
+          <span className="text-xl font-bold md:text-2xl">
+            ~
+            {numericFormatter(
+              `${fees.senderAgent.amount} ${fees.senderAgent.token}`,
+              {
+                thousandSeparator: ', ',
+              }
+            )}
+          </span>
+        </div>
+      )}
+
+      {isRecipient && fees.recipientAgent && (
+        <div className="flex flex-col space-y-1">
+          <span className="text-gray-400">
+            Your commission at {fees.recipientAgent.commission}%
+          </span>
+
+          <span className="text-xl font-bold md:text-2xl">
+            ~
+            {numericFormatter(
+              `${fees.recipientAgent.amount} ${fees.recipientAgent.token}`,
+              {
+                thousandSeparator: ', ',
+              }
+            )}
+          </span>
+        </div>
+      )}
+
       {isSender && (
         <SelectChain control={control} name="chainId" list={chainList} />
       )}
