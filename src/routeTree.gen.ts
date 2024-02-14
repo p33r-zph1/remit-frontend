@@ -14,7 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
-import { Route as AuthRouteImport } from './routes/_auth/route'
+import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthHistoryImport } from './routes/_auth/history'
 import { Route as AuthOrderOrderIdIndexImport } from './routes/_auth/order/$orderId/index'
@@ -32,43 +32,43 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
-const AuthRouteRoute = AuthRouteImport.update({
+const AuthRoute = AuthImport.update({
   id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
 const AuthIndexRoute = AuthIndexImport.update({
   path: '/',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthAlertsLazyRoute = AuthAlertsLazyImport.update({
   path: '/alerts',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() => import('./routes/_auth/alerts.lazy').then((d) => d.Route))
 
 const AuthHistoryRoute = AuthHistoryImport.update({
   path: '/history',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() => import('./routes/_auth/history.lazy').then((d) => d.Route))
 
 const AuthOrderOrderIdIndexRoute = AuthOrderOrderIdIndexImport.update({
   path: '/order/$orderId/',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
   import('./routes/_auth/order/$orderId/index.lazy').then((d) => d.Route),
 )
 
 const AuthOrderOrderIdShowQrRoute = AuthOrderOrderIdShowQrImport.update({
   path: '/order/$orderId/showQr',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
   import('./routes/_auth/order/$orderId/showQr.lazy').then((d) => d.Route),
 )
 
 const AuthOrderOrderIdScanQrRoute = AuthOrderOrderIdScanQrImport.update({
   path: '/order/$orderId/scanQr',
-  getParentRoute: () => AuthRouteRoute,
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
   import('./routes/_auth/order/$orderId/scanQr.lazy').then((d) => d.Route),
 )
@@ -78,7 +78,7 @@ const AuthOrderOrderIdScanQrRoute = AuthOrderOrderIdScanQrImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/_auth': {
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -87,27 +87,27 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/history': {
       preLoaderRoute: typeof AuthHistoryImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/alerts': {
       preLoaderRoute: typeof AuthAlertsLazyImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/': {
       preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/order/$orderId/scanQr': {
       preLoaderRoute: typeof AuthOrderOrderIdScanQrImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/order/$orderId/showQr': {
       preLoaderRoute: typeof AuthOrderOrderIdShowQrImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
     '/_auth/order/$orderId/': {
       preLoaderRoute: typeof AuthOrderOrderIdIndexImport
-      parentRoute: typeof AuthRouteImport
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -115,7 +115,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  AuthRouteRoute.addChildren([
+  AuthRoute.addChildren([
     AuthHistoryRoute,
     AuthAlertsLazyRoute,
     AuthIndexRoute,
