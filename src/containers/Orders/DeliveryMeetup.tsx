@@ -9,19 +9,30 @@ import type { Group } from '../../schema/cognito';
 import CustomerMeetup from '../Meetup/CustomerMeetup';
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   group: Group;
 };
 
-export default function CollectionMeetup({ group }: Props) {
+export default function DeliveryMeetup({ group }: Props) {
   const navigate = useNavigate();
 
   const {
-    order: { deliveryDetails, senderAgentId, orderId },
+    order: {
+      deliveryDetails,
+      recipientAgentId,
+      orderId,
+      contactDetails: { recipientAgent, recipient },
+    },
   } = useOrderDetails();
 
   if (!deliveryDetails) throw new Error('Delivery details is not present.');
+
+  if (!recipientAgentId) throw new Error('Recipient agentId is not present.');
+
+  if (!recipientAgent)
+    throw new Error('Recipient agent contact details is not present.');
 
   const { areaName } = deliveryDetails;
 
@@ -56,7 +67,9 @@ export default function CollectionMeetup({ group }: Props) {
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        {group === 'customer' && <>Collect cash from Agent #{senderAgentId}</>}
+        {group === 'customer' && (
+          <>Collect cash from Agent #{recipientAgentId}</>
+        )}
         {group === 'agent' && `Collect cash at ${areaName}`}
       </HeaderTitle>
 
@@ -80,8 +93,22 @@ export default function CollectionMeetup({ group }: Props) {
 
         <button
           type="button"
-          className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
           disabled={isGeneratingQr}
+          onClick={() => {
+            switch (group) {
+              case 'customer': {
+                const { url, deeplink } = recipientAgent.telegram;
+
+                return window.open(isMobile ? deeplink : url, '_blank');
+              }
+              case 'agent': {
+                const { url, deeplink } = recipient.telegram;
+
+                return window.open(isMobile ? deeplink : url, '_blank');
+              }
+            }
+          }}
+          className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact {group === 'customer' && 'agent'}
           {group === 'agent' && 'recipient'}

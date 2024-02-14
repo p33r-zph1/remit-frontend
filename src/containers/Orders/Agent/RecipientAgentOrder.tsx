@@ -1,6 +1,6 @@
 import { type TransferTimelineStatus } from '../../../schema/order';
 import AgentMeetup from '../../Meetup/AgentMeetup';
-import CollectionMeetup from '../CollectionMeetup';
+import DeliveryMeetup from '../DeliveryMeetup';
 import TakeOrder from '../TakeOrder';
 
 type Props = {
@@ -18,7 +18,7 @@ export default function RecipientAgentOrder({ status }: Props) {
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      return <CollectionMeetup group="agent" />;
+      return <DeliveryMeetup group="agent" />;
     }
 
     default:

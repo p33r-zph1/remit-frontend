@@ -1,14 +1,23 @@
 import { PhoneIcon } from '@heroicons/react/20/solid';
-import HeaderTitle from '../../components/HeaderTitle';
-import CustomerMeetup from '../Meetup/CustomerMeetup';
+import { isMobile } from 'react-device-detect';
+
 import useOrderDetails from '../../hooks/useOrderDetails';
+import CustomerMeetup from '../Meetup/CustomerMeetup';
+import HeaderTitle from '../../components/HeaderTitle';
 
 export default function GiveCash() {
   const {
-    order: { senderAgentId, collectionDetails },
+    order: {
+      senderAgentId,
+      collectionDetails,
+      contactDetails: { senderAgent },
+    },
   } = useOrderDetails();
 
   if (!collectionDetails) throw new Error('Collection details is not present.');
+
+  if (!senderAgent)
+    throw new Error('Sender agent contact details is not present.');
 
   return (
     <div className="flex flex-col space-y-12">
@@ -19,6 +28,11 @@ export default function GiveCash() {
 
         <button
           type="button"
+          onClick={() => {
+            const { url, deeplink } = senderAgent.telegram;
+
+            window.open(isMobile ? deeplink : url, '_blank');
+          }}
           className="btn btn-primary btn-block rounded-full text-base
 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >

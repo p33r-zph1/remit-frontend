@@ -1,6 +1,8 @@
 import { z } from 'zod';
+
 import { makeApiSchema } from './api/fetch';
 import { isValidAddress } from '../utils';
+import contactSchema from './contact';
 
 export const orderStatusSchema = z.enum([
   'COMPLETED',
@@ -69,11 +71,16 @@ export const locationDetailsSchema = z.object({
   radius: radiusSchema,
 });
 
+export const contactInfoSchema = z.object({
+  url: z.string().url(),
+  deeplink: z.string().url(),
+});
+
 export const contactDetailsSchema = z.object({
-  recipient: z.object({ telegram: z.string() }),
-  sender: z.object({ telegram: z.string() }),
-  senderAgent: z.object({ telegram: z.string() }).optional(),
-  recipientAgent: z.object({ telegram: z.string() }).optional(),
+  recipient: contactSchema,
+  sender: contactSchema,
+  senderAgent: contactSchema.optional(),
+  recipientAgent: contactSchema.optional(),
 });
 
 export const escrowDetailsSchema = z.object({

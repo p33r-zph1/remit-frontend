@@ -1,15 +1,20 @@
+import { isMobile } from 'react-device-detect';
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
+import { format } from 'date-fns';
 
 import useConfirmCash from '../../hooks/api/useConfirmCash';
 import useOrderDetails from '../../hooks/useOrderDetails';
 
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
-import { format } from 'date-fns';
 
 export default function CollectCash() {
   const {
-    order: { orderId, collectionDetails },
+    order: {
+      orderId,
+      collectionDetails,
+      contactDetails: { sender },
+    },
   } = useOrderDetails();
 
   const { mutateAsync: collectCashAsync, isPending, error } = useConfirmCash();
@@ -43,6 +48,11 @@ export default function CollectCash() {
         <button
           type="button"
           disabled={isPending}
+          onClick={() => {
+            const { url, deeplink } = sender.telegram;
+
+            window.open(isMobile ? deeplink : url, '_blank');
+          }}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact sender
