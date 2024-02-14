@@ -1,15 +1,14 @@
-import { Suspense } from 'react';
-import { createLazyFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { createLazyFileRoute } from '@tanstack/react-router';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import QueryFallback from '../../../components/Fallback/QueryFallback';
+import HeroNotFound from '../../../components/Hero/HeroNotFound';
+import Page from '../../../components/Page';
+import LoadingRing from '../../../components/Spinner/LoadingRing';
 import ScanQrCode from '../../../containers/Orders/QrCode/ScanQrCode';
 import useAuth from '../../../hooks/useAuth';
-
-import Page from '../../../components/Page';
-import QueryFallback from '../../../components/Fallback/QueryFallback';
-import LoadingRing from '../../../components/Spinner/LoadingRing';
-import HeroNotFound from '../../../components/Hero/HeroNotFound';
 
 export const Route = createLazyFileRoute('/_auth/order/scanQr')({
   component: () => (

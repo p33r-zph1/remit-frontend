@@ -4,10 +4,10 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/20/solid';
 import { Link, useNavigate, useRouter } from '@tanstack/react-router';
-
-import Brand from '../Brand';
-import useAuth from '../../hooks/useAuth';
 import { useCallback } from 'react';
+
+import useAuth from '../../hooks/useAuth';
+import Brand from '../Brand';
 
 export default function NavBar() {
   const { user, logout } = useAuth();

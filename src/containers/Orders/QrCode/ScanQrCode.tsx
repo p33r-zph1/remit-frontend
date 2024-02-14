@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { QrCodeIcon } from '@heroicons/react/20/solid';
+import { useNavigate } from '@tanstack/react-router';
 import QrScanner from 'qr-scanner';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import useConfirmDelivery from '../../../hooks/api/useConfirmDelivery';
-
-import HeaderTitle from '../../../components/HeaderTitle';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
+import HeaderTitle from '../../../components/HeaderTitle';
+import useConfirmDelivery from '../../../hooks/api/useConfirmDelivery';
 
 type Props = {
   orderId: string;

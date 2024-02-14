@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
 import { Combobox } from '@headlessui/react';
+import { useCallback } from 'react';
+import {
+  type FieldValues,
+  useController,
+  type UseControllerProps,
+} from 'react-hook-form';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete';
-import {
-  type FieldValues,
-  type UseControllerProps,
-  useController,
-} from 'react-hook-form';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   onSelect: (position: LatLng) => void;

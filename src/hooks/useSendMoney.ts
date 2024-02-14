@@ -1,11 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { coerce, z } from 'zod';
 
+import useAgents from './api/useAgents';
 import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
-import useAgents from './api/useAgents';
 
 const formSchema = z.object({
   recipientId: z.string().min(1, 'Please enter a valid recipient'),

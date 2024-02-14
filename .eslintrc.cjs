@@ -7,6 +7,8 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:@tanstack/eslint-plugin-query/recommended',
@@ -27,13 +29,27 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    /** @see https://github.com/import-js/eslint-plugin-import?tab=readme-ov-file#typescript */
+    'import/resolver': {
+      typescript: true,
+      node: true,
+    },
   },
-  plugins: ['@typescript-eslint', 'react', 'react-refresh', 'prettier'],
+  plugins: [
+    '@typescript-eslint',
+    'simple-import-sort',
+    'react',
+    'react-refresh',
+    'prettier',
+  ],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
+
+    'simple-import-sort/imports': 'warn',
+    'simple-import-sort/exports': 'warn',
 
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'prettier/prettier': 'error',

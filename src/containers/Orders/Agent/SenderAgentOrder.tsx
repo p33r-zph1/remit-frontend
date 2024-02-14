@@ -1,9 +1,8 @@
 import { type TransferTimelineStatus } from '../../../schema/order';
-
-import TakeOrder from '../TakeOrder';
 import AgentMeetup from '../../Meetup/AgentMeetup';
-import CollectCash from '../CollectCash';
 import ApproveERC20 from '../ApproveERC20';
+import CollectCash from '../CollectCash';
+import TakeOrder from '../TakeOrder';
 
 type Props = {
   status: TransferTimelineStatus;

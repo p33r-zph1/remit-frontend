@@ -1,10 +1,9 @@
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
-import OrderList from './OrderList';
+import HeaderTitle from '../../components/HeaderTitle';
 import useAgent from '../../hooks/api/useAgent';
 import useAuth from '../../hooks/useAuth';
-
-import HeaderTitle from '../../components/HeaderTitle';
+import OrderList from './OrderList';
 
 function CommisionCard({
   commision,

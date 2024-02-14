@@ -1,23 +1,22 @@
-import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import ErrorAlert from '../../components/Alert/ErrorAlert';
+import SelectChain from '../../components/Select/SelectChain';
 import chainList, { getCustomChainId } from '../../constants/chains';
 import useAcceptOrder from '../../hooks/api/useAcceptOrder';
 import useRejectOrder from '../../hooks/api/useRejectOrder';
 import useOrderDetails from '../../hooks/useOrderDetails';
 
-import ErrorAlert from '../../components/Alert/ErrorAlert';
-import SelectChain from '../../components/Select/SelectChain';
-
 const takeOrderSchema = z.object({
   chainId: z.number().min(1),
 });
 
-export type TakeOrder = z.infer<typeof takeOrderSchema>;
+export type TakeOrderSchema = z.infer<typeof takeOrderSchema>;
 
 export default function TakeOrder() {
-  const { control, handleSubmit } = useForm<TakeOrder>({
+  const { control, handleSubmit } = useForm<TakeOrderSchema>({
     resolver: zodResolver(takeOrderSchema),
     defaultValues: {
       chainId: 0,
@@ -41,7 +40,7 @@ export default function TakeOrder() {
     error: rejectOrderError,
   } = useRejectOrder();
 
-  const onSubmit: SubmitHandler<TakeOrder> = async ({ chainId }) => {
+  const onSubmit: SubmitHandler<TakeOrderSchema> = async ({ chainId }) => {
     try {
       await acceptOrderAsync({
         key: 'senderagent',

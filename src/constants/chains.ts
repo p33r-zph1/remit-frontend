@@ -1,11 +1,11 @@
 import {
-  mainnet,
-  sepolia,
   bsc,
   bscTestnet,
+  type Chain,
+  mainnet,
   polygon,
   polygonMumbai,
-  type Chain,
+  sepolia,
 } from 'wagmi/chains';
 
 const ethChains: Chain[] = [mainnet, sepolia] as const;

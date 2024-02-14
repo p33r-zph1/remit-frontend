@@ -1,8 +1,8 @@
 import {
-  XMarkIcon,
   ArrowDownIcon,
-  CheckIcon,
   ArrowUpIcon,
+  CheckIcon,
+  XMarkIcon,
 } from '@heroicons/react/20/solid';
 
 import type { OrderStatus } from '../../schema/order';

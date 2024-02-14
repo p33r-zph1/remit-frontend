@@ -1,5 +1,4 @@
 import { type TransferTimelineStatus } from '../../../schema/order';
-
 import AcceptOrder from '../AcceptOrder';
 import DeliveryMeetup from '../DeliveryMeetup';
 

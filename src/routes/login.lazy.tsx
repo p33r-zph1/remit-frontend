@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 
-import LoginForm from '../containers/LoginForm';
-import Page from '../components/Page';
 import Brand from '../components/Brand';
+import Page from '../components/Page';
+import LoginForm from '../containers/LoginForm';
 
 export const Route = createLazyFileRoute('/login')({
   component: () => (

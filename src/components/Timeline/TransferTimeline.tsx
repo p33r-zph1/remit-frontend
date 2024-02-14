@@ -1,7 +1,7 @@
 import {
-  XCircleIcon,
   CheckCircleIcon,
   ClockIcon,
+  XCircleIcon,
 } from '@heroicons/react/20/solid';
 
 import type { OrderStatus, TransferTimeline } from '../../schema/order';

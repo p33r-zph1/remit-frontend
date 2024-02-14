@@ -1,11 +1,11 @@
-import { type ElementRef, useRef } from 'react';
-import {
-  useLoadScript,
-  type Libraries,
-  GoogleMap,
-} from '@react-google-maps/api';
 import { CalendarIcon } from '@heroicons/react/20/solid';
+import {
+  GoogleMap,
+  type Libraries,
+  useLoadScript,
+} from '@react-google-maps/api';
 import { format } from 'date-fns';
+import { type ElementRef, useRef } from 'react';
 
 import MapsAPI from '../../components/Location/MapsAPI';
 import LoadingRing from '../../components/Spinner/LoadingRing';

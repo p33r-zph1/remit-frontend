@@ -1,7 +1,7 @@
-import useAuth from '../../hooks/useAuth';
+import EmptyOrder from '../../components/Empty/EmptyOrder';
 import OrderItem from '../../components/Item/OrderItem';
 import useOrders, { type OrdersQueryProps } from '../../hooks/api/useOrders';
-import EmptyOrder from '../../components/Empty/EmptyOrder';
+import useAuth from '../../hooks/useAuth';
 
 type Props = OrdersQueryProps;
 

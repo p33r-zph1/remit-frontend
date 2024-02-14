@@ -1,5 +1,5 @@
 import { http } from 'viem';
-import { mainnet, sepolia, bsc, bscTestnet } from 'viem/chains';
+import { bsc, bscTestnet, mainnet, sepolia } from 'viem/chains';
 import { createConfig } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 

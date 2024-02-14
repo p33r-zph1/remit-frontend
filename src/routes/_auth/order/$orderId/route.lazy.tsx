@@ -1,19 +1,18 @@
-import { Suspense } from 'react';
-import { createLazyFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { createLazyFileRoute } from '@tanstack/react-router';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import useAuth from '../../../../hooks/useAuth';
-import useOrderDetails from '../../../../hooks/useOrderDetails';
-import CustomerOrderDetails from '../../../../containers/Orders/Customer/CustomerOrderDetails';
+import QueryFallback from '../../../../components/Fallback/QueryFallback';
+import HeroNotFound from '../../../../components/Hero/HeroNotFound';
+import Page from '../../../../components/Page';
+import LoadingRing from '../../../../components/Spinner/LoadingRing';
 import AgentOrderDetails from '../../../../containers/Orders/Agent/AgentOrderDetails';
+import CustomerOrderDetails from '../../../../containers/Orders/Customer/CustomerOrderDetails';
 import ShowQrCode from '../../../../containers/Orders/QrCode/ShowQrCode';
 import { OrderDetailsProvider } from '../../../../contexts/order-details';
-
-import Page from '../../../../components/Page';
-import QueryFallback from '../../../../components/Fallback/QueryFallback';
-import LoadingRing from '../../../../components/Spinner/LoadingRing';
-import HeroNotFound from '../../../../components/Hero/HeroNotFound';
+import useAuth from '../../../../hooks/useAuth';
+import useOrderDetails from '../../../../hooks/useOrderDetails';
 
 export const Route = createLazyFileRoute('/_auth/order/$orderId')({
   component: () => (

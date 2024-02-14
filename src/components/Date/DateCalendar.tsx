@@ -1,5 +1,4 @@
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { ChevronLeftIcon } from '@heroicons/react/20/solid';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import {
   addMonths,
   eachDayOfInterval,

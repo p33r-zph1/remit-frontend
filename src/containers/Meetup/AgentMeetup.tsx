@@ -1,24 +1,23 @@
-import { type ElementRef, useRef } from 'react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  useLoadScript,
-  type Libraries,
   GoogleMap,
+  type Libraries,
+  useLoadScript,
 } from '@react-google-maps/api';
+import { type ElementRef, useRef } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
+import ErrorAlert from '../../components/Alert/ErrorAlert';
+import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
+import MapsAPI from '../../components/Location/MapsAPI';
+import CalendarPopover from '../../components/Popover/CalendarPopover';
+import LoadingRing from '../../components/Spinner/LoadingRing';
 import useSetCollection, {
   type MutationProps,
 } from '../../hooks/api/useSetCollection';
 import useOrderDetails from '../../hooks/useOrderDetails';
-
-import MapsAPI from '../../components/Location/MapsAPI';
-import CalendarPopover from '../../components/Popover/CalendarPopover';
-import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
-import LoadingRing from '../../components/Spinner/LoadingRing';
-import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const deliveryProps = z.object({
   startDate: z.date({

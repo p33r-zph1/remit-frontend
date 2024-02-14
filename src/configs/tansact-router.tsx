@@ -1,8 +1,8 @@
 import { createRouter } from '@tanstack/react-router';
 
-import { routeTree } from '../routeTree.gen';
 import DefaultFallback from '../components/Fallback/DefaultFallback';
 import LoadingRing from '../components/Spinner/LoadingRing';
+import { routeTree } from '../routeTree.gen';
 import queryClient from './tansact-query';
 
 const router = createRouter({

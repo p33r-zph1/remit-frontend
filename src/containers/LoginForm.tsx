@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { useNavigate, useRouter } from '@tanstack/react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Route } from '../routes/login';
-import useAuth from '../hooks/useAuth';
 import ErrorAlert from '../components/Alert/ErrorAlert';
+import useAuth from '../hooks/useAuth';
+import { Route } from '../routes/login';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),

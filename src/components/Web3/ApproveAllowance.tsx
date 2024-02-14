@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { type Address, erc20Abi, parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 
-import ErrorAlert from '../Alert/ErrorAlert';
 import { trimErrorMessage } from '../../utils';
+import ErrorAlert from '../Alert/ErrorAlert';
 
 type Props = {
   tokenAddress: Address;

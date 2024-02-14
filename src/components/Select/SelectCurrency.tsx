@@ -1,10 +1,10 @@
-import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import {
   CheckIcon,
   ChevronDownIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
+import { Fragment } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { type Currency } from '../../schema/currency';

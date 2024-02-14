@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { makeApiSchema } from './api/fetch';
 import { isValidAddress } from '../utils';
+import { makeApiSchema } from './api/fetch';
 import contactSchema from './contact';
 
 export const orderStatusSchema = z.enum([

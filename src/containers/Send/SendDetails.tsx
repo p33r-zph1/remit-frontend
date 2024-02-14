@@ -1,12 +1,12 @@
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import {
   type FieldValues,
-  type UseControllerProps,
   useController,
+  type UseControllerProps,
 } from 'react-hook-form';
 
-import type { Agent } from '../../schema/agent';
 import SelectAgent from '../../components/Select/SelectAgent';
+import type { Agent } from '../../schema/agent';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   list: Agent[];
