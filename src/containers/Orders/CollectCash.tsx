@@ -21,7 +21,9 @@ export default function CollectCash() {
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Collect cash on {format(startDate, 'MMMM dd, YYYY')} at {areaName}
+        <span className="text-gray-400">Collect cash on </span>
+        {format(startDate, 'MMMM dd, yyyy')}{' '}
+        <span className="text-gray-400">at </span> {areaName}
       </HeaderTitle>
 
       {error && <ErrorAlert message={error.message} />}
