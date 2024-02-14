@@ -4,7 +4,7 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import useAgent from '@/src/hooks/api/useAgent';
 import useAuth from '@/src/hooks/useAuth';
 
-import OrderList from './OrderList';
+import OrderList from './Details/-components/OrderList';
 
 function CommisionCard({
   commision,

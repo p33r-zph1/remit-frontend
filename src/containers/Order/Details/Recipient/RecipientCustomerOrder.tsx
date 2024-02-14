@@ -1,7 +1,7 @@
 import { type TransferTimelineStatus } from '@/src/schema/order';
 
-import AcceptOrder from '../AcceptOrder';
-import DeliveryMeetup from '../DeliveryMeetup';
+import AcceptOrder from '../-components/AcceptOrder';
+import DeliveryMeetup from '../-components/Meetup/DeliveryMeetup';
 
 type Props = {
   status: TransferTimelineStatus;

@@ -1,9 +1,9 @@
+import AgentMeetup from '@/src/containers/Meetup/AgentMeetup';
 import { type TransferTimelineStatus } from '@/src/schema/order';
 
-import AgentMeetup from '../../Meetup/AgentMeetup';
-import ApproveERC20 from '../ApproveERC20';
-import CollectCash from '../CollectCash';
-import TakeOrder from '../TakeOrder';
+import ApproveERC20 from '../-components/ApproveERC20';
+import CollectionMeetup from '../-components/Meetup/CollectionMeetup';
+import TakeOrder from '../-components/TakeOrder';
 
 type Props = {
   status: TransferTimelineStatus;
@@ -19,7 +19,7 @@ export default function SenderAgentOrder({ status }: Props) {
       return <AgentMeetup meetupType="collection" />;
 
     case 'COLLECTION_MEETUP_SET':
-      return <CollectCash />;
+      return <CollectionMeetup />;
 
     case 'CASH_COLLECTED':
       return <ApproveERC20 />;

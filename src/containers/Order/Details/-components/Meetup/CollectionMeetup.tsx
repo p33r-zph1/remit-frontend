@@ -6,7 +6,7 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-export default function CollectCash() {
+export default function CollectionMeetup() {
   const {
     order: {
       orderId,

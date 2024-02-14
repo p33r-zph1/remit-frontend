@@ -11,7 +11,7 @@ import { WagmiProvider } from 'wagmi';
 import queryClient from './configs/tansact-query';
 import router from './configs/tansact-router';
 import wagmi from './configs/wagmi';
-import { AuthProvider } from './contexts/auth';
+import AuthProvider from './contexts/auth';
 import useAuth from './hooks/useAuth';
 
 export function App() {

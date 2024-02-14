@@ -4,11 +4,10 @@ import { useCallback } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
+import CustomerMeetup from '@/src/containers/Meetup/CustomerMeetup';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import type { Group } from '@/src/schema/cognito';
-
-import CustomerMeetup from '../Meetup/CustomerMeetup';
 
 type Props = {
   group: Group;
@@ -48,7 +47,7 @@ export default function DeliveryMeetup({ group }: Props) {
       } = await generateQrAsync({ orderId });
 
       return navigate({
-        to: '/order/$orderId',
+        to: '/order/$orderId/showQr',
         params: { orderId },
         search: { qrCode },
         mask: { to: '/order/$orderId', params: { orderId } },
@@ -56,8 +55,8 @@ export default function DeliveryMeetup({ group }: Props) {
     }
     if (group === 'agent') {
       return navigate({
-        to: '/order/scanQr',
-        search: { orderId },
+        to: '/order/$orderId/scanQr',
+        params: { orderId },
         mask: { to: '/order/$orderId', params: { orderId } },
       });
     }

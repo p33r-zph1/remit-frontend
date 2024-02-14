@@ -17,7 +17,11 @@ export interface AuthContext {
 
 export const AuthContext = createContext<AuthContext | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<string>();
   const [group, setGroup] = useState<CognitoGroup>();
   const [error, setError] = useState<string>();

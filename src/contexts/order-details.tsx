@@ -2,7 +2,7 @@ import { createContext, type ReactNode, useMemo } from 'react';
 
 import useOrder from '@/src/hooks/api/useOrder';
 import useAuth from '@/src/hooks/useAuth';
-import { Route } from '@/src/routes/_auth/order/$orderId/route';
+import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Order } from '@/src/schema/order';
 
 type Role = {
@@ -18,7 +18,11 @@ interface OrderDetails {
 
 export const OrderDetailsContext = createContext<OrderDetails | null>(null);
 
-export function OrderDetailsProvider({ children }: { children: ReactNode }) {
+export default function OrderDetailsProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const { orderId } = Route.useParams();
 
   const { user: userId } = useAuth();

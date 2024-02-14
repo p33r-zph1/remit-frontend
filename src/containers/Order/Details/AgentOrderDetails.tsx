@@ -2,8 +2,8 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-import RecipientAgentOrder from './RecipientAgentOrder';
-import SenderAgentOrder from './SenderAgentOrder';
+import RecipientAgentOrder from './Recipient/RecipientAgentOrder';
+import SenderAgentOrder from './Sender/SenderAgentOrder';
 
 export default function AgentOrderDetails() {
   const { agent, order } = useOrderDetails();

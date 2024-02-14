@@ -7,7 +7,7 @@ import QueryFallback from '@/src/components/Fallback/QueryFallback';
 import Page from '@/src/components/Page';
 import SendMoneySkeleton from '@/src/components/Skeleton/SendMoneySkeleton';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
-import AgentOrders from '@/src/containers/Orders/AgentOrders';
+import AgentOrders from '@/src/containers/Order/AgentOrders';
 import SendForm from '@/src/containers/Send/SendForm';
 import useAuth from '@/src/hooks/useAuth';
 

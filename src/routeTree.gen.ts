@@ -17,8 +17,9 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth/route'
 import { Route as AuthIndexImport } from './routes/_auth/index'
 import { Route as AuthHistoryImport } from './routes/_auth/history'
-import { Route as AuthOrderScanQrImport } from './routes/_auth/order/scanQr'
-import { Route as AuthOrderOrderIdRouteImport } from './routes/_auth/order/$orderId/route'
+import { Route as AuthOrderOrderIdIndexImport } from './routes/_auth/order/$orderId/index'
+import { Route as AuthOrderOrderIdShowQrImport } from './routes/_auth/order/$orderId/showQr'
+import { Route as AuthOrderOrderIdScanQrImport } from './routes/_auth/order/$orderId/scanQr'
 
 // Create Virtual Routes
 
@@ -51,18 +52,25 @@ const AuthHistoryRoute = AuthHistoryImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() => import('./routes/_auth/history.lazy').then((d) => d.Route))
 
-const AuthOrderScanQrRoute = AuthOrderScanQrImport.update({
-  path: '/order/scanQr',
+const AuthOrderOrderIdIndexRoute = AuthOrderOrderIdIndexImport.update({
+  path: '/order/$orderId/',
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() =>
-  import('./routes/_auth/order/scanQr.lazy').then((d) => d.Route),
+  import('./routes/_auth/order/$orderId/index.lazy').then((d) => d.Route),
 )
 
-const AuthOrderOrderIdRouteRoute = AuthOrderOrderIdRouteImport.update({
-  path: '/order/$orderId',
+const AuthOrderOrderIdShowQrRoute = AuthOrderOrderIdShowQrImport.update({
+  path: '/order/$orderId/showQr',
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() =>
-  import('./routes/_auth/order/$orderId/route.lazy').then((d) => d.Route),
+  import('./routes/_auth/order/$orderId/showQr.lazy').then((d) => d.Route),
+)
+
+const AuthOrderOrderIdScanQrRoute = AuthOrderOrderIdScanQrImport.update({
+  path: '/order/$orderId/scanQr',
+  getParentRoute: () => AuthRouteRoute,
+} as any).lazy(() =>
+  import('./routes/_auth/order/$orderId/scanQr.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -89,12 +97,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthRouteImport
     }
-    '/_auth/order/$orderId': {
-      preLoaderRoute: typeof AuthOrderOrderIdRouteImport
+    '/_auth/order/$orderId/scanQr': {
+      preLoaderRoute: typeof AuthOrderOrderIdScanQrImport
       parentRoute: typeof AuthRouteImport
     }
-    '/_auth/order/scanQr': {
-      preLoaderRoute: typeof AuthOrderScanQrImport
+    '/_auth/order/$orderId/showQr': {
+      preLoaderRoute: typeof AuthOrderOrderIdShowQrImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/_auth/order/$orderId/': {
+      preLoaderRoute: typeof AuthOrderOrderIdIndexImport
       parentRoute: typeof AuthRouteImport
     }
   }
@@ -107,8 +119,9 @@ export const routeTree = rootRoute.addChildren([
     AuthHistoryRoute,
     AuthAlertsLazyRoute,
     AuthIndexRoute,
-    AuthOrderOrderIdRouteRoute,
-    AuthOrderScanQrRoute,
+    AuthOrderOrderIdScanQrRoute,
+    AuthOrderOrderIdShowQrRoute,
+    AuthOrderOrderIdIndexRoute,
   ]),
   LoginRoute,
 ])

@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 import { maybeLazyError } from '@/src/utils/error';
 
-export const Route = createFileRoute('/_auth/order/scanQr')({
+export const Route = createFileRoute('/_auth/order/$orderId/showQr')({
   validateSearch: z.object({
-    orderId: z.string().nullish(),
+    qrCode: z.string(),
   }),
   onError: maybeLazyError,
 });

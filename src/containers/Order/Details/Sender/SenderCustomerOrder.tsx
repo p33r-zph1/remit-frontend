@@ -1,6 +1,6 @@
 import type { TransferTimelineStatus } from '@/src/schema/order';
 
-import GiveCash from '../GiveCash';
+import GiveCash from '../-components/GiveCash';
 
 type Props = {
   status: TransferTimelineStatus;

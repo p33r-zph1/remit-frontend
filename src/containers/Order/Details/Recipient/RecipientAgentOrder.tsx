@@ -1,8 +1,8 @@
+import AgentMeetup from '@/src/containers/Meetup/AgentMeetup';
 import { type TransferTimelineStatus } from '@/src/schema/order';
 
-import AgentMeetup from '../../Meetup/AgentMeetup';
-import DeliveryMeetup from '../DeliveryMeetup';
-import TakeOrder from '../TakeOrder';
+import DeliveryMeetup from '../-components/Meetup/DeliveryMeetup';
+import TakeOrder from '../-components/TakeOrder';
 
 type Props = {
   status: TransferTimelineStatus;
