@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { createLazyFileRoute, redirect } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -33,17 +33,10 @@ export const Route = createLazyFileRoute('/_auth/order/$orderId/showQr')({
 function ShowQrComponent() {
   const {
     customer: { isRecipient: isRecipientCustomer },
-    order: { orderId, transferTimelineStatus: status },
+    order: { transferTimelineStatus: status },
   } = useOrderDetails();
 
   switch (status) {
-    case 'ESCROW_RELEASED':
-      throw redirect({
-        to: '/order/$orderId',
-        params: { orderId },
-        replace: true,
-      });
-
     case 'DELIVERY_MEETUP_SET': {
       if (isRecipientCustomer) {
         return <ShowQrCode />;

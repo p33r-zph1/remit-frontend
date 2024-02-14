@@ -1,4 +1,5 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
+import { useNavigate } from '@tanstack/react-router';
 import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -8,6 +9,8 @@ import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 export default function ScanQrCode() {
+  const navigate = useNavigate();
+
   const {
     order: { orderId },
   } = useOrderDetails();
@@ -38,6 +41,8 @@ export default function ScanQrCode() {
       confirmDeliveryAsync({
         body: { deliveryCode: scannedResult },
         orderId,
+      }).then(() => {
+        navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
       });
     }
   }, [confirmDeliveryAsync, orderId, scannedResult]);
