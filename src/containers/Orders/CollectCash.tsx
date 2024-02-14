@@ -1,4 +1,3 @@
-import { isMobile } from 'react-device-detect';
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 
@@ -48,11 +47,7 @@ export default function CollectCash() {
         <button
           type="button"
           disabled={isPending}
-          onClick={() => {
-            const { url, deeplink } = sender.telegram;
-
-            window.open(isMobile ? deeplink : url, '_blank');
-          }}
+          onClick={() => window.open(sender.telegram.url, '_blank')}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact sender

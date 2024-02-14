@@ -1,5 +1,4 @@
 import { PhoneIcon } from '@heroicons/react/20/solid';
-import { isMobile } from 'react-device-detect';
 
 import useOrderDetails from '../../hooks/useOrderDetails';
 import CustomerMeetup from '../Meetup/CustomerMeetup';
@@ -28,11 +27,7 @@ export default function GiveCash() {
 
         <button
           type="button"
-          onClick={() => {
-            const { url, deeplink } = senderAgent.telegram;
-
-            window.open(isMobile ? deeplink : url, '_blank');
-          }}
+          onClick={() => window.open(senderAgent.telegram.url, '_blank')}
           className="btn btn-primary btn-block rounded-full text-base
 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >

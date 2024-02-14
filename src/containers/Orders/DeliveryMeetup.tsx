@@ -9,7 +9,6 @@ import type { Group } from '../../schema/cognito';
 import CustomerMeetup from '../Meetup/CustomerMeetup';
 import HeaderTitle from '../../components/HeaderTitle';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
-import { isMobile } from 'react-device-detect';
 
 type Props = {
   group: Group;
@@ -97,14 +96,10 @@ export default function DeliveryMeetup({ group }: Props) {
           onClick={() => {
             switch (group) {
               case 'customer': {
-                const { url, deeplink } = recipientAgent.telegram;
-
-                return window.open(isMobile ? deeplink : url, '_blank');
+                return window.open(recipientAgent.telegram.url, '_blank');
               }
               case 'agent': {
-                const { url, deeplink } = recipient.telegram;
-
-                return window.open(isMobile ? deeplink : url, '_blank');
+                return window.open(recipient.telegram.url, '_blank');
               }
             }
           }}
