@@ -50,13 +50,11 @@ export default function AcceptOrder() {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ agentId }) => {
     try {
-      const { data } = await acceptOrderAsync({
+      await acceptOrderAsync({
         key: 'customer',
         orderId,
         body: { recipientAgentId: agentId },
       });
-
-      console.log({ data });
     } catch (e: unknown) {
       console.error(e);
     }

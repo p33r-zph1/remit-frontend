@@ -13,6 +13,16 @@ import router from './configs/tansact-router';
 import wagmi from './configs/wagmi';
 import AuthProvider from './contexts/auth';
 import useAuth from './hooks/useAuth';
+import { preloadError } from './utils/error';
+
+/**
+ * @description Load Error Handling (Code splitting)
+ * @see https://vitejs.dev/guide/build#load-error-handling
+ */
+window.addEventListener('vite:preloadError', () => {
+  preloadError();
+  router.invalidate();
+});
 
 export function App() {
   const auth = useAuth();

@@ -34,10 +34,10 @@ export function getErrorMessage(error: unknown) {
 }
 
 /**
- * @description Wrapper around `React.lazy`: If an import fails, it will reload the page once. If it fails again, it will throw an error (error will be handled by `ErrorBoundary`)
- * @param {unknown} error - Expected to be related to dynamic import or code splitting.
+ * @description If an import fails, it will reload the page once. If it fails again, it will throw an error.
+ *  (Error will be handled by `ErrorBoundary`.)
  */
-export async function maybeLazyError(error: unknown) {
+export function preloadError() {
   // Get the last reload time from local storage and the current time
   const timeStr = sessionStorage.getItem('last-reload');
   const time = timeStr ? Number(timeStr) : null;
@@ -47,15 +47,14 @@ export async function maybeLazyError(error: unknown) {
   const isReloading = !time || time + 10_000 < now;
 
   if (isReloading) {
-    console.log('Reloading due to a potential fixable loading error.');
+    console.log('Reloading due to preloading error.');
     sessionStorage.setItem('last-reload', String(now));
 
-    window.location.reload();
-
-    // Return an empty module so we do not see the error in the app before reloading
-    return { default: () => null };
+    return window.location.reload();
   }
 
   // We let ErrorBoundary handle the error
-  throw error;
+  throw new Error(
+    'Oops! There was a problem loading that page, please try again later.'
+  );
 }
