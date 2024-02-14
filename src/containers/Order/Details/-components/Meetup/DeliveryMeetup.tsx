@@ -7,6 +7,7 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import CustomerMeetup from '@/src/containers/Meetup/CustomerMeetup';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Group } from '@/src/schema/cognito';
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export default function DeliveryMeetup({ group }: Props) {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const {
     order: {
@@ -48,16 +49,14 @@ export default function DeliveryMeetup({ group }: Props) {
 
       return navigate({
         to: '/order/$orderId/showQr',
-        params: { orderId },
         search: { qrCode },
-        mask: { to: '/order/$orderId', params: { orderId } },
+        mask: { to: '/order/$orderId' },
       });
     }
     if (group === 'agent') {
       return navigate({
         to: '/order/$orderId/scanQr',
-        params: { orderId },
-        mask: { to: '/order/$orderId', params: { orderId } },
+        mask: { to: '/order/$orderId' },
       });
     }
   }, [generateQrAsync, group, navigate, orderId]);

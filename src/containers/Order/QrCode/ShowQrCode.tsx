@@ -3,21 +3,25 @@ import { useEffect } from 'react';
 
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { Route } from '@/src/routes/_auth/order/$orderId/showQr.lazy';
+import { Route } from '@/src/routes/_auth/order/$orderId/showQr';
 
 export default function ShowQrCode() {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
   const { qrCode } = Route.useSearch();
 
   const {
-    order: { senderAgentId, transferTimelineStatus: status, orderId },
+    order: { senderAgentId, transferTimelineStatus: status },
   } = useOrderDetails();
 
   useEffect(() => {
     if (status === 'ESCROW_RELEASED') {
-      navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
+      navigate({
+        to: '/order/$orderId',
+        params: true,
+        replace: true,
+      });
     }
-  }, [navigate, orderId, status]);
+  }, [navigate, status]);
 
   return (
     <div className="flex flex-1 flex-col space-y-10">

@@ -7,9 +7,10 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { Route } from '@/src/routes/_auth/order/$orderId/scanQr';
 
 export default function ScanQrCode() {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const {
     order: { orderId },
@@ -42,7 +43,11 @@ export default function ScanQrCode() {
         body: { deliveryCode: scannedResult },
         orderId,
       }).then(() => {
-        navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
+        navigate({
+          to: '/order/$orderId',
+          params: true,
+          replace: true,
+        });
       });
     }
   }, [confirmDeliveryAsync, navigate, orderId, scannedResult]);

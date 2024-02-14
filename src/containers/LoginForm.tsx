@@ -26,7 +26,7 @@ export default function Login() {
 
   const { authenticate, error } = useAuth();
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
   const router = useRouter();
   const search = Route.useSearch();
 

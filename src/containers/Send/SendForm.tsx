@@ -6,13 +6,14 @@ import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
 import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
+import { Route } from '@/src/routes/_auth/';
 
 import SendDetails from './SendDetails';
 
 // let renderCount = 0;
 
 export default function SendForm() {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const {
     // currency dropdown controlled state
