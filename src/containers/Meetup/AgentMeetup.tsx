@@ -21,9 +21,11 @@ import LoadingRing from '../../components/Spinner/LoadingRing';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 
 const deliveryProps = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  areaName: z.string(),
+  startDate: z.date({
+    required_error: 'Please enter a valid delivery date',
+  }),
+  endDate: z.date(),
+  areaName: z.string().min(1, { message: 'Please enter your delivery area' }),
   radius: z.string(),
   coordinates: z.object({
     latitude: z.string(),
@@ -49,7 +51,7 @@ export default function AgentMeetup({ meetupType }: Props) {
     setValue,
     getValues,
     watch,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<Delivery>({
     resolver: zodResolver(deliveryProps),
     defaultValues: {
@@ -106,9 +108,17 @@ export default function AgentMeetup({ meetupType }: Props) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
       {/* {rerender / 2} */}
 
-      <div>
-        <div className="text-sm font-semibold text-gray-400">
-          Set delivery date and time
+      <label className="form-control w-full">
+        <div className="label">
+          <span className="label-text text-sm font-semibold text-gray-400">
+            Set delivery date and time
+          </span>
+
+          {errors.startDate && (
+            <span className="label-text-alt font-semibold text-error">
+              {errors.startDate.message}
+            </span>
+          )}
         </div>
 
         <CalendarPopover
@@ -116,21 +126,27 @@ export default function AgentMeetup({ meetupType }: Props) {
           name="startDate"
           setEndDate={date => setValue('endDate', date)}
         />
-      </div>
+      </label>
 
-      <div>
-        <div className="text-sm font-semibold text-gray-400">
-          Set delivery area
+      <label className="form-control w-full">
+        <div className="label">
+          <span className="label-text text-sm font-semibold text-gray-400">
+            Set delivery area
+          </span>
+
+          {errors.areaName && (
+            <span className="label-text-alt font-semibold text-error">
+              {errors.areaName.message}
+            </span>
+          )}
         </div>
 
-        <div className="rounded-lg border border-slate-200">
+        <div className="flex flex-col rounded-lg border border-slate-200">
           <div className="mt-2 flex flex-col space-y-4 p-4">
             <PlacesAutocomplete
               control={control}
               name="areaName"
               onSelect={location => {
-                console.log({ location });
-
                 setValue('coordinates', {
                   latitude: String(location.lat),
                   longitude: String(location.lng),
@@ -167,6 +183,13 @@ export default function AgentMeetup({ meetupType }: Props) {
             </div>
           </div>
 
+          {!errors.areaName && errors.coordinates && (
+            <span className="my-2 self-center text-xs font-semibold text-error">
+              Oops! that location is currently not available, please try again
+              later.
+            </span>
+          )}
+
           <MapsAPI
             ref={mapRef}
             meetUpLocation={
@@ -179,7 +202,7 @@ export default function AgentMeetup({ meetupType }: Props) {
             disabled={isSubmitting}
           />
         </div>
-      </div>
+      </label>
 
       {error && <ErrorAlert message={error.message} />}
 
