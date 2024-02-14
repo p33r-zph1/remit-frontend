@@ -3,13 +3,13 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import QueryFallback from '../../components/Fallback/QueryFallback';
-import Page from '../../components/Page';
-import SendMoneySkeleton from '../../components/Skeleton/SendMoneySkeleton';
-import LoadingRing from '../../components/Spinner/LoadingRing';
-import AgentOrders from '../../containers/Orders/AgentOrders';
-import SendForm from '../../containers/Send/SendForm';
-import useAuth from '../../hooks/useAuth';
+import QueryFallback from '@/src/components/Fallback/QueryFallback';
+import Page from '@/src/components/Page';
+import SendMoneySkeleton from '@/src/components/Skeleton/SendMoneySkeleton';
+import LoadingRing from '@/src/components/Spinner/LoadingRing';
+import AgentOrders from '@/src/containers/Orders/AgentOrders';
+import SendForm from '@/src/containers/Send/SendForm';
+import useAuth from '@/src/hooks/useAuth';
 
 export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,

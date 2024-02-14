@@ -6,7 +6,8 @@ import {
 import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 
-import type { Currency } from '../../schema/currency';
+import type { Currency } from '@/src/schema/currency';
+
 import SelectCurrency from '../Select/SelectCurrency';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {

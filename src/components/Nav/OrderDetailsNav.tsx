@@ -2,7 +2,8 @@ import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useRouter } from '@tanstack/react-router';
 import { numericFormatter } from 'react-number-format';
 
-import type { Order, OrderStatus, TransferInfo } from '../../schema/order';
+import type { Order, OrderStatus, TransferInfo } from '@/src/schema/order';
+
 import StatusIcon from '../Icon/StatusIcon';
 
 function getTitleByStatus(status: OrderStatus) {

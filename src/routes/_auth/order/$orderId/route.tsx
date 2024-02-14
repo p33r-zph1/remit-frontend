@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 
-import { orderQueryOptions } from '../../../../hooks/api/useOrder';
-import { maybeLazyError } from '../../../../utils/error';
+import { orderQueryOptions } from '@/src/hooks/api/useOrder';
+import { maybeLazyError } from '@/src/utils/error';
 
 export const Route = createFileRoute('/_auth/order/$orderId')({
   loader: opts =>

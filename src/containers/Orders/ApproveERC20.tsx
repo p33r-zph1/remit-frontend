@@ -1,11 +1,11 @@
 import { numericFormatter } from 'react-number-format';
 import { useAccount } from 'wagmi';
 
-import HeaderTitle from '../../components/HeaderTitle';
-import ConnectWallet from '../../components/Web3/ConnectWallet';
-import TokenAllowance from '../../components/Web3/TokenAllowance';
-import useEscrowDeposit from '../../hooks/api/useEscrowDeposit';
-import useOrderDetails from '../../hooks/useOrderDetails';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import ConnectWallet from '@/src/components/Web3/ConnectWallet';
+import TokenAllowance from '@/src/components/Web3/TokenAllowance';
+import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
+import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 export default function ApproveERC20() {
   const {

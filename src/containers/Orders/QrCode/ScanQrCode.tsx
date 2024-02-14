@@ -3,9 +3,9 @@ import { useNavigate } from '@tanstack/react-router';
 import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import ErrorAlert from '../../../components/Alert/ErrorAlert';
-import HeaderTitle from '../../../components/HeaderTitle';
-import useConfirmDelivery from '../../../hooks/api/useConfirmDelivery';
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 
 type Props = {
   orderId: string;

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { isValidAddress } from '../utils';
+import { isValidAddress } from '@/src/utils';
+
 import { makeApiSchema } from './api/fetch';
 import contactSchema from './contact';
 

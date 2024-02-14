@@ -1,7 +1,8 @@
 import { PhoneIcon } from '@heroicons/react/20/solid';
 
-import HeaderTitle from '../../components/HeaderTitle';
-import useOrderDetails from '../../hooks/useOrderDetails';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import useOrderDetails from '@/src/hooks/useOrderDetails';
+
 import CustomerMeetup from '../Meetup/CustomerMeetup';
 
 export default function GiveCash() {

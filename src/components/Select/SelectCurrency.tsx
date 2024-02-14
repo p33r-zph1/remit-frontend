@@ -7,7 +7,7 @@ import {
 import { Fragment } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { type Currency } from '../../schema/currency';
+import { type Currency } from '@/src/schema/currency';
 
 interface Props<T> {
   currencies: T[];

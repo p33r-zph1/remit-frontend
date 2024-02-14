@@ -6,7 +6,8 @@ import {
 import { Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
-import useAuth from '../../hooks/useAuth';
+import useAuth from '@/src/hooks/useAuth';
+
 import Brand from '../Brand';
 
 export default function NavBar() {

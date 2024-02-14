@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { OrderDetailsContext } from '../contexts/order-details';
+import { OrderDetailsContext } from '@/src/contexts/order-details';
 
 export default function useOrderDetails() {
   const orderDetails = useContext(OrderDetailsContext);

@@ -5,8 +5,8 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 
-import SelectAgent from '../../components/Select/SelectAgent';
-import type { Agent } from '../../schema/agent';
+import SelectAgent from '@/src/components/Select/SelectAgent';
+import type { Agent } from '@/src/schema/agent';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   list: Agent[];

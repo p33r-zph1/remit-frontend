@@ -5,7 +5,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/20/solid';
 
-import type { OrderStatus } from '../../schema/order';
+import type { OrderStatus } from '@/src/schema/order';
 
 type Props = {
   status: OrderStatus;

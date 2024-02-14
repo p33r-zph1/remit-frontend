@@ -4,7 +4,7 @@ import {
   XCircleIcon,
 } from '@heroicons/react/20/solid';
 
-import type { OrderStatus, TransferTimeline } from '../../schema/order';
+import type { OrderStatus, TransferTimeline } from '@/src/schema/order';
 
 function getIconByStatus(status: OrderStatus, isLastItem: boolean = false) {
   if (status === 'IN_PROGRESS' && isLastItem) {

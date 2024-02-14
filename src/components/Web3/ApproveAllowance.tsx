@@ -2,7 +2,8 @@ import { useCallback } from 'react';
 import { type Address, erc20Abi, parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 
-import { trimErrorMessage } from '../../utils';
+import { trimErrorMessage } from '@/src/utils';
+
 import ErrorAlert from '../Alert/ErrorAlert';
 
 type Props = {

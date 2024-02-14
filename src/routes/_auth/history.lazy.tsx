@@ -3,11 +3,11 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 import { type ReactNode, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import QueryFallback from '../../components/Fallback/QueryFallback';
-import HeaderTitle from '../../components/HeaderTitle';
-import Page from '../../components/Page';
-import HistorySkeleton from '../../components/Skeleton/HistorySkeleton';
-import HistoryList from '../../containers/HistoryList';
+import QueryFallback from '@/src/components/Fallback/QueryFallback';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import Page from '@/src/components/Page';
+import HistorySkeleton from '@/src/components/Skeleton/HistorySkeleton';
+import HistoryList from '@/src/containers/HistoryList';
 
 export const Route = createLazyFileRoute('/_auth/history')({
   pendingComponent: () => (

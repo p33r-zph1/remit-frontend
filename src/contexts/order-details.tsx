@@ -1,9 +1,9 @@
 import { createContext, type ReactNode, useMemo } from 'react';
 
-import useOrder from '../hooks/api/useOrder';
-import useAuth from '../hooks/useAuth';
-import { Route } from '../routes/_auth/order/$orderId/route';
-import type { Order } from '../schema/order';
+import useOrder from '@/src/hooks/api/useOrder';
+import useAuth from '@/src/hooks/useAuth';
+import { Route } from '@/src/routes/_auth/order/$orderId/route';
+import type { Order } from '@/src/schema/order';
 
 type Role = {
   isSender: boolean;

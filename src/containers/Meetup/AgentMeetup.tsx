@@ -9,15 +9,15 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
-import ErrorAlert from '../../components/Alert/ErrorAlert';
-import PlacesAutocomplete from '../../components/Autocomplete/PlacesAutocomplete';
-import MapsAPI from '../../components/Location/MapsAPI';
-import CalendarPopover from '../../components/Popover/CalendarPopover';
-import LoadingRing from '../../components/Spinner/LoadingRing';
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import PlacesAutocomplete from '@/src/components/Autocomplete/PlacesAutocomplete';
+import MapsAPI from '@/src/components/Location/MapsAPI';
+import CalendarPopover from '@/src/components/Popover/CalendarPopover';
+import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import useSetCollection, {
   type MutationProps,
-} from '../../hooks/api/useSetCollection';
-import useOrderDetails from '../../hooks/useOrderDetails';
+} from '@/src/hooks/api/useSetCollection';
+import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 const deliveryProps = z.object({
   startDate: z.date({

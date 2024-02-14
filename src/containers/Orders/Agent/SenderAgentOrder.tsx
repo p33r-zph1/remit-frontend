@@ -1,4 +1,5 @@
-import { type TransferTimelineStatus } from '../../../schema/order';
+import { type TransferTimelineStatus } from '@/src/schema/order';
+
 import AgentMeetup from '../../Meetup/AgentMeetup';
 import ApproveERC20 from '../ApproveERC20';
 import CollectCash from '../CollectCash';

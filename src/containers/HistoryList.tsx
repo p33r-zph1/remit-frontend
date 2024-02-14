@@ -1,7 +1,7 @@
-import EmptyHistory from '../components/Empty/EmptyHistory';
-import HistoryItem from '../components/Item/HistoryItem';
-import useOrders from '../hooks/api/useOrders';
-import useAuth from '../hooks/useAuth';
+import EmptyHistory from '@/src/components/Empty/EmptyHistory';
+import HistoryItem from '@/src/components/Item/HistoryItem';
+import useOrders from '@/src/hooks/api/useOrders';
+import useAuth from '@/src/hooks/useAuth';
 
 export default function HistoryList() {
   const { user, hasGroup } = useAuth();

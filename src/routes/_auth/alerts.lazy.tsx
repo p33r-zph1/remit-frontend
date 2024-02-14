@@ -3,11 +3,11 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import QueryFallback from '../../components/Fallback/QueryFallback';
-import HeaderTitle from '../../components/HeaderTitle';
-import Page from '../../components/Page';
-import AlertSkeleton from '../../components/Skeleton/AlertSkeleton';
-import AlertList from '../../containers/AlertList';
+import QueryFallback from '@/src/components/Fallback/QueryFallback';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import Page from '@/src/components/Page';
+import AlertSkeleton from '@/src/components/Skeleton/AlertSkeleton';
+import AlertList from '@/src/containers/AlertList';
 
 export const Route = createLazyFileRoute('/_auth/alerts')({
   component: () => (

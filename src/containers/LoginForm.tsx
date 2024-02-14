@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import ErrorAlert from '../components/Alert/ErrorAlert';
-import useAuth from '../hooks/useAuth';
-import { Route } from '../routes/login';
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import useAuth from '@/src/hooks/useAuth';
+import { Route } from '@/src/routes/login';
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),

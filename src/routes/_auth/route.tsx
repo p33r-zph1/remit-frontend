@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { fetchAuthSession } from 'aws-amplify/auth';
 
-import BottomNavigation from '../../components/Nav/BottomNavigation';
-import NavBar from '../../components/Nav/NavBar';
-import { fromJwt } from '../../schema/cognito';
+import BottomNavigation from '@/src/components/Nav/BottomNavigation';
+import NavBar from '@/src/components/Nav/NavBar';
+import { fromJwt } from '@/src/schema/cognito';
 
 export const Route = createFileRoute('/_auth')({
   beforeLoad: async ({ context, location }) => {

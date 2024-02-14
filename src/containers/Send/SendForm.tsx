@@ -1,11 +1,12 @@
 import { useNavigate } from '@tanstack/react-router';
 import type { SubmitHandler } from 'react-hook-form';
 
-import ErrorAlert from '../../components/Alert/ErrorAlert';
-import CurrencyInput from '../../components/Input/CurrencyInput';
-import RecipientInput from '../../components/Input/RecipientInput';
-import useCreateOrder from '../../hooks/api/useCreateOrder';
-import useSendMoney, { type SendMoney } from '../../hooks/useSendMoney';
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import CurrencyInput from '@/src/components/Input/CurrencyInput';
+import RecipientInput from '@/src/components/Input/RecipientInput';
+import useCreateOrder from '@/src/hooks/api/useCreateOrder';
+import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
+
 import SendDetails from './SendDetails';
 
 // let renderCount = 0;

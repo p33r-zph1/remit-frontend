@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { numericFormatter } from 'react-number-format';
 
-import type { Order } from '../../schema/order';
+import type { Order } from '@/src/schema/order';
+
 import StatusIcon from '../Icon/StatusIcon';
 
 type Item = Order & {

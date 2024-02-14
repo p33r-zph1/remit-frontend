@@ -7,9 +7,9 @@ import {
 import { format } from 'date-fns';
 import { type ElementRef, useRef } from 'react';
 
-import MapsAPI from '../../components/Location/MapsAPI';
-import LoadingRing from '../../components/Spinner/LoadingRing';
-import type { LocationDetails } from '../../schema/order';
+import MapsAPI from '@/src/components/Location/MapsAPI';
+import LoadingRing from '@/src/components/Spinner/LoadingRing';
+import type { LocationDetails } from '@/src/schema/order';
 
 const libraries: Libraries = ['places'];
 

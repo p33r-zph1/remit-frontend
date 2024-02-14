@@ -1,6 +1,6 @@
 import useTokenBalance, {
   type BalanceProps,
-} from '../../hooks/erc20/useTokenBalance';
+} from '@/src/hooks/erc20/useTokenBalance';
 
 export default function TokenBalance(props: BalanceProps) {
   const { balance } = useTokenBalance(props);

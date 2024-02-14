@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import alertApiSchema from '../../schema/alert';
-import { genericFetch } from '../../schema/api/fetch';
+import alertApiSchema from '@/src/schema/alert';
+import { genericFetch } from '@/src/schema/api/fetch';
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
 

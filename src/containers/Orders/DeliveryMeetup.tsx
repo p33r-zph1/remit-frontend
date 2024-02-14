@@ -2,11 +2,12 @@ import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
-import ErrorAlert from '../../components/Alert/ErrorAlert';
-import HeaderTitle from '../../components/HeaderTitle';
-import useGenerateQr from '../../hooks/api/useGenerateQr';
-import useOrderDetails from '../../hooks/useOrderDetails';
-import type { Group } from '../../schema/cognito';
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import HeaderTitle from '@/src/components/HeaderTitle';
+import useGenerateQr from '@/src/hooks/api/useGenerateQr';
+import useOrderDetails from '@/src/hooks/useOrderDetails';
+import type { Group } from '@/src/schema/cognito';
+
 import CustomerMeetup from '../Meetup/CustomerMeetup';
 
 type Props = {

@@ -3,8 +3,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-import HeroNotFound from '../components/Hero/HeroNotFound';
-import { AuthContext } from '../contexts/auth';
+import HeroNotFound from '@/src/components/Hero/HeroNotFound';
+import { AuthContext } from '@/src/contexts/auth';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
