@@ -45,7 +45,7 @@ export default function ScanQrCode() {
         navigate({ to: '/order/$orderId', params: { orderId }, replace: true });
       });
     }
-  }, [confirmDeliveryAsync, orderId, scannedResult]);
+  }, [confirmDeliveryAsync, navigate, orderId, scannedResult]);
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {
