@@ -55,9 +55,7 @@ export default function useSendMoney() {
     },
   });
 
-  const { setValue, getValues, watch } = formProps;
-
-  const agentId = watch('agentId');
+  const { setValue, getValues } = formProps;
 
   const conversionHandler = useCallback(
     (value: number | string | null) => {
@@ -65,7 +63,7 @@ export default function useSendMoney() {
 
       if (!result.success) return '';
 
-      const agent = agents.find(a => a.agentId === agentId);
+      const agent = agents.find(a => a.agentId === getValues('agentId'));
 
       let recipientAmount = 0;
 
@@ -88,15 +86,20 @@ export default function useSendMoney() {
 
       setValue('recipientAmount', formatAmount);
     },
-    [agentId, agents, exchangeRate, setValue]
+    [getValues, agents, exchangeRate, setValue]
   );
 
   useEffect(() => {
-    // re-calculates the conversion amount when the pair(exchange rate) or agent gets ypdated
-    if (pairUpdated || agentId) {
+    // re-calculates the conversion amount when the pair(exchange rate) updated
+    if (pairUpdated) {
       conversionHandler(getValues('sendAmount'));
     }
-  }, [agentId, conversionHandler, getValues, pairUpdated]);
+  }, [conversionHandler, getValues, pairUpdated, setValue]);
+
+  useEffect(() => {
+    // reset the selected agent to default when sender select's a new currency
+    setValue('agentId', 'default');
+  }, [senderCurrency.countryIsoCode, setValue]);
 
   return {
     // currency dropdown controlled state
