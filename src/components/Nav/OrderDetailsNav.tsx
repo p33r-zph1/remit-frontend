@@ -1,8 +1,8 @@
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useRouter } from '@tanstack/react-router';
-import { numericFormatter } from 'react-number-format';
 
-import type { Order, OrderStatus, TransferInfo } from '@/src/schema/order';
+import type { Order, OrderStatus } from '@/src/schema/order';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 import StatusIcon from '../Icon/StatusIcon';
 
@@ -33,12 +33,6 @@ function getTitleByStatus(status: OrderStatus) {
         </div>
       );
   }
-}
-
-function getAmount({ amount, currency }: TransferInfo) {
-  return numericFormatter(`${amount} ${currency}`, {
-    thousandSeparator: ',',
-  });
 }
 
 function BackButton() {
@@ -82,7 +76,9 @@ export default function OrderDetailsNav({
 
         <div className="flex flex-row items-center justify-between py-1">
           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
-            {isRecipient ? getAmount(recipient) : getAmount(sender)}
+            {isRecipient
+              ? formatTranferInfo(recipient)
+              : formatTranferInfo(sender)}
           </div>
 
           <StatusIcon status={orderStatus} isRecipient={isRecipient} />

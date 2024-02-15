@@ -21,10 +21,10 @@ import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 const deliveryProps = z.object({
   startDate: z.date({
-    required_error: 'Please enter a valid delivery date',
+    required_error: 'Enter a valid date',
   }),
   endDate: z.date(),
-  areaName: z.string().min(1, { message: 'Please enter your delivery area' }),
+  areaName: z.string().min(1, { message: 'Enter an area' }),
   radius: z.string(),
   coordinates: z.object({
     latitude: z.string(),

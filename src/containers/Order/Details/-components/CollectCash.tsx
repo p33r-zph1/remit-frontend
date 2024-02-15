@@ -7,7 +7,7 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-export default memo(function CollectionMeetup() {
+export default memo(function CollectCash() {
   const {
     order: {
       orderId,

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import type { TransferTimelineStatus } from '@/src/schema/order';
+import type { TransferTimelineStatus } from '@/src/schema/order/transfer-timeline';
 
 import GiveCash from '../-components/GiveCash';
 

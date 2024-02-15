@@ -1,50 +1,9 @@
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
-
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useAgent from '@/src/hooks/api/useAgent';
 import useAuth from '@/src/hooks/useAuth';
 
-import OrderList from './Details/-components/OrderList';
-
-function CommisionCard({
-  commision,
-  isActive,
-}: {
-  commision: number;
-  isActive: boolean;
-}) {
-  return (
-    <div className="flex flex-col items-stretch justify-center space-y-4 rounded-lg bg-card-gradient px-4 py-8 text-primary-content shadow-md duration-200 hover:bg-primary md:p-8">
-      <div className="flex items-center justify-between">
-        <h1 className=" text-2xl font-bold tracking-wide md:text-3xl">
-          My Commision
-        </h1>
-
-        <label className="flex cursor-pointer items-center justify-center space-x-2">
-          <span className="text-sm font-bold">Active</span>
-
-          <input
-            type="checkbox"
-            className="toggle toggle-primary toggle-md"
-            checked={isActive}
-            onChange={() => {}}
-          />
-        </label>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="group flex items-end space-x-1">
-          <h2 className="text-balance text-3xl font-semibold">{commision}%</h2>
-          <span className="text-sm">on all orders</span>
-        </div>
-
-        <button className="btn btn-circle btn-ghost">
-          <PencilSquareIcon className="h-8 w-8" />
-        </button>
-      </div>
-    </div>
-  );
-}
+import CommissionCard from './CommissionCard';
+import OrderList from './OrderList';
 
 export default function AgentOrders() {
   const { user } = useAuth();
@@ -53,7 +12,7 @@ export default function AgentOrders() {
 
   return (
     <div className="mt-8 flex flex-col space-y-10 sm:mt-16">
-      <CommisionCard commision={agent.commission} isActive={agent.isActive} />
+      <CommissionCard commission={agent.commission} isActive={agent.isActive} />
 
       <div>
         <HeaderTitle className="text-xl md:text-2xl">

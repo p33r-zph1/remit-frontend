@@ -9,7 +9,7 @@ import { type ElementRef, useRef } from 'react';
 
 import MapsAPI from '@/src/components/Location/MapsAPI';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
-import type { LocationDetails } from '@/src/schema/order';
+import type { LocationDetails } from '@/src/schema/location';
 
 const libraries: Libraries = ['places'];
 

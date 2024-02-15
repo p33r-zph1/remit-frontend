@@ -4,17 +4,18 @@ import { memo, useCallback } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
-import CustomerMeetup from '@/src/containers/Meetup/CustomerMeetup';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Group } from '@/src/schema/cognito';
 
+import CustomerMeetup from './Meetup/CustomerMeetup';
+
 type Props = {
   group: Group;
 };
 
-export default memo(function DeliveryMeetup({ group }: Props) {
+export default memo(function DeliverCash({ group }: Props) {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const {

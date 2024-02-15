@@ -130,7 +130,9 @@ export default function Modal({
                         <span className="loading loading-spinner loading-sm"></span>
                       )}
 
-                      <span>{actions.confirm.label}</span>
+                      <span className="capitalize">
+                        {actions.confirm.label}
+                      </span>
                     </span>
                   </button>
 
@@ -142,7 +144,7 @@ export default function Modal({
                         actions.cancel.action ? actions.cancel.action : onClose
                       }
                     >
-                      <span>{actions.cancel.label}</span>
+                      <span className="capitalize">{actions.cancel.label}</span>
                     </button>
                   )}
                 </div>

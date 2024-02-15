@@ -21,7 +21,7 @@ const SelectAgent = forwardRef<HTMLSelectElement, Props>(
         {...selectProps}
       >
         <option disabled value="default">
-          {error?.message ? error?.message : 'Select agent commision'}
+          {error?.message ? error?.message : 'Select agent commission'}
         </option>
 
         {list.map(item => (

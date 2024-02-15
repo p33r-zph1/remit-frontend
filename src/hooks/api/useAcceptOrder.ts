@@ -20,19 +20,19 @@ export type CustomerOrderBody = z.infer<typeof customerOrderBodySchema>;
 export type SenderAgentOrderBody = z.infer<typeof senderAgentOrderBodySchema>;
 
 type CustomerMutation = {
-  key: 'customer';
+  type: 'customer';
   orderId: string;
   body: CustomerOrderBody;
 };
 
 type SenderAgentMutation = {
-  key: 'senderagent';
+  type: 'senderagent';
   orderId: string;
   body: SenderAgentOrderBody;
 };
 
 type RecipientAgentMutation = {
-  key: 'agent';
+  type: 'recipientagent';
   orderId: string;
 };
 
@@ -41,13 +41,15 @@ export type MutationProps =
   | SenderAgentMutation
   | RecipientAgentMutation;
 
+export type AgentType = MutationProps['type'];
+
 function handleRequestBody(props: MutationProps) {
-  switch (props.key) {
+  switch (props.type) {
     case 'customer':
       return JSON.stringify(customerOrderBodySchema.parse(props.body));
     case 'senderagent':
       return JSON.stringify(senderAgentOrderBodySchema.parse(props.body));
-    case 'agent':
+    case 'recipientagent':
       return null;
   }
 }

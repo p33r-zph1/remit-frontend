@@ -1,11 +1,11 @@
 import { memo } from 'react';
 
-import AgentMeetup from '@/src/containers/Meetup/AgentMeetup';
-import { type TransferTimelineStatus } from '@/src/schema/order';
+import type { TransferTimelineStatus } from '@/src/schema/order/transfer-timeline';
 
 import ApproveERC20 from '../-components/ApproveERC20';
-import CollectionMeetup from '../-components/Meetup/CollectionMeetup';
-import TakeOrder from '../-components/TakeOrder';
+import CollectCash from '../-components/CollectCash';
+import AgentMeetup from '../-components/Meetup/AgentMeetup';
+import SenderAgentTakeOrder from '../-components/TakeOrder/SenderAgentTakeOrder';
 
 type Props = {
   status: TransferTimelineStatus;
@@ -15,13 +15,13 @@ export default memo(function SenderAgentOrder({ status }: Props) {
   switch (status) {
     case 'RECIPIENT_ACCEPTED':
     case 'RECIPIENT_AGENT_ACCEPTED':
-      return <TakeOrder />;
+      return <SenderAgentTakeOrder />;
 
     case 'ORDER_ACCEPTED':
       return <AgentMeetup meetupType="collection" />;
 
     case 'COLLECTION_MEETUP_SET':
-      return <CollectionMeetup />;
+      return <CollectCash />;
 
     case 'CASH_COLLECTED':
       return <ApproveERC20 />;
