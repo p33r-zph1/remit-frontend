@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import SelectChain from '@/src/components/Select/SelectChain';
-import chainList, { getCustomChainId } from '@/src/constants/chains';
+import wagmi, { getCustomChainId } from '@/src/configs/wagmi';
 import useAcceptOrder from '@/src/hooks/api/useAcceptOrder';
 import useRejectOrder from '@/src/hooks/api/useRejectOrder';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
@@ -93,7 +93,7 @@ export default function TakeOrder() {
       )}
 
       {isSender && (
-        <SelectChain control={control} name="chainId" list={chainList} />
+        <SelectChain control={control} name="chainId" list={wagmi.chains} />
       )}
 
       {acceptOrderError && <ErrorAlert message={acceptOrderError.message} />}

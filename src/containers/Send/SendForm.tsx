@@ -168,16 +168,14 @@ export default function SendForm() {
         title="Confirm send money"
         size="medium"
       >
-        <div className="mt-4">
-          <p className="text-balance text-slate-500">
-            You&apos;re about to send{' '}
-            <span className="font-bold">{orderAmountSummary()}</span> to {` `}
-            <span className="font-bold">{getValues('recipientId')}</span> with
-            agent <span className="font-bold">#{getValues('agentId')}</span>.
-            <br />
-            Are you sure you want to continue?
-          </p>
-        </div>
+        <p className="text-balance text-slate-500">
+          You&apos;re about to send{' '}
+          <span className="font-bold">{orderAmountSummary()}</span> to {` `}
+          <span className="font-bold">{getValues('recipientId')}</span> with
+          agent <span className="font-bold">#{getValues('agentId')}</span>.
+          <br />
+          Are you sure you want to continue?
+        </p>
       </Modal>
     </form>
   );

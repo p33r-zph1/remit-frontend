@@ -7,12 +7,11 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
-import type { Chain } from 'viem';
 
-import { getChainName } from '@/src/constants/chains';
+import { type Chains, getSupportedChain } from '@/src/configs/wagmi';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
-  list: Chain[];
+  readonly list: Chains;
 };
 
 export default function SelectChain<T extends FieldValues>({
@@ -41,7 +40,7 @@ export default function SelectChain<T extends FieldValues>({
             )}
           >
             <span className="block truncate">
-              {value ? getChainName(value) : 'Select your chain'}
+              {value ? getSupportedChain(value)?.name : 'Select your chain'}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon

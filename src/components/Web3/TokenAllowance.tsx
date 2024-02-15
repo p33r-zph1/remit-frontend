@@ -36,6 +36,7 @@ export default function TokenAllowance({
         tokenAddress={tokenAddress}
         value={tokenAmount}
         decimals={decimals}
+        symbol={symbol}
         onApproved={onApproved}
       />
     );

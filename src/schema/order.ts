@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isValidAddress } from '@/src/utils';
+import { isSupportedChain, isValidAddress } from '@/src/utils';
 
 import { makeApiSchema } from './api/fetch';
 import contactSchema from './contact';
@@ -96,6 +96,7 @@ export const escrowDetailsSchema = z.object({
   tokenAddress: z.string().refine(isValidAddress).optional(),
   tokenDecimals: z.number().optional(),
   chain: z.string().optional(),
+  chainId: z.coerce.number().refine(isSupportedChain).optional(),
   escrow: z.string().refine(isValidAddress).optional(),
   depositTransaction: z.string().url().optional(),
   releaseTransaction: z.string().url().optional(),

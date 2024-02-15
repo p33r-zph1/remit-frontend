@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type ModalProps = {
@@ -67,13 +67,15 @@ export default function Modal({
   slideFrom = 'top',
 }: Props) {
   return (
-    <Transition.Root show={open} afterLeave={onCloseComplete}>
+    <Transition appear show={open} as={Fragment} afterLeave={onCloseComplete}>
       <Dialog
-        onClose={isLoading ? () => {} : onClose}
+        as="div"
         className="relative z-50"
+        onClose={isLoading ? () => {} : onClose}
       >
         {/* Background overlay */}
         <Transition.Child
+          as={Fragment}
           enter="transition ease-out"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -93,6 +95,7 @@ export default function Modal({
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             {/* Modal panel */}
             <Transition.Child
+              as={Fragment}
               enter="transition ease-out"
               enterFrom={twMerge('opacity-0', slideFromClasses[slideFrom].from)}
               enterTo={twMerge('opacity-100', slideFromClasses[slideFrom].to)}
@@ -102,15 +105,16 @@ export default function Modal({
             >
               <Dialog.Panel
                 className={twMerge(
-                  'relative w-full overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8',
+                  'w-full transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:rounded-2xl',
                   sizeClasses[size]
                 )}
               >
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
-                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
+                    <Dialog.Title className="mb-4 text-xl font-semibold leading-6 text-slate-900">
                       {title}
                     </Dialog.Title>
+
                     {children}
                   </div>
                 </div>
@@ -148,6 +152,6 @@ export default function Modal({
           </div>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }
