@@ -1,6 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import {
+  ProviderNotFoundError,
+  useAccount,
+  useConnect,
+  useDisconnect,
+} from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
 type Props = {
@@ -9,8 +14,19 @@ type Props = {
 
 export default function ConnectWallet({ disabled }: Props) {
   const { isConnected, isConnecting, isDisconnected } = useAccount();
-  const { connect } = useConnect();
+  const { connect, error } = useConnect();
   const { disconnect } = useDisconnect();
+
+  const noProviderError = useMemo(
+    () => error instanceof ProviderNotFoundError,
+    [error]
+  );
+
+  useEffect(() => {
+    if (noProviderError) {
+      window.open('https://metamask.io/', '_blank');
+    }
+  }, [noProviderError]);
 
   const handleClick = useCallback(() => {
     if (isConnected) return disconnect();
