@@ -35,7 +35,7 @@ export default function SendDetails<T extends FieldValues>({
             />
           </div>
           <span className="w-1/2 truncate text-sm font-semibold text-sleep-200">
-            1.00%
+            ~ 1.00%
           </span>
           <span className="text-sm font-semibold text-sleep-200">
             Platform fee

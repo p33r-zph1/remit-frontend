@@ -123,7 +123,7 @@ export default function SendForm() {
         <SendDetails name="agentId" control={control} list={agents} />
 
         <CurrencyInput
-          label="Recipient will get"
+          label="Recipient will get (estimate)"
           name="recipientAmount"
           control={control}
           selected={recipientCurrency}
