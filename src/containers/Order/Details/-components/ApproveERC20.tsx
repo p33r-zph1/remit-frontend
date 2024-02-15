@@ -74,8 +74,14 @@ export default memo(function ApproveERC20() {
       </HeaderTitle>
 
       {(() => {
-        if (isDisconnected || !address || !chainId || !chain) {
+        if (isDisconnected || !address) {
           return <ConnectWallet />;
+        }
+
+        if (!chain || !chainId) {
+          return (
+            <SwitchChain preferredChainId={prefferedChainId} name={chainName} />
+          );
         }
 
         if (depositError) {
@@ -85,7 +91,10 @@ export default memo(function ApproveERC20() {
         return (
           <div className="flex flex-col space-y-2">
             {isDepositingOnEscrow && (
-              <LoadingAlert message="Please wait while we confirm your transaction on our end." />
+              <LoadingAlert
+                tone="info"
+                message="Please wait while we confirm your transaction on our end."
+              />
             )}
 
             {isDeposited && (
@@ -110,7 +119,7 @@ export default memo(function ApproveERC20() {
             {prefferedChainId !== chainId && (
               <SwitchChain
                 preferredChainId={prefferedChainId}
-                name={chain.name}
+                name={chainName}
               />
             )}
           </div>
