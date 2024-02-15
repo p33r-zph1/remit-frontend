@@ -24,7 +24,7 @@ export default function NavBar() {
   }, [logout, navigate, router]);
 
   return (
-    <header className="navbar sticky top-0 z-[999] bg-base-100">
+    <header className="navbar sticky top-0 z-40 bg-base-100">
       <div className="navbar-start visible md:invisible">
         <div className="flex lg:hidden">
           <Brand />
