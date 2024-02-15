@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import AgentMeetup from '@/src/containers/Meetup/AgentMeetup';
 import { type TransferTimelineStatus } from '@/src/schema/order';
 
@@ -9,7 +11,7 @@ type Props = {
   status: TransferTimelineStatus;
 };
 
-export default function SenderAgentOrder({ status }: Props) {
+export default memo(function SenderAgentOrder({ status }: Props) {
   switch (status) {
     case 'RECIPIENT_ACCEPTED':
     case 'RECIPIENT_AGENT_ACCEPTED':
@@ -27,4 +29,4 @@ export default function SenderAgentOrder({ status }: Props) {
     default:
       return null;
   }
-}
+});

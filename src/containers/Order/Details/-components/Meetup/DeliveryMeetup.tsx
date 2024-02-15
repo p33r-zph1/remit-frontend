@@ -1,6 +1,6 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
@@ -14,7 +14,7 @@ type Props = {
   group: Group;
 };
 
-export default function DeliveryMeetup({ group }: Props) {
+export default memo(function DeliveryMeetup({ group }: Props) {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const {
@@ -113,4 +113,4 @@ export default function DeliveryMeetup({ group }: Props) {
       )}
     </div>
   );
-}
+});

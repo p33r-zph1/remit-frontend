@@ -1,21 +1,23 @@
+import { memo, useCallback } from 'react';
 import { numericFormatter } from 'react-number-format';
 import { useAccount } from 'wagmi';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import LoadingAlert from '@/src/components/Alert/LoadingAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
+import ApproveAllowance from '@/src/components/Web3/ApproveAllowance';
 import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';
-import TokenAllowance from '@/src/components/Web3/TokenAllowance';
-import { getSupportedChain } from '@/src/configs/wagmi';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-export default function ApproveERC20() {
-  const { address, chainId, isDisconnected } = useAccount();
+export default memo(function ApproveERC20() {
+  const { address, chain, chainId, isDisconnected } = useAccount();
 
   const {
     mutateAsync: escrowDepositAsync,
     isPending: isDepositingOnEscrow,
+    isSuccess: isDeposited,
     error: depositError,
   } = useEscrowDeposit();
 
@@ -44,6 +46,19 @@ export default function ApproveERC20() {
   if (!chainName || !prefferedChainId)
     throw new Error('Chain/ChainId cannot be missing!');
 
+  const onApprove = useCallback(async () => {
+    if (!address) throw new Error('Please connect your wallet.');
+
+    try {
+      await escrowDepositAsync({
+        orderId,
+        body: { walletAddress: address },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [address, escrowDepositAsync, orderId]);
+
   return (
     <div className="flex flex-col space-y-12">
       <HeaderTitle className="text-xl md:text-2xl">
@@ -59,20 +74,8 @@ export default function ApproveERC20() {
       </HeaderTitle>
 
       {(() => {
-        if (isDisconnected || !address || !chainId) {
+        if (isDisconnected || !address || !chainId || !chain) {
           return <ConnectWallet />;
-        }
-
-        if (isDepositingOnEscrow) {
-          return (
-            <div role="alert" className="alert bg-white shadow-md">
-              <span className="loading loading-dots"></span>
-
-              <span className="text-sm font-medium md:text-base">
-                Please wait while we confirm your transaction on our end.
-              </span>
-            </div>
-          );
         }
 
         if (depositError) {
@@ -80,40 +83,39 @@ export default function ApproveERC20() {
         }
 
         return (
-          <>
-            <code className="flex w-full flex-col text-balance break-words rounded-lg border border-slate-200 p-2 text-center text-sm font-semibold shadow-md">
-              <span className="text-sm md:text-base">{address}</span>
-              <span className="text-base font-medium md:text-lg">
-                {getSupportedChain(chainId)?.name || 'Unsupported chain'}
-              </span>
-            </code>
+          <div className="flex flex-col space-y-2">
+            {isDepositingOnEscrow && (
+              <LoadingAlert message="Please wait while we confirm your transaction on our end." />
+            )}
 
-            <div className="flex flex-col space-y-2">
-              <TokenAllowance
-                ownerAddress={address}
-                spenderAddress={escrowAddress}
-                tokenAddress={tokenAddress}
-                tokenAmount={String(tokenAmount)}
-                decimals={tokenDecimals}
-                symbol={tokenSymbol}
-                onApproved={() =>
-                  escrowDepositAsync({
-                    orderId,
-                    body: { walletAddress: address },
-                  })
-                }
+            {isDeposited && (
+              <LoadingAlert
+                tone="info"
+                message="We have confirmed your transaction, please wait for the transfer timeline to get updated."
               />
+            )}
 
-              {prefferedChainId !== chainId && (
-                <SwitchChain
-                  preferredChainId={prefferedChainId}
-                  name={chainName}
-                />
-              )}
-            </div>
-          </>
+            <ApproveAllowance
+              ownerAddress={address}
+              spenderAddress={escrowAddress}
+              tokenAddress={tokenAddress}
+              value={String(tokenAmount)}
+              decimals={tokenDecimals}
+              symbol={tokenSymbol}
+              chainName={chain.name}
+              blockExplorerUrl={chain.blockExplorers.default.url}
+              onApproved={onApprove}
+            />
+
+            {prefferedChainId !== chainId && (
+              <SwitchChain
+                preferredChainId={prefferedChainId}
+                name={chain.name}
+              />
+            )}
+          </div>
         );
       })()}
     </div>
   );
-}
+});

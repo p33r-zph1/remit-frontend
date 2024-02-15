@@ -1,36 +1,39 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { numericFormatter } from 'react-number-format';
+import { twMerge } from 'tailwind-merge';
 import { type Address, erc20Abi, parseUnits } from 'viem';
-import {
-  useAccount,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from 'wagmi';
+import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 
 import { trimErrorMessage } from '@/src/utils';
 
 import ErrorAlert from '../Alert/ErrorAlert';
+import LoadingAlert from '../Alert/LoadingAlert';
 import Modal from '../Modal';
 
 type Props = {
-  tokenAddress: Address;
+  ownerAddress: Address;
   spenderAddress: Address;
+  tokenAddress: Address;
   value: string;
   decimals: number;
   symbol: string;
+  blockExplorerUrl: string;
+  chainName: string;
   onApproved: () => void;
 };
 
-export default function ApproveAllowance({
-  tokenAddress,
+export default memo(function ApproveAllowance({
+  ownerAddress,
   spenderAddress,
+  tokenAddress,
   value,
   decimals,
   symbol,
+  blockExplorerUrl,
+  chainName,
   onApproved,
 }: Props) {
-  const { chain } = useAccount();
   const {
     data: txnhash,
     writeContractAsync,
@@ -43,9 +46,15 @@ export default function ApproveAllowance({
     isSuccess: isConfirmed,
     error: receiptError,
   } = useWaitForTransactionReceipt({
-    confirmations: 2,
+    confirmations: 5,
     hash: txnhash,
   });
+
+  useEffect(() => {
+    if (isConfirmed) {
+      onApproved();
+    }
+  }, [isConfirmed, onApproved]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -57,47 +66,32 @@ export default function ApproveAllowance({
         functionName: 'approve',
         args: [spenderAddress, parseUnits(value, decimals)],
       });
+
+      setModalVisible(false);
     } catch (err) {
       setModalVisible(false);
       console.error(err);
     }
   }, [decimals, spenderAddress, tokenAddress, value, writeContractAsync]);
 
-  useEffect(() => {
-    if (isConfirmed) {
-      setModalVisible(false);
-      onApproved();
-    }
-  }, [isConfirmed, onApproved]);
-
-  useEffect(() => {
-    if (receiptError) {
-      setModalVisible(false);
-    }
-  }, [receiptError]);
-
-  const blockExplorerUrl = useMemo(
-    () => chain?.blockExplorers.default.url,
-    [chain]
-  );
-
   return (
     <div className="flex flex-col space-y-2">
-      {writeContractError && (
-        <ErrorAlert message={trimErrorMessage(writeContractError.message)} />
-      )}
-      {receiptError && (
-        <ErrorAlert message={trimErrorMessage(receiptError.message)} />
-      )}
-
-      {txnhash && (
+      {txnhash && isConfirmed && (
         <div role="alert" className="alert bg-white shadow-md">
-          <CheckIcon className="h-6 w-6 text-success" />
+          <CheckIcon
+            className={twMerge('h-6 w-6', isConfirmed && 'text-success')}
+          />
 
           <div className="w-full overflow-hidden text-balance break-words">
-            <h3 className="font-bold">Transaction sent to blockchain</h3>
+            <h3 className={twMerge('font-bold', isConfirmed && 'text-success')}>
+              {isConfirmed
+                ? 'Transaction confirmed!'
+                : 'Transaction sent to blockchain'}
+            </h3>
 
-            <div className="text-xs">{txnhash}</div>
+            <div className={twMerge('text-xs', isConfirmed && 'text-success')}>
+              {txnhash}
+            </div>
           </div>
 
           {blockExplorerUrl && (
@@ -113,17 +107,31 @@ export default function ApproveAllowance({
         </div>
       )}
 
+      {isConfirming && (
+        <LoadingAlert message="Waiting for enough blockchain confirmations, please wait..." />
+      )}
+
+      {!txnhash && (
+        <code className="flex w-full flex-col text-balance break-words rounded-lg border border-slate-200 p-2 text-center text-sm font-semibold shadow-md">
+          <span className="text-sm md:text-base">{ownerAddress}</span>
+          <span className="text-base font-medium md:text-lg">{chainName}</span>
+        </code>
+      )}
+
+      {writeContractError && (
+        <ErrorAlert message={trimErrorMessage(writeContractError.message)} />
+      )}
+      {receiptError && (
+        <ErrorAlert message={trimErrorMessage(receiptError.message)} />
+      )}
+
       <button
         type="button"
         className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         onClick={() => setModalVisible(true)}
-        disabled={isPending}
+        disabled={isPending || isConfirming || isConfirmed}
       >
-        {isPending ? (
-          <span className="loading loading-spinner"></span>
-        ) : (
-          <img src="/metamask.png" alt="metamask icon" className="h-8 w-8" />
-        )}
+        <img src="/metamask.png" alt="metamask icon" className="h-8 w-8" />
         Approve Transfer
       </button>
 
@@ -145,22 +153,18 @@ export default function ApproveAllowance({
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          {isConfirming ? (
-            <>Waiting for enough blockchain confirmations, please wait...</>
-          ) : (
-            <>
-              You&apos;re about to approve{' '}
-              <span className="font-bold">
-                {numericFormatter(`${value} ${symbol}`, {
-                  thousandSeparator: ',',
-                })}
-              </span>
-              <br />
-              Are you sure you want to continue?
-            </>
-          )}
+          <></>
+          You&apos;re about to approve{' '}
+          <span className="font-bold">
+            {numericFormatter(`${value} ${symbol}`, {
+              thousandSeparator: ',',
+            })}
+          </span>
+          <br />
+          <br />
+          Are you sure you want to continue?
         </p>
       </Modal>
     </div>
   );
-}
+});

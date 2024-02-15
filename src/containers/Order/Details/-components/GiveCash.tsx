@@ -1,10 +1,11 @@
 import { PhoneIcon } from '@heroicons/react/20/solid';
+import { memo } from 'react';
 
 import HeaderTitle from '@/src/components/HeaderTitle';
 import CustomerMeetup from '@/src/containers/Meetup/CustomerMeetup';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-export default function GiveCash() {
+export default memo(function GiveCash() {
   const {
     order: {
       senderAgentId,
@@ -39,4 +40,4 @@ font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:
       <CustomerMeetup locationDetails={collectionDetails} />
     </div>
   );
-}
+});

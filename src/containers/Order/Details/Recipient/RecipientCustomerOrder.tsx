@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { type TransferTimelineStatus } from '@/src/schema/order';
 
 import AcceptOrder from '../-components/AcceptOrder';
@@ -7,7 +9,7 @@ type Props = {
   status: TransferTimelineStatus;
 };
 
-export default function RecipientOrder({ status }: Props) {
+export default memo(function RecipientOrder({ status }: Props) {
   switch (status) {
     case 'PENDING': {
       return <AcceptOrder />;
@@ -19,4 +21,4 @@ export default function RecipientOrder({ status }: Props) {
     default:
       return null;
   }
-}
+});

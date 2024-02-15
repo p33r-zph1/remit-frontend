@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { memo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -21,7 +22,7 @@ const formSchema = z.object({
 
 type Inputs = z.infer<typeof formSchema>;
 
-export default function AcceptOrder() {
+export default memo(function AcceptOrder() {
   const {
     order: { orderId, transferDetails },
   } = useOrderDetails();
@@ -97,4 +98,4 @@ export default function AcceptOrder() {
       </div>
     </form>
   );
-}
+});

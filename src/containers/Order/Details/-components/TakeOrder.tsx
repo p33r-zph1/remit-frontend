@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { memo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { numericFormatter } from 'react-number-format';
 import { z } from 'zod';
@@ -16,7 +17,7 @@ const takeOrderSchema = z.object({
 
 export type TakeOrderSchema = z.infer<typeof takeOrderSchema>;
 
-export default function TakeOrder() {
+export default memo(function TakeOrder() {
   const { control, handleSubmit } = useForm<TakeOrderSchema>({
     resolver: zodResolver(takeOrderSchema),
     defaultValues: {
@@ -133,4 +134,4 @@ export default function TakeOrder() {
       </div>
     </form>
   );
-}
+});

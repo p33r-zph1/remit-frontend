@@ -8,6 +8,8 @@ import ApproveAllowance from './ApproveAllowance';
 type Props = AllowanceProps & {
   symbol: string;
   tokenAmount: string;
+  chainName: string;
+  blockExplorerUrl: string;
   onApproved: () => void;
 };
 
@@ -16,6 +18,8 @@ export default function TokenAllowance({
   spenderAddress,
   tokenAddress,
   tokenAmount,
+  chainName,
+  blockExplorerUrl,
   decimals,
   symbol,
   onApproved,
@@ -32,11 +36,14 @@ export default function TokenAllowance({
   if (!allowance || allowance.value === 0n) {
     return (
       <ApproveAllowance
+        ownerAddress={ownerAddress}
         spenderAddress={spenderAddress}
         tokenAddress={tokenAddress}
         value={tokenAmount}
         decimals={decimals}
         symbol={symbol}
+        chainName={chainName}
+        blockExplorerUrl={blockExplorerUrl}
         onApproved={onApproved}
       />
     );

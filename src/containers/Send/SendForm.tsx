@@ -174,6 +174,7 @@ export default function SendForm() {
           <span className="font-bold">{getValues('recipientId')}</span> with
           agent <span className="font-bold">#{getValues('agentId')}</span>.
           <br />
+          <br />
           Are you sure you want to continue?
         </p>
       </Modal>

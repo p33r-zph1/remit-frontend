@@ -1,12 +1,13 @@
 import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
+import { memo } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
-export default function CollectionMeetup() {
+export default memo(function CollectionMeetup() {
   const {
     order: {
       orderId,
@@ -54,4 +55,4 @@ export default function CollectionMeetup() {
       </div>
     </div>
   );
-}
+});

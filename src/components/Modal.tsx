@@ -21,20 +21,19 @@ export type ModalProps = {
 
 type Props = ModalProps & {
   title: string;
-  // tone: 'default' | 'danger' | 'success';
-  size: 'small' | 'medium' | 'large';
-  slideFrom: 'top' | 'right' | 'bottom' | 'left';
   children: ReactNode;
+  size?: 'small' | 'medium' | 'large';
+  slideFrom?: 'top' | 'right' | 'bottom' | 'left';
 };
 
-const sizeClasses: Record<Props['size'], string> = {
+const sizeClasses: Record<NonNullable<Props['size']>, string> = {
   small: 'sm:max-w-sm',
   medium: 'sm:max-w-lg',
   large: 'sm:max-w-2xl',
 };
 
 const slideFromClasses: Record<
-  Props['slideFrom'],
+  NonNullable<Props['slideFrom']>,
   { from: string; to: string }
 > = {
   top: {

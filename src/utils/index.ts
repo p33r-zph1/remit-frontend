@@ -1,16 +1,8 @@
-import type { Address } from 'viem';
-
 import type { SupportedChains } from '../configs/wagmi';
 import wagmi from '../configs/wagmi';
 
 export function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export function isValidAddress(data: string | undefined): data is Address {
-  if (!data) return false;
-
-  return data.startsWith('0x');
 }
 
 export function isSupportedChain(

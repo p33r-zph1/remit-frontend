@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import type { TransferTimelineStatus } from '@/src/schema/order';
 
 import GiveCash from '../-components/GiveCash';
@@ -6,7 +8,7 @@ type Props = {
   status: TransferTimelineStatus;
 };
 
-export default function SenderOrder({ status }: Props) {
+export default memo(function SenderOrder({ status }: Props) {
   switch (status) {
     case 'COLLECTION_MEETUP_SET':
       return <GiveCash />;
@@ -14,4 +16,4 @@ export default function SenderOrder({ status }: Props) {
     default:
       return null;
   }
-}
+});
