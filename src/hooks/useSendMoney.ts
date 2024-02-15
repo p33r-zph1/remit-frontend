@@ -55,38 +55,43 @@ export default function useSendMoney() {
     },
   });
 
-  const { setValue, getValues } = formProps;
+  const { setValue, getValues, watch } = formProps;
+
+  const agentId = watch('agentId');
 
   const conversionHandler = useCallback(
     (value: number | string | null) => {
       const result = coerce.number().safeParse(value);
-
       if (!result.success) return '';
 
-      const agent = agents.find(a => a.agentId === getValues('agentId'));
+      // Closure for calculating fiat value
+      const calculateFiatValue = (amount: number) => amount * exchangeRate;
 
-      let recipientAmount = 0;
+      // Corrected Closure for applying commission
+      const applyCommission = (amount: number, commissionRate: number) =>
+        amount - amount * commissionRate;
+
+      // Corrected Closure for applying platform fee
+      const applyPlatformFee = (amount: number, feeRate: number) =>
+        amount - amount * feeRate;
+
+      const agent = agents.find(a => a.agentId === agentId);
+
+      let fiatValue = calculateFiatValue(result.data);
 
       if (agent) {
-        // Converting commission percentage to decimal
         const commissionRate = agent.commission / 100;
-
-        // Calculating fiat value
-        const fiatValue = result.data * exchangeRate;
-
-        // Calculating the amount with commission
-        recipientAmount = fiatValue - fiatValue * commissionRate;
-      } else {
-        // Calculating fiat value without commision
-        recipientAmount = result.data * exchangeRate;
+        fiatValue = applyCommission(fiatValue, commissionRate);
       }
 
-      // Returns stringified amount (if amount is zero returns empty string)
-      const formatAmount = String(recipientAmount === 0 ? '' : recipientAmount);
+      const platformFeeRate = platformFee / 100;
+      const recipientAmount = applyPlatformFee(fiatValue, platformFeeRate);
 
+      // Format and set the recipient amount
+      const formatAmount = recipientAmount === 0 ? '' : String(recipientAmount);
       setValue('recipientAmount', formatAmount);
     },
-    [getValues, agents, exchangeRate, setValue]
+    [agentId, agents, exchangeRate, setValue]
   );
 
   useEffect(() => {
@@ -121,3 +126,5 @@ export default function useSendMoney() {
     formProps,
   };
 }
+
+const platformFee = 1; // 1%
