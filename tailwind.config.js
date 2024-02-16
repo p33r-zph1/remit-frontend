@@ -14,6 +14,7 @@ export default {
       colors: {
         'deep-blue': '#2F80ED',
         'regal-blue': 'rgba(94,132,184,0.78)',
+        'lemon-zest': 'rgba(247, 183, 51, 0.78)',
       },
     },
   },

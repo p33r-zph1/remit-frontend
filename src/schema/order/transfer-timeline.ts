@@ -30,4 +30,17 @@ export type TransferTimelineStatus = z.infer<
   typeof transferTimelineStatusSchema
 >;
 
+export function isOrderSettled(status: TransferTimelineStatus) {
+  switch (status) {
+    case 'RECIPIENT_REJECTED':
+    case 'RECIPIENT_AGENT_REJECTED':
+    case 'SENDER_AGENT_REJECTED':
+    case 'ESCROW_RELEASED':
+      return true;
+
+    default:
+      return false;
+  }
+}
+
 export default transferTimelineSchema;
