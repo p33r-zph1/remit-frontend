@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { makeApiSchema } from './api/fetch';
-import contactSchema from './contact';
+import { contactSchema } from './contact';
 
 export const agentSchema = z.object({
   agentId: z.string(),

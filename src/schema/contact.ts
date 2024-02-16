@@ -5,7 +5,7 @@ const contactInfoSchema = z.object({
   deeplink: z.string().url(),
 });
 
-const contactSchema = z.object({
+export const contactSchema = z.object({
   telegram: contactInfoSchema,
 });
 
