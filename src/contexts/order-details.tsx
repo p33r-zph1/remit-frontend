@@ -1,9 +1,9 @@
-import { type ReactNode, createContext, useMemo } from 'react';
+import { createContext, type ReactNode, useMemo } from 'react';
 
-import { Route } from '../routes/_auth/order/$orderId/route';
-import type { Order } from '../schema/order';
-import useOrder from '../hooks/api/useOrder';
-import useAuth from '../hooks/useAuth';
+import useOrder from '@/src/hooks/api/useOrder';
+import useAuth from '@/src/hooks/useAuth';
+import { Route } from '@/src/routes/_auth/order/$orderId';
+import type { Order } from '@/src/schema/order';
 
 type Role = {
   isSender: boolean;
@@ -18,7 +18,11 @@ interface OrderDetails {
 
 export const OrderDetailsContext = createContext<OrderDetails | null>(null);
 
-export function OrderDetailsProvider({ children }: { children: ReactNode }) {
+export default function OrderDetailsProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const { orderId } = Route.useParams();
 
   const { user: userId } = useAuth();

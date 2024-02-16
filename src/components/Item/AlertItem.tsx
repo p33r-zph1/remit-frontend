@@ -13,14 +13,14 @@ export default function AlertItem({ title, desctiption, timestamp }: Alert) {
           <div className="max-w-sm text-sm font-semibold transition duration-200 group-hover:scale-105 md:text-lg">
             {title}
           </div>
-          <div className="max-w-sm text-sm text-sleep-100 md:text-lg">
+          <div className="max-w-sm text-sm text-gray-400 md:text-lg">
             {desctiption}
           </div>
         </div>
       </div>
 
       {/* Timestamp */}
-      <pre className="font-sans text-sm text-sleep-200 md:text-lg">
+      <pre className="font-sans text-sm text-gray-400 md:text-lg">
         {timestamp}
       </pre>
     </div>

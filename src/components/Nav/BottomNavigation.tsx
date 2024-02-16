@@ -1,8 +1,10 @@
-import { type ElementType } from 'react';
+import {
+  ArrowUpCircleIcon,
+  BellAlertIcon,
+  ChatBubbleLeftIcon,
+} from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
-import { ArrowUpCircleIcon } from '@heroicons/react/24/outline';
-import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
-import { BellAlertIcon } from '@heroicons/react/24/outline';
+import { type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type LinkItem = {

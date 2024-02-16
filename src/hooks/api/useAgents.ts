@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { genericFetch } from '../../schema/api/fetch';
-import agentListApiSchema from '../../schema/agent-list';
+import agentListApiSchema from '@/src/schema/agent-list';
+import { genericFetch } from '@/src/schema/api/fetch';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/agents';

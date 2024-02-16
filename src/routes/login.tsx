@@ -2,8 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { z } from 'zod';
 
-import { fromJwt } from '../schema/cognito';
-import { maybeLazyError } from '../utils/error';
+import { fromJwt } from '@/src/schema/cognito';
 
 export const Route = createFileRoute('/login')({
   validateSearch: z.object({
@@ -31,5 +30,4 @@ export const Route = createFileRoute('/login')({
       });
     }
   },
-  onError: maybeLazyError,
 });

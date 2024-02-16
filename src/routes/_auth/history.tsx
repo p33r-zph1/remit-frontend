@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ordersQueryOptions } from '../../hooks/api/useOrders';
-import { maybeLazyError } from '../../utils/error';
+import { ordersQueryOptions } from '@/src/hooks/api/useOrders';
 
 export const Route = createFileRoute('/_auth/history')({
   loader: opts =>
@@ -12,5 +11,4 @@ export const Route = createFileRoute('/_auth/history')({
       })
     ),
   pendingMs: 0,
-  onError: maybeLazyError,
 });

@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { genericFetch } from '../../schema/api/fetch';
-import orderApiSchema from '../../schema/order';
-import { queryClient } from '../../utils/config';
+import { genericFetch } from '@/src/schema/api/fetch';
+import orderApiSchema from '@/src/schema/order';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -42,6 +41,5 @@ export default function useSetCollection() {
           body: JSON.stringify(meetupSchema.parse(body)),
         }
       ),
-    onSuccess: () => queryClient.invalidateQueries(),
   });
 }

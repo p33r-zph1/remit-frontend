@@ -1,13 +1,14 @@
-import { NumericFormat } from 'react-number-format';
 import {
   type FieldValues,
-  type UseControllerProps,
   useController,
+  type UseControllerProps,
 } from 'react-hook-form';
+import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 
+import type { Currency } from '@/src/schema/currency';
+
 import SelectCurrency from '../Select/SelectCurrency';
-import type { Currency } from '../../schema/currency';
 
 type Props<T extends FieldValues> = UseControllerProps<T> & {
   label: string;
@@ -35,7 +36,7 @@ export default function CurrencyInput<T extends FieldValues>({
 
   return (
     <div className="relative flex flex-col">
-      <span className="absolute left-8 top-3 text-sm text-sleep-200">
+      <span className="absolute left-8 top-3 text-sm text-gray-400">
         {label}
       </span>
 

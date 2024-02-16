@@ -1,7 +1,7 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import { genericFetch } from '../../schema/api/fetch';
-import orderListApiSchema from '../../schema/order-list';
+import { genericFetch } from '@/src/schema/api/fetch';
+import orderListApiSchema from '@/src/schema/order-list';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';

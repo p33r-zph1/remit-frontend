@@ -1,13 +1,13 @@
-import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import {
   CheckIcon,
   ChevronDownIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
+import { Fragment } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { type Currency } from '../../schema/currency';
+import { type Currency } from '@/src/schema/currency';
 
 interface Props<T> {
   currencies: T[];
@@ -50,7 +50,7 @@ export default function SelectCurrency<T extends Currency>({
           {hideChevron ? (
             <span className="mr-8" />
           ) : (
-            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-sleep-200 hover:text-gray-800" />
+            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-400 hover:text-gray-800" />
           )}
         </Listbox.Button>
 

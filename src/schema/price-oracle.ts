@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { makeApiSchema } from './api/fetch';
 
 type Pair = `${string}:${string}`;

@@ -4,10 +4,11 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/20/solid';
 import { Link, useNavigate, useRouter } from '@tanstack/react-router';
+import { useCallback } from 'react';
+
+import useAuth from '@/src/hooks/useAuth';
 
 import Brand from '../Brand';
-import useAuth from '../../hooks/useAuth';
-import { useCallback } from 'react';
 
 export default function NavBar() {
   const { user, logout } = useAuth();
@@ -23,7 +24,7 @@ export default function NavBar() {
   }, [logout, navigate, router]);
 
   return (
-    <header className="navbar sticky top-0 z-[999] bg-base-100">
+    <header className="navbar sticky top-0 z-40 bg-base-100">
       <div className="navbar-start visible md:invisible">
         <div className="flex lg:hidden">
           <Brand />

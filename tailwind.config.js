@@ -1,4 +1,5 @@
 import daisyui from 'daisyui';
+import themes from 'daisyui/src/theming/themes';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
@@ -11,12 +12,9 @@ export default {
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'sleep-100': '#9CA3AF',
-        'sleep-200': '#757F87',
-      },
-      backgroundImage: {
-        'card-gradient':
-          'linear-gradient(180.11deg, #2F80ED 1.73%, rgba(94, 132, 184, 0.78) 99.9%)',
+        'deep-blue': '#2F80ED',
+        'regal-blue': 'rgba(94,132,184,0.78)',
+        'lemon-zest': 'rgba(247, 183, 51, 0.78)',
       },
     },
   },
@@ -26,7 +24,7 @@ export default {
     themes: [
       {
         winter: {
-          ...require('daisyui/src/theming/themes')['winter'],
+          ...themes.winter,
           primary: '#1165EF',
           accent: '#de8800',
           success: '#009747',

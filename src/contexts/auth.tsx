@@ -1,6 +1,7 @@
+import { signIn, type SignInInput, signOut } from 'aws-amplify/auth';
 import { createContext, useCallback, useState } from 'react';
-import { type SignInInput, signIn, signOut } from 'aws-amplify/auth';
-import type { CognitoGroup, Group } from '../schema/cognito';
+
+import type { CognitoGroup, Group } from '@/src/schema/cognito';
 
 export interface AuthContext {
   setUser: (username: string | undefined) => void;
@@ -16,7 +17,11 @@ export interface AuthContext {
 
 export const AuthContext = createContext<AuthContext | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<string>();
   const [group, setGroup] = useState<CognitoGroup>();
   const [error, setError] = useState<string>();

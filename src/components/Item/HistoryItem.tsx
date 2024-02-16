@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
-import { numericFormatter } from 'react-number-format';
 
-import type { Order } from '../../schema/order';
+import type { Order } from '@/src/schema/order';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 import StatusIcon from '../Icon/StatusIcon';
 
@@ -33,7 +33,7 @@ export default function HistoryItem({
           <div className="max-w-sm text-sm font-semibold md:text-lg">
             {recipientId}
           </div>
-          <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
+          <div className="max-w-sm text-sm capitalize text-gray-400 md:text-lg">
             {transferTimelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
@@ -42,14 +42,10 @@ export default function HistoryItem({
       {/* Amount & Conversion Details */}
       <div className="flex flex-col items-end justify-center">
         <div className="max-w-sm text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
-          {numericFormatter(`${sender.amount} ${sender.currency}`, {
-            thousandSeparator: ',',
-          })}
+          {formatTranferInfo(sender)}
         </div>
-        <div className="text-sm text-sleep-200 md:text-lg">
-          {numericFormatter(`${recipient.amount} ${recipient.currency}`, {
-            thousandSeparator: ',',
-          })}
+        <div className="text-sm text-gray-400 md:text-lg">
+          {formatTranferInfo(recipient)}
         </div>
       </div>
     </Link>

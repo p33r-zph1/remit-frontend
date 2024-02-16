@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { genericFetch } from '../../schema/api/fetch';
-import priceOracleApiSchema from '../../schema/price-oracle';
+import { genericFetch } from '@/src/schema/api/fetch';
+import priceOracleApiSchema from '@/src/schema/price-oracle';
 
 const BASE_URL =
   'https://9tbw1uqhph.execute-api.ap-southeast-1.amazonaws.com/main';

@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
-import { getErrorMessage } from '../../utils/error';
+
+import { getErrorMessage } from '@/src/utils/error';
 
 export default function DefaultFallback({
   error,

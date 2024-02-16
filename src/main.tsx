@@ -1,53 +1,28 @@
 import './index.css';
+import './configs/amplify-auth';
+import './configs/buffer';
 
-import { Buffer } from 'buffer';
-import { StrictMode } from 'react';
-import ReactDOM from 'react-dom/client';
-import { Amplify } from 'aws-amplify';
-import { defaultStorage } from 'aws-amplify/utils';
-import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { RouterProvider } from '@tanstack/react-router';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { WagmiProvider } from 'wagmi';
 
-import { routeTree } from './routeTree.gen';
-
+import queryClient from './configs/tansact-query';
+import router from './configs/tansact-router';
+import wagmi from './configs/wagmi';
+import AuthProvider from './contexts/auth';
 import useAuth from './hooks/useAuth';
-import { AuthProvider } from './contexts/auth';
+import { preloadError } from './utils/error';
 
-import { authConfig, queryClient, wagmiConfig } from './utils/config';
-import LoadingRing from './components/Spinner/LoadingRing';
-import DefaultFallback from './components/Fallback/DefaultFallback';
-
-Amplify.configure({ Auth: authConfig });
-
-cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage);
-
-globalThis.Buffer = Buffer;
-
-const router = createRouter({
-  routeTree,
-  defaultPendingComponent: () => <LoadingRing className="flex-1" />,
-  defaultErrorComponent: ({ error }) => <DefaultFallback error={error} />,
-  context: {
-    queryClient,
-    auth: undefined!, // Injected in AuthProvider
-  },
-  defaultPreload: 'intent',
-  defaultPreloadStaleTime: 0,
+/**
+ * @description Load Error Handling (Code splitting)
+ * @see https://vitejs.dev/guide/build#load-error-handling
+ */
+window.addEventListener('vite:preloadError', () => {
+  preloadError();
+  router.invalidate();
 });
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
-
-declare module 'wagmi' {
-  interface Register {
-    config: typeof wagmiConfig;
-  }
-}
 
 export function App() {
   const auth = useAuth();
@@ -55,9 +30,9 @@ export function App() {
   return <RouterProvider router={router} context={{ auth }} />;
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={wagmi}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <App />

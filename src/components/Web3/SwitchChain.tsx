@@ -1,24 +1,23 @@
-import { twMerge } from 'tailwind-merge';
-import { useAccount, useSwitchChain } from 'wagmi';
+import { useSwitchChain } from 'wagmi';
 
-export default function SwitchChain() {
-  const { chainId } = useAccount();
-  const { chains, switchChain } = useSwitchChain();
+import type { SupportedChains } from '@/src/configs/wagmi';
+
+type Props = {
+  name: string;
+  preferredChainId: SupportedChains;
+};
+
+export default function SwitchChain({ name, preferredChainId }: Props) {
+  const { switchChain, isPending } = useSwitchChain();
 
   return (
-    <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-      {chains.map(chain => (
-        <button
-          className={twMerge(
-            'btn btn-primary btn-sm px-2 py-1',
-            chainId !== chain.id && 'btn-outline'
-          )}
-          key={chain.id}
-          onClick={() => switchChain({ chainId: chain.id })}
-        >
-          {chain.name}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
+      onClick={() => switchChain({ chainId: preferredChainId })}
+    >
+      {isPending && <span className="loading loading-spinner"></span>}
+      Switch to {name}
+    </button>
   );
 }

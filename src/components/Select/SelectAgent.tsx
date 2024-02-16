@@ -1,7 +1,8 @@
 import { type ComponentPropsWithRef, forwardRef } from 'react';
 import type { FieldError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
-import type { Agent } from '../../schema/agent';
+
+import type { Agent } from '@/src/schema/agent';
 
 type Props = ComponentPropsWithRef<'select'> & {
   list: Agent[];
@@ -20,7 +21,7 @@ const SelectAgent = forwardRef<HTMLSelectElement, Props>(
         {...selectProps}
       >
         <option disabled value="default">
-          {error?.message ? error?.message : 'Select agent commision'}
+          {error?.message ? error?.message : 'Select agent commission'}
         </option>
 
         {list.map(item => (

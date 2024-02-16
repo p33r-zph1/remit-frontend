@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { genericFetch } from '../../schema/api/fetch';
-import orderApiSchema from '../../schema/order';
-import { queryClient } from '../../utils/config';
+import { genericFetch } from '@/src/schema/api/fetch';
+import orderApiSchema from '@/src/schema/order';
 
 const BASE_URL =
   'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
@@ -21,19 +20,19 @@ export type CustomerOrderBody = z.infer<typeof customerOrderBodySchema>;
 export type SenderAgentOrderBody = z.infer<typeof senderAgentOrderBodySchema>;
 
 type CustomerMutation = {
-  key: 'customer';
+  type: 'customer';
   orderId: string;
   body: CustomerOrderBody;
 };
 
 type SenderAgentMutation = {
-  key: 'senderagent';
+  type: 'senderagent';
   orderId: string;
   body: SenderAgentOrderBody;
 };
 
 type RecipientAgentMutation = {
-  key: 'agent';
+  type: 'recipientagent';
   orderId: string;
 };
 
@@ -42,13 +41,15 @@ export type MutationProps =
   | SenderAgentMutation
   | RecipientAgentMutation;
 
+export type AgentType = MutationProps['type'];
+
 function handleRequestBody(props: MutationProps) {
-  switch (props.key) {
+  switch (props.type) {
     case 'customer':
       return JSON.stringify(customerOrderBodySchema.parse(props.body));
     case 'senderagent':
       return JSON.stringify(senderAgentOrderBodySchema.parse(props.body));
-    case 'agent':
+    case 'recipientagent':
       return null;
   }
 }
@@ -64,6 +65,5 @@ export default function useAcceptOrder() {
         body: handleRequestBody(props),
       });
     },
-    onSuccess: () => queryClient.invalidateQueries(),
   });
 }

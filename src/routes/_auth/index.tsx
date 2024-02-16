@@ -1,16 +1,15 @@
-import { Suspense } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import useAuth from '../../hooks/useAuth';
-import AgentOrders from '../../containers/Orders/AgentOrders';
-
-import Page from '../../components/Page';
-import SendForm from '../../containers/Send/SendForm';
-import QueryFallback from '../../components/Fallback/QueryFallback';
-import SendMoneySkeleton from '../../components/Skeleton/SendMoneySkeleton';
-import LoadingRing from '../../components/Spinner/LoadingRing';
+import QueryFallback from '@/src/components/Fallback/QueryFallback';
+import Page from '@/src/components/Page';
+import SendMoneySkeleton from '@/src/components/Skeleton/SendMoneySkeleton';
+import LoadingRing from '@/src/components/Spinner/LoadingRing';
+import AgentOrders from '@/src/containers/Order/AgentOrders';
+import SendForm from '@/src/containers/Send/SendForm';
+import useAuth from '@/src/hooks/useAuth';
 
 export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,
