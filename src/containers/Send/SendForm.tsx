@@ -35,12 +35,14 @@ export default function SendForm() {
     agents,
 
     // hook form props
-    formProps: { control, handleSubmit, getValues },
+    formProps: { control, handleSubmit, getValues, reset },
   } = useSendMoney();
 
   const {
+    data: sendOrderData,
     mutateAsync: sendOrderAsync,
     isPending: isSendingOrder,
+    isSuccess: isSendOrderSuccess,
     error,
   } = useCreateOrder();
 
@@ -63,7 +65,7 @@ export default function SendForm() {
   }) => {
     async function confirmSend() {
       try {
-        const { data } = await sendOrderAsync({
+        await sendOrderAsync({
           body: {
             recipientId,
             senderCurrency: senderCurrency.currency,
@@ -73,12 +75,8 @@ export default function SendForm() {
           },
         });
 
+        reset();
         setModalVisible(false);
-
-        navigate({
-          to: '/order/$orderId',
-          params: { orderId: data.orderId },
-        });
       } catch (e: unknown) {
         setModalVisible(false);
         console.error(e);
@@ -88,6 +86,15 @@ export default function SendForm() {
     setOnConfirmSend(() => confirmSend);
     setModalVisible(true);
   };
+
+  const onNavigateToOrder = useCallback(() => {
+    if (isSendOrderSuccess) {
+      navigate({
+        to: '/order/$orderId',
+        params: { orderId: sendOrderData.data.orderId },
+      });
+    }
+  }, [isSendOrderSuccess, navigate, sendOrderData?.data.orderId]);
 
   // renderCount++;
 
@@ -154,6 +161,7 @@ export default function SendForm() {
         open={modalVisible}
         isLoading={isSendingOrder}
         onClose={() => setModalVisible(false)}
+        onCloseComplete={onNavigateToOrder}
         actions={{
           confirm: {
             label: 'Send',

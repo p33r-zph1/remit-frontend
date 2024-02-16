@@ -1,4 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
+import { useBlocker } from '@tanstack/react-router';
 import { Fragment, type ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -65,6 +66,14 @@ export default function Modal({
   size = 'medium',
   slideFrom = 'top',
 }: Props) {
+  useBlocker(
+    () =>
+      window.confirm(
+        'Are you sure you want to leave? Continuing may lead to potential loss of funds.'
+      ),
+    open
+  );
+
   return (
     <Transition appear show={open} as={Fragment} afterLeave={onCloseComplete}>
       <Dialog
