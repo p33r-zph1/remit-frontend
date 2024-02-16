@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 
-import useAcceptOrder from '@/src/hooks/api/useAcceptOrder';
-import useRejectOrder from '@/src/hooks/api/useRejectOrder';
-
 import { getCustomChainId } from '../configs/wagmi';
+import useAcceptOrder from './api/useAcceptOrder';
+import useRejectOrder from './api/useRejectOrder';
 
 type Props = {
   orderId: string;

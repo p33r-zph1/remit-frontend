@@ -1,64 +1,91 @@
 import {
+  ArrowPathIcon,
+  BoltIcon,
   CheckCircleIcon,
-  ClockIcon,
+  CurrencyDollarIcon,
+  MapPinIcon,
+  UserCircleIcon,
+  WalletIcon,
   XCircleIcon,
-} from '@heroicons/react/20/solid';
+} from '@heroicons/react/24/outline';
 
-import type { OrderStatus } from '@/src/schema/order';
-import type { TransferTimeline } from '@/src/schema/order/transfer-timeline';
+import type {
+  TransferTimeline,
+  TransferTimelineStatus,
+} from '@/src/schema/order/transfer-timeline';
 
-function getIconByStatus(status: OrderStatus, isLastItem: boolean = false) {
-  if (status === 'IN_PROGRESS' && isLastItem) {
-    return <ClockIcon className="h-6 w-6 text-gray-300" />;
-  }
-
+function getIconByStatus(status: TransferTimelineStatus) {
   switch (status) {
-    case 'IN_PROGRESS':
-      return <ClockIcon className="h-6 w-6 text-primary" />;
-    case 'COMPLETED':
+    case 'PENDING':
+      return <CurrencyDollarIcon className="h-6 w-6 text-primary" />;
+
+    case 'RECIPIENT_ACCEPTED':
+    case 'SENDER_AGENT_ACCEPTED':
+    case 'RECIPIENT_AGENT_ACCEPTED':
+      return <UserCircleIcon className="h-6 w-6 text-primary" />;
+
+    case 'ORDER_ACCEPTED':
+      return <BoltIcon className="h-6 w-6 text-primary" />;
+
+    case 'COLLECTION_MEETUP_SET':
+    case 'DELIVERY_MEETUP_SET':
+      return <MapPinIcon className="h-6 w-6 text-primary" />;
+
+    case 'ESCROW_DEPOSITED':
+      return <ArrowPathIcon className="h-6 w-6 text-primary" />;
+
+    case 'CASH_COLLECTED':
+    case 'CASH_DELIVERED':
+      return <WalletIcon className="h-6 w-6 text-primary" />;
+
+    case 'ESCROW_RELEASED':
       return <CheckCircleIcon className="h-6 w-6 text-primary" />;
-    case 'CANCELLED':
+
+    case 'RECIPIENT_REJECTED':
+    case 'SENDER_AGENT_REJECTED':
+    case 'RECIPIENT_AGENT_REJECTED':
       return <XCircleIcon className="h-6 w-6 text-error/80" />;
-    case 'EXPIRED':
-      return <XCircleIcon className="h-6 w-6 text-gray-300" />;
   }
 }
 
-function getLineDividerByStatus(
-  status: OrderStatus,
-  isLastItem: boolean = false
-) {
-  if (status === 'IN_PROGRESS' && isLastItem) {
-    return <hr className="bg-slate-300" />;
-  }
-
+function getLineDividerByStatus(status: TransferTimelineStatus) {
   switch (status) {
-    case 'IN_PROGRESS':
-    case 'COMPLETED':
-      return <hr className="bg-primary" />;
-    case 'CANCELLED':
+    case 'PENDING':
+    case 'RECIPIENT_ACCEPTED':
+    case 'SENDER_AGENT_ACCEPTED':
+    case 'RECIPIENT_AGENT_ACCEPTED':
+    case 'ORDER_ACCEPTED':
+    case 'COLLECTION_MEETUP_SET':
+    case 'DELIVERY_MEETUP_SET':
+    case 'ESCROW_DEPOSITED':
+    case 'CASH_COLLECTED':
+    case 'CASH_DELIVERED':
+    case 'ESCROW_RELEASED':
+      return <hr className="bg-primary/80" />;
+
+    case 'RECIPIENT_REJECTED':
+    case 'SENDER_AGENT_REJECTED':
+    case 'RECIPIENT_AGENT_REJECTED':
       return <hr className="bg-error/80" />;
-    case 'EXPIRED':
-      return <hr className="bg-slate-300" />;
   }
 }
 
 function Item({
   title,
   description,
-  orderStatus,
+  status,
   isLastItem,
 }: TransferTimeline & { isLastItem: boolean }) {
   return (
     <li>
-      {getLineDividerByStatus(orderStatus)}
+      {getLineDividerByStatus(status)}
 
-      <div className="timeline-middle">{getIconByStatus(orderStatus)}</div>
+      <div className="timeline-middle">{getIconByStatus(status)}</div>
 
       <div className="group timeline-end timeline-box">
         <div
           className="flex select-none flex-col items-baseline"
-          // data-tip={getTooltipByStatus(orderStatus)}
+          // data-tip={getTooltipByStatus(status)}
         >
           <span className="text-xs font-semibold md:text-sm">{title}</span>
 
@@ -68,7 +95,7 @@ function Item({
         </div>
       </div>
 
-      {!isLastItem && getLineDividerByStatus(orderStatus)}
+      {!isLastItem && getLineDividerByStatus(status)}
     </li>
   );
 }

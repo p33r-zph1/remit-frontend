@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-import { orderStatusSchema } from '../order';
-
 export const transferTimelineStatusSchema = z.enum([
   'PENDING',
   'RECIPIENT_ACCEPTED',
@@ -24,7 +22,6 @@ const transferTimelineSchema = z.object({
   description: z.string(),
   dateTime: z.coerce.date(),
   status: transferTimelineStatusSchema,
-  orderStatus: orderStatusSchema,
 });
 
 export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
