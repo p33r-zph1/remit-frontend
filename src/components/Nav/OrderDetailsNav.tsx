@@ -3,10 +3,11 @@ import { useRouter } from '@tanstack/react-router';
 
 import type { Order, OrderStatus } from '@/src/schema/order';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
+import type { TransferTimelineStatus } from '@/src/schema/order/transfer-timeline';
 
 import StatusIcon from '../Icon/StatusIcon';
 
-function getTitleByStatus(status: OrderStatus) {
+function getTitleByOrderStatus(status: OrderStatus) {
   switch (status) {
     case 'IN_PROGRESS':
       return (
@@ -35,6 +36,30 @@ function getTitleByStatus(status: OrderStatus) {
   }
 }
 
+function getRecipientDescription(status: TransferTimelineStatus) {
+  switch (status) {
+    case 'PENDING':
+      return <p>Is the estimated amount to receive</p>;
+
+    case 'RECIPIENT_REJECTED':
+    case 'RECIPIENT_AGENT_REJECTED':
+    case 'SENDER_AGENT_REJECTED':
+      return <p className="text-error">This order has been rejected</p>;
+
+    case 'CASH_COLLECTED':
+      return <p>Cash has been collected by senderagent</p>;
+
+    case 'CASH_DELIVERED':
+      return <p>Cash gas been delivererd by recipientagent</p>;
+
+    case 'ESCROW_RELEASED':
+      return <p className="text-success">Order is completed</p>;
+
+    default:
+      return <p>Is the exact amount to receive</p>;
+  }
+}
+
 function BackButton() {
   const router = useRouter();
 
@@ -58,6 +83,7 @@ export default function OrderDetailsNav({
   recipientId,
   senderId,
   transferDetails,
+  transferTimelineStatus,
 }: Props) {
   const { sender, recipient } = transferDetails;
 
@@ -71,7 +97,7 @@ export default function OrderDetailsNav({
             Sender {senderId} sent
           </div>
         ) : (
-          getTitleByStatus(orderStatus)
+          getTitleByOrderStatus(orderStatus)
         )}
 
         <div className="flex flex-row items-center justify-between py-1">
@@ -86,7 +112,7 @@ export default function OrderDetailsNav({
 
         <div className="text-base text-sleep-200 md:text-lg">
           {isRecipient
-            ? 'Is the exact amount to receive'
+            ? getRecipientDescription(transferTimelineStatus)
             : `Recipient ${recipientId}`}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -31,6 +31,7 @@ export default memo(function RecipientCustomerTakeOrder() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>({
     resolver: zodResolver(formSchema),
@@ -61,6 +62,13 @@ export default memo(function RecipientCustomerTakeOrder() {
   const onSubmit: SubmitHandler<Inputs> = ({ agentId }) => {
     onAcceptOrder(agentId);
   };
+
+  const agentId = watch('agentId');
+
+  const selectedAgent = useMemo(
+    () => agents.find(a => a.agentId === agentId),
+    [agentId, agents]
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -123,6 +131,16 @@ export default memo(function RecipientCustomerTakeOrder() {
           <span className="font-bold">
             ~ {formatTranferInfo(transferDetails.recipient)}
           </span>
+          {modalState.state === 'accept' && (
+            <>
+              <br />
+              with agent <span className="font-medium">#{agentId}</span>{' '}
+              commision of{' '}
+              <span className="font-medium">
+                {selectedAgent?.commission || '?'}%
+              </span>
+            </>
+          )}
           <br />
           <br />
           Are you sure you want to continue?
