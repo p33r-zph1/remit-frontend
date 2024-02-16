@@ -50,7 +50,7 @@ export default function SelectCurrency<T extends Currency>({
           {hideChevron ? (
             <span className="mr-8" />
           ) : (
-            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-sleep-200 hover:text-gray-800" />
+            <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-400 hover:text-gray-800" />
           )}
         </Listbox.Button>
 

@@ -33,7 +33,7 @@ export default function HistoryItem({
           <div className="max-w-sm text-sm font-semibold md:text-lg">
             {recipientId}
           </div>
-          <div className="max-w-sm text-sm capitalize text-sleep-100 md:text-lg">
+          <div className="max-w-sm text-sm capitalize text-gray-400 md:text-lg">
             {transferTimelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function HistoryItem({
         <div className="max-w-sm text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
           {formatTranferInfo(sender)}
         </div>
-        <div className="text-sm text-sleep-200 md:text-lg">
+        <div className="text-sm text-gray-400 md:text-lg">
           {formatTranferInfo(recipient)}
         </div>
       </div>

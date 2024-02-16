@@ -30,14 +30,14 @@ export default function SendDetails<T extends FieldValues>({
         <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
           <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
             <MinusIcon
-              className="h-full w-full text-sleep-200"
+              className="h-full w-full text-gray-400"
               strokeWidth={2}
             />
           </div>
-          <span className="w-1/2 truncate text-sm font-semibold text-sleep-200">
+          <span className="w-1/2 truncate text-sm font-semibold text-gray-400">
             ~ 1.00%
           </span>
-          <span className="text-sm font-semibold text-sleep-200">
+          <span className="text-sm font-semibold text-gray-400">
             Platform fee
           </span>
         </div>
@@ -45,7 +45,7 @@ export default function SendDetails<T extends FieldValues>({
         <div className="flex items-center justify-between pl-14 pr-4 lg:pr-10">
           <div className="absolute left-6 -ml-px h-5 w-5 rounded-full bg-[#E7E9EB] p-1">
             <XMarkIcon
-              className="h-full w-full text-sleep-200"
+              className="h-full w-full text-gray-400"
               strokeWidth={2}
             />
           </div>

@@ -1,8 +1,8 @@
+import CommissionCard from '@/src/components/Card/CommissionCard';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useAgent from '@/src/hooks/api/useAgent';
 import useAuth from '@/src/hooks/useAuth';
 
-import CommissionCard from './CommissionCard';
 import OrderList from './OrderList';
 
 export default function AgentOrders() {

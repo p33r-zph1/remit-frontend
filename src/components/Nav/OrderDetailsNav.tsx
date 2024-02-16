@@ -110,7 +110,7 @@ export default function OrderDetailsNav({
           <StatusIcon status={orderStatus} isRecipient={isRecipient} />
         </div>
 
-        <div className="text-base text-sleep-200 md:text-lg">
+        <div className="text-base text-gray-400 md:text-lg">
           {isRecipient
             ? getRecipientDescription(transferTimelineStatus)
             : `Recipient ${recipientId}`}

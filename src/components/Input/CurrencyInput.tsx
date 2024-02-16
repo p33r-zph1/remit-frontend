@@ -36,7 +36,7 @@ export default function CurrencyInput<T extends FieldValues>({
 
   return (
     <div className="relative flex flex-col">
-      <span className="absolute left-8 top-3 text-sm text-sleep-200">
+      <span className="absolute left-8 top-3 text-sm text-gray-400">
         {label}
       </span>
 
