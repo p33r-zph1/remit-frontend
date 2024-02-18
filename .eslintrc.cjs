@@ -52,6 +52,8 @@ module.exports = {
     'simple-import-sort/exports': 'warn',
 
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
+
+    'no-param-reassign': 'error',
     'prettier/prettier': 'error',
   },
   ignorePatterns: [
