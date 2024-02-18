@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
+import { API_URL } from '@/src/configs/env';
 import agentApiSchema from '@/src/schema/agent';
 import { genericFetch } from '@/src/schema/api/fetch';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/agents';
+const BASE_URL = `${API_URL}/agents`;
 
 export default function useAgent(agentId: string | undefined) {
   return useSuspenseQuery({

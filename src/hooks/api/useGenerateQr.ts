@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { API_URL } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import qrCodeApiSchema from '@/src/schema/qr-code';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
+const BASE_URL = `${API_URL}/orders`;
 
 export type MutationProps = {
   orderId: string;

@@ -9,6 +9,7 @@ import { type ElementRef, useRef } from 'react';
 
 import MapsAPI from '@/src/components/Location/MapsAPI';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
+import { parsedEnvs } from '@/src/configs/env';
 import type { LocationDetails } from '@/src/schema/location';
 
 const libraries: Libraries = ['places'];
@@ -23,7 +24,7 @@ export default function CustomerMeetup({
   const mapRef = useRef<ElementRef<typeof GoogleMap>>();
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
+    googleMapsApiKey: parsedEnvs.VITE_MAPS_JS_API,
     libraries,
   });
 

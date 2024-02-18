@@ -1,10 +1,10 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
+import { API_URL } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderListApiSchema from '@/src/schema/order-list';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
+const BASE_URL = `${API_URL}/orders`;
 
 export type OrdersQueryProps = {
   pageSize: number;
