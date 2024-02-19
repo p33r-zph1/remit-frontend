@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { coerce, z } from 'zod';
 
+import { platformFee } from '../constants';
+import { calculateFees } from '../schema/fees';
 import useAgents from './api/useAgents';
 import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
@@ -66,35 +68,17 @@ export default function useSendMoney() {
       const result = coerce.number().safeParse(value);
       if (!result.success) return '';
 
-      // Closure for calculating fiat value
-      const calculateFiatValue = (amount: number) => amount * exchangeRate;
-
-      // Corrected Closure for applying commission
-      const applyCommission = (amount: number, commissionRate: number) =>
-        amount - amount * commissionRate;
-
-      // Corrected Closure for applying platform fee
-      const applyPlatformFee = (amount: number, feeRate: number) =>
-        amount - amount * feeRate;
-
       const agent = agents.find(a => a.agentId === agentId);
 
-      let fiatValue = calculateFiatValue(result.data);
+      const recipientAmount = calculateFees({
+        amount: result.data,
+        precision: recipientCurrency.decimals,
+        exchangeRate,
+        platformFee,
+        agent,
+      });
 
-      if (agent) {
-        const commissionRate = agent.commission / 100;
-        fiatValue = applyCommission(fiatValue, commissionRate);
-      }
-
-      const platformFeeRate = platformFee / 100;
-      const recipientAmount = applyPlatformFee(fiatValue, platformFeeRate);
-
-      // Format and set the recipient amount
-      const formatAmount =
-        recipientAmount === 0
-          ? ''
-          : String(recipientAmount.toFixed(recipientCurrency.decimals));
-      setValue('recipientAmount', formatAmount);
+      setValue('recipientAmount', recipientAmount);
     },
     [agentId, agents, exchangeRate, recipientCurrency.decimals, setValue]
   );
@@ -131,5 +115,3 @@ export default function useSendMoney() {
     formProps,
   };
 }
-
-const platformFee = 1; // 1%

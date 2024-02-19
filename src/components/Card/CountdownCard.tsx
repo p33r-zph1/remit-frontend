@@ -8,7 +8,9 @@ type Props = {
 };
 
 export default function CountdownCard({ endDate }: Props) {
-  const { days, hours, minutes, seconds } = useCountdown({ date: endDate });
+  const { days, hours, minutes, seconds, isOver } = useCountdown({
+    date: endDate,
+  });
 
   return (
     <div
@@ -21,7 +23,7 @@ export default function CountdownCard({ endDate }: Props) {
     >
       <div className="flex items-center space-x-1">
         <h1 className="text-xl font-bold tracking-wide md:text-3xl">
-          Time Remaining
+          {isOver ? 'Transaction expired' : 'Time Remaining'}
         </h1>
 
         <span

@@ -13,10 +13,15 @@ type CountdownState = {
   hours: string;
   minutes: string;
   seconds: string;
+  isOver: boolean;
 };
 
 function formatTimeUnit(unit: number) {
   return String(unit).padStart(2, '0');
+}
+
+function isEqualOrAfter(now: Date, date: Date) {
+  return isEqual(now, date) || isAfter(now, date);
 }
 
 export default function useCountdown({ date, onComplete }: Props) {
@@ -27,14 +32,22 @@ export default function useCountdown({ date, onComplete }: Props) {
     hours: '00',
     minutes: '00',
     seconds: '00',
+    isOver: true,
   });
 
   useEffect(() => {
+    if (isEqualOrAfter(new Date(), date)) {
+      setState(prev => ({ ...prev, isOver: true }));
+      return onComplete?.();
+    }
+
     function updateCountdown() {
       const now = new Date();
 
-      if (isEqual(now, date) || isAfter(now, date)) {
+      if (isEqualOrAfter(now, date)) {
         clearInterval(timer);
+
+        setState(prev => ({ ...prev, isOver: true }));
         return onComplete?.();
       }
 
@@ -47,6 +60,7 @@ export default function useCountdown({ date, onComplete }: Props) {
         hours: formatTimeUnit(duration.hours ?? 0),
         minutes: formatTimeUnit(duration.minutes ?? 0),
         seconds: formatTimeUnit(duration.seconds ?? 0),
+        isOver: false,
       });
     }
 
