@@ -40,7 +40,9 @@ export default memo(function RecipientCustomerTakeOrder() {
     },
   });
 
-  const { data: agents } = useAgents(transferDetails.recipient.countryIsoCode);
+  const { data: agents } = useAgents({
+    isoCode: transferDetails.recipient.countryIsoCode,
+  });
 
   const {
     // callbacks

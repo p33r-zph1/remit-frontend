@@ -43,7 +43,9 @@ export default function useSendMoney() {
     to: recipientCurrency.currency,
   });
 
-  const { data: agents } = useAgents(senderCurrency.countryIsoCode);
+  const { data: agents } = useAgents({
+    isoCode: senderCurrency.countryIsoCode,
+  });
 
   const formProps = useForm<SendMoney>({
     resolver: zodResolver(formSchema),

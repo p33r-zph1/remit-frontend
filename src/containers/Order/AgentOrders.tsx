@@ -1,3 +1,5 @@
+import { redirect } from '@tanstack/react-router';
+
 import CommissionCard from '@/src/components/Card/CommissionCard';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useAgent from '@/src/hooks/api/useAgent';
@@ -8,7 +10,13 @@ import OrderList from './OrderList';
 export default function AgentOrders() {
   const { user } = useAuth();
 
-  const { data: agent } = useAgent(user);
+  if (!user) {
+    throw redirect({
+      to: '/login',
+    });
+  }
+
+  const { data: agent } = useAgent({ agentId: user });
 
   return (
     <div className="mt-8 flex flex-col space-y-10 sm:mt-16">

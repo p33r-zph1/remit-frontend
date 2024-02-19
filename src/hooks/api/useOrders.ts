@@ -4,6 +4,8 @@ import { API_URL } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderListApiSchema from '@/src/schema/order-list';
 
+import { orderKeys } from './keys/order';
+
 const BASE_URL = `${API_URL}/orders`;
 
 export type OrdersQueryProps = {
@@ -18,7 +20,7 @@ export const ordersQueryOptions = ({
   status,
 }: OrdersQueryProps) =>
   queryOptions({
-    queryKey: ['orders', pageSize, pageNumber, status],
+    queryKey: orderKeys.paginatedList({ pageSize, pageNumber, status }),
     queryFn: () =>
       genericFetch(
         `${BASE_URL}?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}`,

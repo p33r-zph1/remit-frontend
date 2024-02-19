@@ -4,6 +4,8 @@ import { API_URL } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderApiSchema from '@/src/schema/order';
 
+import { orderKeys } from './keys/order';
+
 const BASE_URL = `${API_URL}/orders`;
 
 export type OrderQueryProps = {
@@ -12,7 +14,7 @@ export type OrderQueryProps = {
 
 export const orderQueryOptions = ({ orderId }: OrderQueryProps) =>
   queryOptions({
-    queryKey: ['order', orderId],
+    queryKey: orderKeys.listItem({ orderId }),
     queryFn: () => genericFetch(`${BASE_URL}/${orderId}`, orderApiSchema),
     select: response => response.data,
     refetchInterval: 10_000,
