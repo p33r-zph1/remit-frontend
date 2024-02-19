@@ -90,10 +90,13 @@ export default function useSendMoney() {
       const recipientAmount = applyPlatformFee(fiatValue, platformFeeRate);
 
       // Format and set the recipient amount
-      const formatAmount = recipientAmount === 0 ? '' : String(recipientAmount);
+      const formatAmount =
+        recipientAmount === 0
+          ? ''
+          : String(recipientAmount.toFixed(recipientCurrency.decimals));
       setValue('recipientAmount', formatAmount);
     },
-    [agentId, agents, exchangeRate, setValue]
+    [agentId, agents, exchangeRate, recipientCurrency.decimals, setValue]
   );
 
   useEffect(() => {

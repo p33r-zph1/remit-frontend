@@ -7,6 +7,7 @@ const currencySchema = z.object({
   icon: z.string(),
   currency: z.string(),
   countryIsoCode: z.string(),
+  decimals: z.number(),
 });
 
 export const exchangeCurrencySchema = z.object({
