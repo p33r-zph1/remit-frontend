@@ -38,7 +38,7 @@ export default memo(function ApproveAllowance({
     data: txnhash,
     writeContractAsync,
     error: writeContractError,
-    isPending,
+    isPending: isApproving,
   } = useWriteContract();
 
   const {
@@ -129,7 +129,7 @@ export default memo(function ApproveAllowance({
         type="button"
         className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         onClick={() => setModalVisible(true)}
-        disabled={isPending || isConfirming || isConfirmed}
+        disabled={isApproving || isConfirming || isConfirmed}
       >
         <img src="/metamask.png" alt="metamask icon" className="h-8 w-8" />
         Approve Transfer
@@ -137,7 +137,7 @@ export default memo(function ApproveAllowance({
 
       <Modal
         open={modalVisible}
-        isLoading={isPending || isConfirming}
+        isLoading={isApproving || isConfirming}
         onClose={() => setModalVisible(false)}
         actions={{
           confirm: {
@@ -153,16 +153,19 @@ export default memo(function ApproveAllowance({
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          <></>
           You&apos;re about to approve{' '}
           <span className="font-bold">
             {numericFormatter(`${value} ${symbol}`, {
               thousandSeparator: ',',
             })}
           </span>
-          <br />
-          <br />
-          Are you sure you want to continue?
+          {isApproving && (
+            <span className="text-xs font-semibold text-accent">
+              <br />
+              <br />
+              Tip: Double check the spending cap before continuing
+            </span>
+          )}
         </p>
       </Modal>
     </div>

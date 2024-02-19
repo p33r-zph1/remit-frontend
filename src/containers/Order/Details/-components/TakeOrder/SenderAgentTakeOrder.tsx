@@ -111,9 +111,6 @@ export default memo(function SenderAgentTakeOrder() {
           <span className="font-bold">
             {formatCommissionDetails(fees.senderAgent)} ({commission}%)
           </span>
-          <br />
-          <br />
-          Are you sure you want to continue?
         </p>
       </Modal>
     </form>

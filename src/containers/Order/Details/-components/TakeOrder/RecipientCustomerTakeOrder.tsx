@@ -128,9 +128,8 @@ export default memo(function RecipientCustomerTakeOrder() {
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          You&apos;re about to {modalState.state} an order amounting of
-          <br />
-          <span className="text-xl font-bold md:text-2xl">
+          You&apos;re about to {modalState.state} an order amounting of {` `}
+          <span className="font-bold">
             ~ {formatTranferInfo(transferDetails.recipient)}
           </span>
           {modalState.state === 'accept' && (
@@ -145,7 +144,6 @@ export default memo(function RecipientCustomerTakeOrder() {
           )}
           <br />
           <br />
-          Are you sure you want to continue?
         </p>
       </Modal>
     </form>
