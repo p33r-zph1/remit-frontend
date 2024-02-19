@@ -1,5 +1,4 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
-import { useNavigate } from '@tanstack/react-router';
 import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -7,11 +6,8 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { Route } from '@/src/routes/_auth/order/$orderId/scanQr';
 
 export default function ScanQrCode() {
-  const navigate = useNavigate({ from: Route.fullPath });
-
   const {
     order: { orderId },
   } = useOrderDetails();
@@ -42,15 +38,9 @@ export default function ScanQrCode() {
       confirmDeliveryAsync({
         body: { deliveryCode: scannedResult },
         orderId,
-      }).then(() => {
-        navigate({
-          to: '/order/$orderId',
-          params: true,
-          replace: true,
-        });
       });
     }
-  }, [confirmDeliveryAsync, navigate, orderId, scannedResult]);
+  }, [confirmDeliveryAsync, orderId, scannedResult]);
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {

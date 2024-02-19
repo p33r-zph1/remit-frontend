@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -11,6 +11,8 @@ import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import ScanQrCode from '@/src/containers/Order/QrCode/ScanQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+
+import { Route as ScanQrRoute } from './scanQr';
 
 export const Route = createLazyFileRoute('/_auth/order/$orderId/scanQr')({
   component: () => (
@@ -31,12 +33,24 @@ export const Route = createLazyFileRoute('/_auth/order/$orderId/scanQr')({
 });
 
 function ScanQrComponent() {
+  const navigate = useNavigate({ from: ScanQrRoute.fullPath });
+
   const {
     agent: { isRecipient: isRecipientAgent },
     order: { transferTimelineStatus: status },
   } = useOrderDetails();
 
   switch (status) {
+    case 'CASH_DELIVERED':
+    case 'ESCROW_RELEASED': {
+      navigate({
+        to: '/order/$orderId',
+        replace: true,
+        params: true,
+      });
+      return null;
+    }
+
     case 'DELIVERY_MEETUP_SET': {
       if (isRecipientAgent) {
         return <ScanQrCode />;
