@@ -130,15 +130,15 @@ export default memo(function RecipientCustomerTakeOrder() {
         <p className="text-balance text-slate-500">
           You&apos;re about to {modalState.state} an order amounting of
           <br />
-          <span className="font-bold">
+          <span className="text-xl font-bold md:text-2xl">
             ~ {formatTranferInfo(transferDetails.recipient)}
           </span>
           {modalState.state === 'accept' && (
             <>
               <br />
-              with agent <span className="font-medium">#{agentId}</span>{' '}
-              commision of{' '}
-              <span className="font-medium">
+              with agent <span className="font-bold">#{agentId}</span> commision
+              of{' '}
+              <span className="font-bold">
                 {selectedAgent?.commission || '?'}%
               </span>
             </>
