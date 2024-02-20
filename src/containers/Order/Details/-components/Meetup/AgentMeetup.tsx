@@ -246,7 +246,7 @@ export default function AgentMeetup({ meetupType }: Props) {
       >
         <p className="text-balance text-slate-500">
           You will be meeting up in{' '}
-          <span className="font-bold">
+          <span className="font-semibold">
             {getValues('areaName')}
             {` `}
             {safeFormatRelativeDistance(

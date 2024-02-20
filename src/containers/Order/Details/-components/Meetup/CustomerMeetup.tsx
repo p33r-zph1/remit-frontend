@@ -4,13 +4,13 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { format } from 'date-fns';
 import { type ElementRef, useRef } from 'react';
 
 import MapsAPI from '@/src/components/Location/MapsAPI';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import { parsedEnvs } from '@/src/configs/env';
 import type { LocationDetails } from '@/src/schema/location';
+import { safeFormatRelativeDistance } from '@/src/utils/date';
 
 const libraries: Libraries = ['places'];
 
@@ -40,14 +40,8 @@ export default function CustomerMeetup({
         <div className="flex w-full flex-row space-x-2 rounded-md border border-slate-200 p-2 text-sm md:text-base">
           <CalendarIcon className="h-5 w-5" />
 
-          <span className="font-semibold">
-            {format(startDate, 'MMMM dd, yyyy')}
-            {` `}
-            <span className="tracking-tighter">
-              {format(startDate, 'h:mm a')}
-              {' - '}
-              {format(endDate, 'h:mm a')}
-            </span>
+          <span className="font-semibold first-letter:capitalize">
+            {safeFormatRelativeDistance(startDate, endDate)}
           </span>
         </div>
       </div>
