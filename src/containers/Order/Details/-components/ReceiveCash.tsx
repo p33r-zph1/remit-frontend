@@ -1,9 +1,10 @@
-import { QrCodeIcon } from '@heroicons/react/20/solid';
+import { ExclamationTriangleIcon, QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
+import Modal from '@/src/components/Modal';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
@@ -22,30 +23,32 @@ export default memo(function ReceiveCash() {
     },
   } = useOrderDetails();
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const {
+    data: generatedQrData,
+    mutateAsync: generateQrAsync,
+    isPending: isGeneratingQr,
+    isSuccess: isQrGenerated,
+    error,
+  } = useGenerateQr();
+
+  const onNavigateToShowQr = useCallback(() => {
+    if (isQrGenerated) {
+      navigate({
+        to: '/order/$orderId/showQr',
+        search: { qrCode: generatedQrData.data.qrCode },
+        mask: { to: '/order/$orderId' },
+      });
+    }
+  }, [generatedQrData?.data.qrCode, isQrGenerated, navigate]);
+
   if (!deliveryDetails) throw new Error('Delivery details is not present.');
 
   if (!recipientAgentId) throw new Error('Recipient agentId is not present.');
 
   if (!recipientAgent)
     throw new Error('Recipient agent contact details is not present.');
-
-  const {
-    mutateAsync: generateQrAsync,
-    isPending: isGeneratingQr,
-    error,
-  } = useGenerateQr();
-
-  const handleShowQr = useCallback(async () => {
-    const {
-      data: { qrCode },
-    } = await generateQrAsync({ orderId });
-
-    return navigate({
-      to: '/order/$orderId/showQr',
-      search: { qrCode },
-      mask: { to: '/order/$orderId' },
-    });
-  }, [generateQrAsync, navigate, orderId]);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -59,14 +62,10 @@ export default memo(function ReceiveCash() {
         <button
           type="button"
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-          onClick={handleShowQr}
+          onClick={() => setModalVisible(true)}
           disabled={isGeneratingQr}
         >
-          {isGeneratingQr ? (
-            <span className="loading loading-spinner"></span>
-          ) : (
-            <QrCodeIcon className="h-6 w-6" />
-          )}
+          <QrCodeIcon className="h-6 w-6" />
           Show QR
         </button>
 
@@ -81,6 +80,46 @@ export default memo(function ReceiveCash() {
       </div>
 
       <CustomerMeetup locationDetails={deliveryDetails} />
+
+      <Modal
+        open={modalVisible}
+        isLoading={isGeneratingQr}
+        onClose={() => setModalVisible(false)}
+        onCloseComplete={onNavigateToShowQr}
+        actions={{
+          confirm: {
+            label: 'Proceed',
+            action: () =>
+              generateQrAsync({ orderId }).then(() => setModalVisible(false)),
+          },
+          cancel: {
+            label: 'Cancel',
+          },
+        }}
+        slideFrom="top"
+        title="Show QR"
+        size="medium"
+      >
+        <p className="text-balance text-slate-500">
+          Are you sure you want to display your QR Code?
+          <br />
+          <br />
+          <div
+            role="alert"
+            className="alert bg-white text-sm text-accent shadow-md"
+          >
+            <ExclamationTriangleIcon className="h-6 w-6" />
+
+            <div>
+              Reveal this QR Code{' '}
+              <span className="font-bold">
+                only to the assigned agent upon receiving your cash
+              </span>{' '}
+              to prevent loss of funds.
+            </div>
+          </div>
+        </p>
+      </Modal>
     </div>
   );
 });

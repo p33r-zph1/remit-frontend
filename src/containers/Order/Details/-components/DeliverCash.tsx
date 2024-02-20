@@ -1,8 +1,9 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import HeaderTitle from '@/src/components/HeaderTitle';
+import Modal from '@/src/components/Modal';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 
@@ -20,19 +21,24 @@ export default memo(function DeliverCash() {
     },
   } = useOrderDetails();
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const onNavigateToScanQr = useCallback(() => {
+    if (shouldNavigate) {
+      navigate({
+        to: '/order/$orderId/scanQr',
+        mask: { to: '/order/$orderId' },
+      });
+    }
+  }, [navigate, shouldNavigate]);
+
   if (!deliveryDetails) throw new Error('Delivery details is not present.');
 
   if (!recipientAgentId) throw new Error('Recipient agentId is not present.');
 
   if (!recipientAgent)
     throw new Error('Recipient agent contact details is not present.');
-
-  const handleScanQr = useCallback(async () => {
-    return navigate({
-      to: '/order/$orderId/scanQr',
-      mask: { to: '/order/$orderId' },
-    });
-  }, [navigate]);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -44,7 +50,7 @@ export default memo(function DeliverCash() {
         <button
           type="button"
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-          onClick={handleScanQr}
+          onClick={() => setModalVisible(true)}
           disabled={false}
         >
           <QrCodeIcon className="h-6 w-6" />
@@ -62,6 +68,31 @@ export default memo(function DeliverCash() {
       </div>
 
       <CustomerMeetup locationDetails={deliveryDetails} />
+
+      <Modal
+        open={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onCloseComplete={onNavigateToScanQr}
+        actions={{
+          confirm: {
+            label: 'Yes',
+            action: () => {
+              setModalVisible(false);
+              setShouldNavigate(true);
+            },
+          },
+          cancel: {
+            label: 'Cancel',
+          },
+        }}
+        slideFrom="top"
+        title="Scan QR"
+        size="medium"
+      >
+        <p className="text-balance text-slate-500">
+          Are you with the recipient right now?
+        </p>
+      </Modal>
     </div>
   );
 });

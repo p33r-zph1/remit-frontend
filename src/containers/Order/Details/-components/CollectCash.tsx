@@ -76,7 +76,6 @@ export default memo(function CollectCash() {
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          <></>
           Have you collected{' '}
           <span className="font-bold">
             {formatTranferInfo(transferDetails.sender)}?
