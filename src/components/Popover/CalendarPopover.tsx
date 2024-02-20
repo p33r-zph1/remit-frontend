@@ -1,13 +1,15 @@
 import { Popover, Transition } from '@headlessui/react';
 import { CalendarIcon } from '@heroicons/react/20/solid';
-import { addHours, format } from 'date-fns';
-import { Fragment, useEffect, useState } from 'react';
+import { addHours } from 'date-fns';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
 } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+
+import { safeFormatRelativeDistance } from '@/src/utils/date';
 
 import DateCalendar from '../Date/DateCalendar';
 import DateTime from '../Date/DateTime';
@@ -28,7 +30,10 @@ export default function CalendarPopover<T extends FieldValues>({
   const [durationInHr, setDurationInHr] = useState(1); // 1 hour
 
   // Calculate end date based on duration
-  const endDate = addHours(value, durationInHr);
+  const endDate = useMemo(
+    () => addHours(value, durationInHr),
+    [durationInHr, value]
+  );
 
   useEffect(() => {
     if (endDate) setEndDate(endDate);
@@ -52,21 +57,10 @@ export default function CalendarPopover<T extends FieldValues>({
               aria-hidden="true"
             />
 
-            <span className="font-semibold">
-              {value ? (
-                <Fragment>
-                  {format(value, 'MMMM dd, yyyy')}
-                  {` `}
-                  <span className="tracking-tighter">
-                    {format(value, 'h:mm a')}
-                    {' - '}
-                    {format(endDate, 'h:mm a')}{' '}
-                    <small className="text-gray-400">{`(${durationInHr}hr)`}</small>
-                  </span>
-                </Fragment>
-              ) : (
-                'Please select a date'
-              )}
+            <span className="font-semibold first-letter:uppercase">
+              {value
+                ? safeFormatRelativeDistance(value, endDate)
+                : 'Please select a date'}
             </span>
           </Popover.Button>
 
@@ -88,7 +82,6 @@ export default function CalendarPopover<T extends FieldValues>({
                     <div className="divider" />
 
                     <DateTime
-                      title="Time & Duration"
                       value={value}
                       onChange={onChange}
                       durationInHr={durationInHr}

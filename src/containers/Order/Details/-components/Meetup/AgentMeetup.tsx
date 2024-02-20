@@ -4,7 +4,7 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { type ElementRef, useRef } from 'react';
+import { type ElementRef, useRef, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -12,6 +12,7 @@ import { z } from 'zod';
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import PlacesAutocomplete from '@/src/components/Autocomplete/PlacesAutocomplete';
 import MapsAPI from '@/src/components/Location/MapsAPI';
+import Modal from '@/src/components/Modal';
 import CalendarPopover from '@/src/components/Popover/CalendarPopover';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import { parsedEnvs } from '@/src/configs/env';
@@ -19,6 +20,7 @@ import useSetCollection, {
   type MutationProps,
 } from '@/src/hooks/api/useSetCollection';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { safeFormatRelativeDistance } from '@/src/utils/date';
 
 const deliveryProps = z.object({
   startDate: z.date({
@@ -37,8 +39,6 @@ type Delivery = z.infer<typeof deliveryProps>;
 
 const libraries: Libraries = ['places'];
 
-// let rerender = 0;
-
 type Props = {
   meetupType: MutationProps['meetupType'];
 };
@@ -51,6 +51,7 @@ export default function AgentMeetup({ meetupType }: Props) {
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<Delivery>({
     resolver: zodResolver(deliveryProps),
@@ -71,7 +72,14 @@ export default function AgentMeetup({ meetupType }: Props) {
     order: { orderId },
   } = useOrderDetails();
 
-  const { mutateAsync: setCollectionAsync, error } = useSetCollection();
+  const {
+    mutateAsync: setCollectionAsync,
+    isPending: isConfirming,
+    error,
+  } = useSetCollection();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [onConfirmMeetup, setOnConfirmMeetup] = useState<() => void>();
 
   const onSubmit: SubmitHandler<Delivery> = async ({
     areaName,
@@ -80,34 +88,38 @@ export default function AgentMeetup({ meetupType }: Props) {
     endDate,
     radius,
   }) => {
-    try {
-      await setCollectionAsync({
-        orderId,
-        meetupType,
-        body: {
-          areaName,
-          startDate,
-          endDate,
-          radius: {
-            value: Number(radius),
-            unit: 'm',
+    async function confirmMeetup() {
+      try {
+        await setCollectionAsync({
+          orderId,
+          meetupType,
+          body: {
+            areaName,
+            startDate,
+            endDate,
+            radius: {
+              value: Number(radius),
+              unit: 'm',
+            },
+            coordinates,
           },
-          coordinates,
-        },
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+        });
 
-  // rerender++;
+        reset();
+        setModalVisible(false);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    setOnConfirmMeetup(() => confirmMeetup);
+    setModalVisible(true);
+  };
 
   if (!isLoaded) return <LoadingRing className="h-32" />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-      {/* {rerender / 2} */}
-
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text text-sm font-semibold text-gray-400">
@@ -214,6 +226,36 @@ export default function AgentMeetup({ meetupType }: Props) {
         {isSubmitting && <span className="loading loading-spinner"></span>}
         Set collection
       </button>
+
+      <Modal
+        open={modalVisible}
+        isLoading={isConfirming}
+        onClose={() => setModalVisible(false)}
+        actions={{
+          confirm: {
+            label: 'Confirm',
+            action: () => onConfirmMeetup?.(),
+          },
+          cancel: {
+            label: 'Cancel',
+          },
+        }}
+        slideFrom="top"
+        title="Confirm send money"
+        size="medium"
+      >
+        <p className="text-balance text-slate-500">
+          You will be meeting up in{' '}
+          <span className="font-bold">
+            {getValues('areaName')}
+            {` `}
+            {safeFormatRelativeDistance(
+              getValues('startDate'),
+              getValues('endDate')
+            )}
+          </span>
+        </p>
+      </Modal>
     </form>
   );
 }

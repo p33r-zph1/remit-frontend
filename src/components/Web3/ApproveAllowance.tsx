@@ -159,13 +159,11 @@ export default memo(function ApproveAllowance({
               thousandSeparator: ',',
             })}
           </span>
-          {isApproving && (
-            <span className="text-xs font-semibold text-accent">
-              <br />
-              <br />
-              Tip: Double check the spending cap before continuing
-            </span>
-          )}
+          <br />
+          <br />
+          <span className="text-xs font-semibold text-accent">
+            Tip: Make sure the spending cap matches the numbers above
+          </span>
         </p>
       </Modal>
     </div>

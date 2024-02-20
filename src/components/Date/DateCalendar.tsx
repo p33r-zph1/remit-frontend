@@ -6,21 +6,21 @@ import {
   endOfWeek,
   format,
   getDay,
-  isEqual,
   isPast,
   isSameDay,
   isSameMonth,
   isToday,
   parse,
-  startOfToday,
+  set,
+  startOfHour,
   startOfWeek,
 } from 'date-fns';
-import { type Dispatch, type SetStateAction, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type Props = {
   value: Date | undefined;
-  onChange: Dispatch<SetStateAction<Date>>;
+  onChange: (date: Date) => void;
 };
 
 type Status =
@@ -57,7 +57,7 @@ const getDayStatus = (
   firstDayCurrentMonth: Date
 ): Status => {
   if (isSameDay(day, selectedDay) && isToday(day)) return 'SELECTED';
-  if (isEqual(day, selectedDay)) return 'SELECTED_NOT_TODAY';
+  if (isSameDay(day, selectedDay)) return 'SELECTED_NOT_TODAY';
   if (isToday(day)) return 'TODAY';
   if (isSameMonth(day, firstDayCurrentMonth)) return 'CURRENT_MONTH';
   if (!isSameMonth(day, firstDayCurrentMonth)) return 'OTHER_MONTH';
@@ -65,34 +65,41 @@ const getDayStatus = (
   return 'OTHER_MONTH';
 };
 
-export default function DateCalendar({ value, onChange }: Props) {
-  const today = startOfToday();
+export default memo(function DateCalendar({ value, onChange }: Props) {
+  const today = startOfHour(new Date());
   const day = value || today;
 
   const [selectedDay, setSelectedDay] = useState(day);
+
   const [currentMonth, setCurrentMonth] = useState(format(day, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', day);
 
-  const days = eachDayOfInterval({
-    start: startOfWeek(firstDayCurrentMonth),
-    end: endOfWeek(endOfMonth(firstDayCurrentMonth)),
-  });
+  const days = useMemo(() => {
+    return eachDayOfInterval({
+      start: startOfWeek(firstDayCurrentMonth),
+      end: endOfWeek(endOfMonth(firstDayCurrentMonth)),
+    });
+  }, [firstDayCurrentMonth]);
 
-  function previousMonth() {
+  const previousMonth = useCallback(() => {
     const firstDayPreviousMonth = addMonths(firstDayCurrentMonth, -1);
     setCurrentMonth(format(firstDayPreviousMonth, 'MMM-yyyy'));
-  }
+  }, [firstDayCurrentMonth]);
 
-  function nextMonth() {
+  const nextMonth = useCallback(() => {
     const firstDayNextMonth = addMonths(firstDayCurrentMonth, 1);
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
-  }
+  }, [firstDayCurrentMonth]);
 
-  function setToday() {
+  const setToday = useCallback(() => {
     setSelectedDay(today);
-    setCurrentMonth(format(startOfToday(), 'MMM-yyyy'));
+    setCurrentMonth(format(today, 'MMM-yyyy'));
     onChange(today);
-  }
+  }, [onChange, today]);
+
+  useEffect(() => {
+    setSelectedDay(day);
+  }, [day]);
 
   return (
     <div className="mx-auto w-full max-w-sm">
@@ -155,8 +162,11 @@ export default function DateCalendar({ value, onChange }: Props) {
                 type="button"
                 disabled={isPast(day) && !isToday(day)}
                 onClick={() => {
-                  setSelectedDay(day);
-                  onChange(day);
+                  // Sets the same hour from today to selected day
+                  const value = set(day, { hours: today.getHours() });
+
+                  setSelectedDay(value);
+                  onChange(value);
                 }}
                 className={twMerge(
                   dayStatusBaseClasses,
@@ -181,4 +191,4 @@ export default function DateCalendar({ value, onChange }: Props) {
       </div>
     </div>
   );
-}
+});
