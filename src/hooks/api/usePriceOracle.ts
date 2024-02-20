@@ -17,6 +17,6 @@ export default function usePriceOracle({ from, to }: Pair) {
     queryFn: () =>
       genericFetch(`${BASE_URL}/${from}/${to}`, priceOracleApiSchema),
     select: response => response.data,
-    refetchInterval: 5_000,
+    refetchInterval: 10_000,
   });
 }

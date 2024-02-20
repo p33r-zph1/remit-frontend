@@ -21,7 +21,7 @@ export const agentsQueryOptiions = ({ isoCode }: AgentsQueryProps) =>
         agentListApiSchema
       ),
     select: response => response.data,
-    refetchInterval: 15_000,
+    refetchInterval: 20_000,
   });
 
 export default function useAgents(

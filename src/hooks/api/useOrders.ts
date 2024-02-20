@@ -27,7 +27,7 @@ export const ordersQueryOptions = ({
         orderListApiSchema
       ),
     select: response => response.data,
-    refetchInterval: 10_000,
+    refetchInterval: 20_000,
   });
 
 export default function useOrders(

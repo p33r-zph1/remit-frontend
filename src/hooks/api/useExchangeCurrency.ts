@@ -12,6 +12,6 @@ export default function useExchangeCurrency() {
     queryFn: () =>
       genericFetch(`${BASE_URL}/currency`, exchangeCurrencyApiSchema),
     select: response => response.data,
-    refetchInterval: 10_000,
+    refetchInterval: 20_000,
   });
 }
