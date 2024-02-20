@@ -21,7 +21,7 @@ export default memo(function RecipientAgentOrder({ status }: Props) {
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      return <DeliverCash group="agent" />;
+      return <DeliverCash />;
     }
 
     default:

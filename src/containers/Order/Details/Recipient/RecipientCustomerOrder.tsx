@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import type { TransferTimelineStatus } from '@/src/schema/order/transfer-timeline';
 
-import DeliverCash from '../-components/DeliverCash';
+import ReceiveCash from '../-components/ReceiveCash';
 import RecipientCustomerTakeOrder from '../-components/TakeOrder/RecipientCustomerTakeOrder';
 
 type Props = {
@@ -16,7 +16,7 @@ export default memo(function RecipientOrder({ status }: Props) {
     }
 
     case 'DELIVERY_MEETUP_SET':
-      return <DeliverCash group="customer" />;
+      return <ReceiveCash />;
 
     default:
       return null;

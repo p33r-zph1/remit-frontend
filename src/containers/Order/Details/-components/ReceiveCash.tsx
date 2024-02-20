@@ -2,21 +2,23 @@ import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
 import { memo, useCallback } from 'react';
 
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
+import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
-export default memo(function DeliverCash() {
+export default memo(function ReceiveCash() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const {
     order: {
       deliveryDetails,
       recipientAgentId,
-      recipientId,
-      contactDetails: { recipientAgent, recipient },
+      orderId,
+      contactDetails: { recipientAgent },
     },
   } = useOrderDetails();
 
@@ -27,37 +29,54 @@ export default memo(function DeliverCash() {
   if (!recipientAgent)
     throw new Error('Recipient agent contact details is not present.');
 
-  const handleScanQr = useCallback(async () => {
+  const {
+    mutateAsync: generateQrAsync,
+    isPending: isGeneratingQr,
+    error,
+  } = useGenerateQr();
+
+  const handleShowQr = useCallback(async () => {
+    const {
+      data: { qrCode },
+    } = await generateQrAsync({ orderId });
+
     return navigate({
-      to: '/order/$orderId/scanQr',
+      to: '/order/$orderId/showQr',
+      search: { qrCode },
       mask: { to: '/order/$orderId' },
     });
-  }, [navigate]);
+  }, [generateQrAsync, navigate, orderId]);
 
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Deliver cash to Recipient #{recipientId}
+        Collect cash from Agent #{recipientAgentId}
       </HeaderTitle>
+
+      {error && <ErrorAlert message={error.message} />}
 
       <div className="flex flex-col space-y-2">
         <button
           type="button"
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
-          onClick={handleScanQr}
-          disabled={false}
+          onClick={handleShowQr}
+          disabled={isGeneratingQr}
         >
-          <QrCodeIcon className="h-6 w-6" />
-          Scan QR
+          {isGeneratingQr ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            <QrCodeIcon className="h-6 w-6" />
+          )}
+          Show QR
         </button>
 
         <button
           type="button"
-          disabled={false}
-          onClick={() => window.open(recipient.telegram.url, '_blank')}
+          disabled={isGeneratingQr}
+          onClick={() => window.open(recipientAgent.telegram.url, '_blank')}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
-          Contact recipient
+          Contact agent
         </button>
       </div>
 
