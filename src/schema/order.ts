@@ -42,6 +42,8 @@ const orderApiSchema = makeApiSchema(orderSchema);
 
 export type Order = z.infer<typeof orderSchema>;
 
+export type OrderApi = z.infer<typeof orderApiSchema>;
+
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export default orderApiSchema;

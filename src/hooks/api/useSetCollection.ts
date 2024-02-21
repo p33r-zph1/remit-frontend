@@ -1,9 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema from '@/src/schema/order';
+import orderApiSchema, { type OrderApi } from '@/src/schema/order';
+
+import { orderKeys } from './keys/order.key';
 
 const meetupSchema = z.object({
   startDate: z.coerce.date(),
@@ -28,6 +30,8 @@ export type MutationProps = {
 };
 
 export default function useSetCollection() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['set-collection'],
     mutationFn: ({ orderId, meetupType, body }: MutationProps) =>
@@ -39,5 +43,11 @@ export default function useSetCollection() {
           body: JSON.stringify(meetupSchema.parse(body)),
         }
       ),
+    onSettled: (data, _, { orderId }) => {
+      const queryKey = orderKeys.listItem({ orderId });
+
+      queryClient.setQueryData<OrderApi>(queryKey, data);
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 }

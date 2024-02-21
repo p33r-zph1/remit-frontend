@@ -4,7 +4,7 @@ import { makeApiUrl } from '@/src/configs/env';
 import agentApiSchema from '@/src/schema/agent';
 import { genericFetch } from '@/src/schema/api/fetch';
 
-import { agentKeys } from './keys/agent';
+import { agentKeys } from './keys/agent.key';
 
 export type AgentQueryProps = {
   agentId: string;

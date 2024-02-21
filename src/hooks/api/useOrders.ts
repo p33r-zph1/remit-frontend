@@ -4,7 +4,7 @@ import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderListApiSchema from '@/src/schema/order-list';
 
-import { orderKeys } from './keys/order';
+import { orderKeys } from './keys/order.key';
 
 export type OrdersQueryProps = {
   pageSize: number;

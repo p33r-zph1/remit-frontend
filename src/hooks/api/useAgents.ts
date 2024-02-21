@@ -4,7 +4,7 @@ import { makeApiUrl } from '@/src/configs/env';
 import agentListApiSchema from '@/src/schema/agent-list';
 import { genericFetch } from '@/src/schema/api/fetch';
 
-import { agentKeys } from './keys/agent';
+import { agentKeys } from './keys/agent.key';
 
 export type AgentsQueryProps = {
   isoCode: string;
