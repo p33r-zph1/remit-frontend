@@ -13,6 +13,7 @@ export default memo(function SenderOrder({ status }: Props) {
     case 'COLLECTION_MEETUP_SET':
       return <GiveCash />;
 
+    case 'ORDER_EXPIRED':
     default:
       return null;
   }

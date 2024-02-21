@@ -46,6 +46,9 @@ function getRecipientDescription(status: TransferTimelineStatus) {
     case 'SENDER_AGENT_REJECTED':
       return <p className="text-error">This order has been rejected</p>;
 
+    case 'ORDER_EXPIRED':
+      return <p className="text-error">This order has expired</p>;
+
     case 'CASH_COLLECTED':
       return <p>Cash has been collected by senderagent</p>;
 

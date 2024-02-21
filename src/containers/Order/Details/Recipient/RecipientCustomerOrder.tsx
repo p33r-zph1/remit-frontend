@@ -18,6 +18,7 @@ export default memo(function RecipientOrder({ status }: Props) {
     case 'DELIVERY_MEETUP_SET':
       return <ReceiveCash />;
 
+    case 'ORDER_EXPIRED':
     default:
       return null;
   }

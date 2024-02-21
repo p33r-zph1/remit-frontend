@@ -44,6 +44,7 @@ function getIconByStatus(status: TransferTimelineStatus) {
     case 'RECIPIENT_REJECTED':
     case 'SENDER_AGENT_REJECTED':
     case 'RECIPIENT_AGENT_REJECTED':
+    case 'ORDER_EXPIRED':
       return <XCircleIcon className="h-6 w-6 text-error/80" />;
   }
 }
@@ -66,6 +67,7 @@ function getLineDividerByStatus(status: TransferTimelineStatus) {
     case 'RECIPIENT_REJECTED':
     case 'SENDER_AGENT_REJECTED':
     case 'RECIPIENT_AGENT_REJECTED':
+    case 'ORDER_EXPIRED':
       return <hr className="bg-error/80" />;
   }
 }

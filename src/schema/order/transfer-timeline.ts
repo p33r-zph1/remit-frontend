@@ -15,6 +15,7 @@ export const transferTimelineStatusSchema = z.enum([
   'DELIVERY_MEETUP_SET',
   'CASH_DELIVERED',
   'ESCROW_RELEASED',
+  'ORDER_EXPIRED',
 ]);
 
 const transferTimelineSchema = z.object({
@@ -38,6 +39,7 @@ export function isOrderSettled(status: TransferTimelineStatus) {
     case 'ESCROW_RELEASED':
       return true;
 
+    case 'ORDER_EXPIRED':
     default:
       return false;
   }
