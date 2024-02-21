@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { API_URL } from '@/src/configs/env';
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderApiSchema from '@/src/schema/order';
-
-const BASE_URL = `${API_URL}/orders`;
 
 const orderBodySchema = z.object({
   recipientId: z.string(),
@@ -25,7 +23,7 @@ export default function useCreateOrder() {
   return useMutation({
     mutationKey: ['create-order'],
     mutationFn: ({ body }: MutationProps) =>
-      genericFetch(BASE_URL, orderApiSchema, {
+      genericFetch(makeApiUrl('/orders'), orderApiSchema, {
         method: 'POST',
         body: JSON.stringify(orderBodySchema.parse(body)),
       }),

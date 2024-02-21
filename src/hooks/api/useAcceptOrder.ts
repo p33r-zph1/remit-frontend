@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { API_URL } from '@/src/configs/env';
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderApiSchema from '@/src/schema/order';
-
-const BASE_URL = `${API_URL}/orders`;
 
 const customerOrderBodySchema = z.object({
   recipientAgentId: z.string(),
@@ -60,10 +58,14 @@ export default function useAcceptOrder() {
     mutationFn: (props: MutationProps) => {
       const { orderId } = props;
 
-      return genericFetch(`${BASE_URL}/${orderId}/accept`, orderApiSchema, {
-        method: 'PATCH',
-        body: handleRequestBody(props),
-      });
+      return genericFetch(
+        makeApiUrl(`/orders/${orderId}/accept`),
+        orderApiSchema,
+        {
+          method: 'PATCH',
+          body: handleRequestBody(props),
+        }
+      );
     },
   });
 }

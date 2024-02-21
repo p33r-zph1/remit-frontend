@@ -1,12 +1,10 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import { API_URL } from '@/src/configs/env';
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import orderListApiSchema from '@/src/schema/order-list';
 
 import { orderKeys } from './keys/order';
-
-const BASE_URL = `${API_URL}/orders`;
 
 export type OrdersQueryProps = {
   pageSize: number;
@@ -21,11 +19,15 @@ export const ordersQueryOptions = ({
 }: OrdersQueryProps) =>
   queryOptions({
     queryKey: orderKeys.paginatedList({ pageSize, pageNumber, status }),
-    queryFn: () =>
-      genericFetch(
-        `${BASE_URL}?pageSize=${pageSize}&pageNumber=${pageNumber}&status=${status}`,
-        orderListApiSchema
-      ),
+    queryFn: () => {
+      const url = makeApiUrl(`/orders`);
+      url.searchParams.append('pageSize', String(pageSize));
+      url.searchParams.append('pageNumber', String(pageNumber));
+
+      if (status) url.searchParams.append('status', status);
+
+      return genericFetch(url, orderListApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 20_000,
   });

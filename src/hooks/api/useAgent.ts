@@ -1,12 +1,10 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import { API_URL } from '@/src/configs/env';
+import { makeApiUrl } from '@/src/configs/env';
 import agentApiSchema from '@/src/schema/agent';
 import { genericFetch } from '@/src/schema/api/fetch';
 
 import { agentKeys } from './keys/agent';
-
-const BASE_URL = `${API_URL}/agents`;
 
 export type AgentQueryProps = {
   agentId: string;
@@ -15,7 +13,8 @@ export type AgentQueryProps = {
 export const agentQueryOptions = ({ agentId }: AgentQueryProps) =>
   queryOptions({
     queryKey: agentKeys.listItem({ agentId }),
-    queryFn: () => genericFetch(`${BASE_URL}/${agentId}`, agentApiSchema),
+    queryFn: () =>
+      genericFetch(makeApiUrl(`/agents/${agentId}`), agentApiSchema),
     select: response => response.data,
     refetchInterval: 15_000,
   });

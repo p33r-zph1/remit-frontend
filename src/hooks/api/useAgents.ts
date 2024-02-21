@@ -1,12 +1,10 @@
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 
-import { API_URL } from '@/src/configs/env';
+import { makeApiUrl } from '@/src/configs/env';
 import agentListApiSchema from '@/src/schema/agent-list';
 import { genericFetch } from '@/src/schema/api/fetch';
 
 import { agentKeys } from './keys/agent';
-
-const BASE_URL = `${API_URL}/agents`;
 
 export type AgentsQueryProps = {
   isoCode: string;
@@ -15,11 +13,12 @@ export type AgentsQueryProps = {
 export const agentsQueryOptiions = ({ isoCode }: AgentsQueryProps) =>
   queryOptions({
     queryKey: agentKeys.list({ isoCode }),
-    queryFn: () =>
-      genericFetch(
-        `${BASE_URL}?country_iso_code=${isoCode}`,
-        agentListApiSchema
-      ),
+    queryFn: () => {
+      const url = makeApiUrl(`/agents`);
+      url.searchParams.append('country_iso_code', isoCode);
+
+      return genericFetch(url, agentListApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 20_000,
   });

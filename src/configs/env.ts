@@ -1,3 +1,4 @@
+import urlJoin from 'url-join';
 import { z } from 'zod';
 
 export const envs = z.object({
@@ -12,4 +13,6 @@ export const parsedEnvs = envs.parse(import.meta.env);
 
 const { VITE_API_URL, VITE_API_FLAVOR } = parsedEnvs;
 
-export const API_URL = `${VITE_API_URL}/${VITE_API_FLAVOR}`;
+export function makeApiUrl(relativeUrl: `/${string}`) {
+  return new URL(urlJoin(VITE_API_URL, VITE_API_FLAVOR, relativeUrl));
+}
