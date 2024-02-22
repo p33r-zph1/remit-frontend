@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 
 import EmptyOrder from '@/src/components/Empty/EmptyOrder';
 import OrderItem from '@/src/components/Item/OrderItem';
@@ -10,15 +10,21 @@ type Props = OrdersQueryProps;
 export default memo(function OrderList(props: Props) {
   const { user } = useAuth();
 
-  const { data: orderList } = useOrders(props);
+  const { data } = useOrders(props);
 
-  if (orderList.orders.length === 0) return <EmptyOrder />;
+  if (data.pages.every(page => page.data.orders.length === 0)) {
+    return <EmptyOrder />;
+  }
 
-  return orderList.orders.map(order => (
-    <OrderItem
-      {...order}
-      key={order.orderId}
-      isRecipient={user === order.senderId}
-    />
+  return data.pages.map(({ data: { orders, pageNumber } }) => (
+    <Fragment key={pageNumber}>
+      {orders.map(order => (
+        <OrderItem
+          {...order}
+          key={order.orderId}
+          isRecipient={user === order.senderId}
+        />
+      ))}
+    </Fragment>
   ));
 });

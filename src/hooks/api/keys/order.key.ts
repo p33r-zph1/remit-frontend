@@ -16,13 +16,13 @@ export const orderKeys = {
    * queryOptions({ queryKey: orderKeys.paginatedList(props) })
    */
   paginatedList: (props: OrdersQueryProps) =>
-    [...orderKeys.all, 'paginated_list', { ...props }] as const,
+    [...orderKeys.all, 'list', { ...props }] as const,
 
   /**
    * @description queries a **single** order.
    * @example
    * queryOptions({ queryKey: orderKeys.listItem(props) })
    */
-  listItem: (props: OrderQueryProps) =>
-    [...orderKeys.all, 'list_item', { ...props }] as const,
+  listItem: ({ orderId }: OrderQueryProps) =>
+    [...orderKeys.all, 'list', orderId] as const,
 };

@@ -7,7 +7,7 @@ export default function EmptyHistory({ isCustomer }: { isCustomer: boolean }) {
         No transactions yet.
         {isCustomer && (
           <>
-            Maybe it&apos;s time to{' '}
+            {` `}Maybe it&apos;s time to{' '}
             <Link
               to="/"
               className="link font-semibold text-primary underline decoration-black"

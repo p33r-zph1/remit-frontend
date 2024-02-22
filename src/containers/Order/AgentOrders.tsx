@@ -26,13 +26,13 @@ export default function AgentOrders() {
         <HeaderTitle className="text-xl md:text-2xl">
           My Active Orders
         </HeaderTitle>
-        <OrderList pageNumber={1} pageSize={10} status="active" />
+        <OrderList pageSize={5} status="active" />
       </div>
 
       <div>
         <HeaderTitle className="text-xl md:text-2xl">Open Orders</HeaderTitle>
 
-        <OrderList pageNumber={1} pageSize={10} status="open" />
+        <OrderList pageSize={5} status="open" />
       </div>
     </div>
   );

@@ -4,9 +4,8 @@ import { ordersQueryOptions } from '@/src/hooks/api/useOrders';
 
 export const Route = createFileRoute('/_auth/history')({
   loader: opts =>
-    opts.context.queryClient.ensureQueryData(
+    opts.context.queryClient.fetchInfiniteQuery(
       ordersQueryOptions({
-        pageNumber: 1,
         pageSize: 10,
       })
     ),
