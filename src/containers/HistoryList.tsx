@@ -35,11 +35,13 @@ export default function HistoryList() {
       {hasNextPage ? (
         <button
           onClick={() => fetchNextPage()}
-          className="btn btn-primary btn-sm btn-wide mx-auto my-4 rounded-lg text-base font-semibold shadow-sm md:btn-md md:btn-block disabled:bg-primary/70 disabled:text-primary-content"
+          className="btn btn-ghost btn-primary btn-sm btn-wide mx-auto my-4 rounded-lg text-base font-bold shadow-sm md:btn-md disabled:bg-primary/70 disabled:text-primary-content"
           type="button"
           disabled={isFetchingNextPage}
         >
-          {isFetchingNextPage && <span className="loading loading-bars"></span>}
+          {isFetchingNextPage && (
+            <span className="loading loading-bars text-primary-content"></span>
+          )}
           Load more
         </button>
       ) : (
