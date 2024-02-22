@@ -16,9 +16,13 @@ export default function useGenerateQr() {
   return useMutation({
     mutationKey: ['generate-qr'],
     mutationFn: ({ orderId }: MutationProps) =>
-      genericFetch(makeApiUrl(`/orders/${orderId}/qr`), qrCodeApiSchema, {
-        method: 'POST',
-      }),
+      genericFetch(
+        makeApiUrl(`/orders/cross-border-remittance/${orderId}/qr`),
+        qrCodeApiSchema,
+        {
+          method: 'POST',
+        }
+      ),
     onSettled: (_, __, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });
 

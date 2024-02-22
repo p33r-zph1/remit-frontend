@@ -17,7 +17,9 @@ export default function useConfirmCash() {
     mutationKey: ['confirm-cash'],
     mutationFn: ({ orderId }: MutationProps) =>
       genericFetch(
-        makeApiUrl(`/orders/${orderId}/collection/confirm`),
+        makeApiUrl(
+          `/orders/cross-border-remittance/${orderId}/collection/confirm`
+        ),
         orderApiSchema,
         {
           method: 'PATCH',

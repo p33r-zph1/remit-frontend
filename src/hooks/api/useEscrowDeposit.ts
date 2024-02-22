@@ -26,7 +26,7 @@ export default function useEscrowDeposit() {
     mutationKey: ['escrow-deposit'],
     mutationFn: ({ orderId, body }: MutationProps) =>
       genericFetch(
-        makeApiUrl(`/orders/${orderId}/escrow/deposit`),
+        makeApiUrl(`/orders/cross-border-remittance/${orderId}/escrow/deposit`),
         orderApiSchema,
         {
           method: 'PATCH',

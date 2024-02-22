@@ -13,6 +13,8 @@ import useAuth from '@/src/hooks/useAuth';
 
 export const Route = createFileRoute('/_auth/')({
   component: IndexComponent,
+  pendingMs: 0,
+  pendingMinMs: 0,
 });
 
 function IndexComponent() {

@@ -20,7 +20,7 @@ export const ordersQueryOptions = ({
   queryOptions({
     queryKey: orderKeys.paginatedList({ pageSize, pageNumber, status }),
     queryFn: () => {
-      const url = makeApiUrl(`/orders`);
+      const url = makeApiUrl('/orders');
       url.searchParams.append('pageSize', String(pageSize));
       url.searchParams.append('pageNumber', String(pageNumber));
 

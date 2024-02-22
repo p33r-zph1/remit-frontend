@@ -63,7 +63,7 @@ export default function useAcceptOrder() {
       const { orderId } = props;
 
       return genericFetch(
-        makeApiUrl(`/orders/${orderId}/accept`),
+        makeApiUrl(`/orders/cross-border-remittance/${orderId}/accept`),
         orderApiSchema,
         {
           method: 'PATCH',

@@ -16,9 +16,13 @@ export default function useRejectOrder() {
   return useMutation({
     mutationKey: ['reject-order'],
     mutationFn: ({ orderId }: MutationProps) =>
-      genericFetch(makeApiUrl(`/orders/${orderId}/reject`), orderApiSchema, {
-        method: 'PATCH',
-      }),
+      genericFetch(
+        makeApiUrl(`/orders/cross-border-remittance/${orderId}/reject`),
+        orderApiSchema,
+        {
+          method: 'PATCH',
+        }
+      ),
     onSettled: (data, _, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });
 

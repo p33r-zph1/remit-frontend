@@ -36,7 +36,9 @@ export default function useSetCollection() {
     mutationKey: ['set-collection'],
     mutationFn: ({ orderId, meetupType, body }: MutationProps) =>
       genericFetch(
-        makeApiUrl(`/orders/${orderId}/${meetupType}/details`),
+        makeApiUrl(
+          `/orders/cross-border-remittance/${orderId}/${meetupType}/details`
+        ),
         orderApiSchema,
         {
           method: 'PATCH',

@@ -8,4 +8,5 @@ export const Route = createFileRoute('/_auth/order/$orderId/')({
       orderQueryOptions({ orderId: opts.params.orderId })
     ),
   pendingMs: 0,
+  pendingMinMs: 0,
 });

@@ -25,7 +25,9 @@ export default function useConfirmDelivery() {
     mutationKey: ['confirm-delivery'],
     mutationFn: ({ orderId, body }: MutationProps) =>
       genericFetch(
-        makeApiUrl(`/orders/${orderId}/delivery/confirm`),
+        makeApiUrl(
+          `/orders/cross-border-remittance/${orderId}/delivery/confirm`
+        ),
         orderApiSchema,
         {
           method: 'PATCH',

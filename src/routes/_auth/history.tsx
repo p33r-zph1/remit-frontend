@@ -11,4 +11,5 @@ export const Route = createFileRoute('/_auth/history')({
       })
     ),
   pendingMs: 0,
+  pendingMinMs: 0,
 });

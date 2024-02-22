@@ -27,15 +27,20 @@ export default function useCreateOrder() {
   return useMutation({
     mutationKey: ['create-order'],
     mutationFn: ({ body }: MutationProps) =>
-      genericFetch(makeApiUrl('/orders'), orderApiSchema, {
-        method: 'POST',
-        body: JSON.stringify(orderBodySchema.parse(body)),
-      }),
-    onSettled: data => {
-      const queryKey = orderKeys.all;
-
-      queryClient.setQueryData<OrderApi>(queryKey, data);
-      queryClient.invalidateQueries({ queryKey });
+      genericFetch(
+        makeApiUrl('/orders/cross-border-remittance'),
+        orderApiSchema,
+        {
+          method: 'POST',
+          body: JSON.stringify(orderBodySchema.parse(body)),
+        }
+      ),
+    onSuccess: data => {
+      const { orderId } = data.data;
+      queryClient.setQueryData<OrderApi>(orderKeys.listItem({ orderId }), data);
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: orderKeys.all });
     },
   });
 }
