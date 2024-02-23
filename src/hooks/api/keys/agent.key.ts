@@ -24,5 +24,5 @@ export const agentKeys = {
    * queryOptions({ queryKey: agentKeys.listItem(props) })
    */
   listItem: (props: AgentQueryProps) =>
-    [...agentKeys.all, 'list_item', { ...props }] as const,
+    [...agentKeys.all, 'list', props.agentId] as const,
 };

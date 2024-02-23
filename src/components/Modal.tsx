@@ -14,6 +14,7 @@ export type ModalProps = {
     confirm: {
       label: string;
       action: () => void;
+      disabled?: boolean;
     };
   };
   onClose: () => void;
@@ -130,7 +131,7 @@ export default function Modal({
                 {/* Action buttons */}
                 <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
                   <button
-                    disabled={isLoading}
+                    disabled={isLoading || actions.confirm.disabled}
                     className="btn btn-primary rounded-lg px-6 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
                     onClick={actions.confirm.action}
                   >
