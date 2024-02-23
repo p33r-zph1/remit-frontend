@@ -7,10 +7,12 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
+import SelectCurrency from '@/src/components/Select/SelectCurrency';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
 import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
 import { Route } from '@/src/routes/_auth/';
 
+import OrderType from './OrderType';
 import SendDetails from './SendDetails';
 
 // let renderCount = 0;
@@ -25,7 +27,7 @@ export default function SendForm() {
     recipientCurrency,
     setRecipientCurrency,
 
-    // callback function for calculating the conversion
+    // callback function for calculating the `recipientAmount`
     conversionHandler,
 
     // list of exchange currencies
@@ -35,8 +37,16 @@ export default function SendForm() {
     agents,
 
     // hook form props
-    formProps: { control, handleSubmit, getValues, reset },
+    formProps: {
+      control,
+      handleSubmit,
+      getValues,
+      reset,
+      formState: { isSubmitting, errors },
+    },
   } = useSendMoney();
+
+  console.log(errors);
 
   const {
     data: sendOrderData,
@@ -50,8 +60,8 @@ export default function SendForm() {
   const [onConfirmSend, setOnConfirmSend] = useState<() => void>();
 
   const orderAmountSummary = useCallback(() => {
+    const sendAmount = getValues('senderAmount');
     const recipientAmount = getValues('recipientAmount');
-    const sendAmount = getValues('sendAmount');
 
     const str = `${sendAmount} ${senderCurrency.currency} (${recipientAmount} ${recipientCurrency.currency})`;
 
@@ -59,19 +69,23 @@ export default function SendForm() {
   }, [getValues, recipientCurrency.currency, senderCurrency.currency]);
 
   const onSubmit: SubmitHandler<SendMoney> = ({
+    senderAmount,
     recipientId,
-    sendAmount,
     agentId,
   }) => {
+    if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE')
+      return alert('submitted!'); // TODO: handle other orderTypes
+
     async function confirmSend() {
       try {
         await sendOrderAsync({
+          orderType: getValues('orderType'),
           body: {
-            recipientId,
+            transferAmount: Number(senderAmount),
             senderCurrency: senderCurrency.currency,
+            recipientId: recipientId || '??', // FIXME: refactor `orderBodySchema` that considers orderType requirements
             recipientCurrency: recipientCurrency.currency,
             senderAgentId: agentId,
-            transferAmount: Number(sendAmount),
           },
         });
 
@@ -99,53 +113,74 @@ export default function SendForm() {
   // renderCount++;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-8 space-y-12 sm:mt-16"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-8 sm:mt-8">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <RecipientInput name="recipientId" control={control} />
+      <OrderType name="orderType" control={control}>
+        {orderType => (
+          <div>
+            {(() => {
+              switch (orderType) {
+                case 'CROSS_BORDER_REMITTANCE':
+                  return (
+                    <RecipientInput name="recipientId" control={control} />
+                  );
 
-      <div>
-        <CurrencyInput
-          label="You send"
-          name="sendAmount"
-          control={control}
-          selected={senderCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setSenderCurrency(prevCurrency => {
-              if (newCurrency.currency === recipientCurrency.currency) {
-                setRecipientCurrency(prevCurrency); // swaps currency
+                default:
+                  return null;
               }
+            })()}
 
-              return newCurrency;
-            })
-          }
-          onValueChange={conversionHandler}
-        />
+            <div className="divider my-8"></div>
 
-        <SendDetails name="agentId" control={control} list={agents} />
+            <CurrencyInput
+              label="You send"
+              name="senderAmount"
+              control={control}
+              onValueChange={conversionHandler}
+            >
+              <SelectCurrency
+                selected={senderCurrency}
+                list={supportedCurrencies}
+                onChange={newCurrency =>
+                  setSenderCurrency(prevCurrency => {
+                    if (newCurrency.currency === recipientCurrency.currency) {
+                      setRecipientCurrency(prevCurrency); // swaps currency
+                    }
 
-        <CurrencyInput
-          label="Recipient will get (estimate)"
-          name="recipientAmount"
-          control={control}
-          selected={recipientCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setRecipientCurrency(prevCurrency => {
-              if (newCurrency.currency === senderCurrency.currency) {
-                setSenderCurrency(prevCurrency); // swaps currency
-              }
+                    return newCurrency;
+                  })
+                }
+                disabled={isSubmitting}
+              />
+            </CurrencyInput>
 
-              return newCurrency;
-            })
-          }
-          readOnly
-        />
-      </div>
+            <SendDetails name="agentId" control={control} list={agents} />
+
+            <CurrencyInput
+              label="Recipient will get (estimate)"
+              name="recipientAmount"
+              control={control}
+              readOnly
+            >
+              <SelectCurrency
+                selected={recipientCurrency}
+                list={supportedCurrencies}
+                onChange={newCurrency =>
+                  setRecipientCurrency(prevCurrency => {
+                    if (newCurrency.currency === senderCurrency.currency) {
+                      setSenderCurrency(prevCurrency); // swaps currency
+                    }
+
+                    return newCurrency;
+                  })
+                }
+                disabled={isSubmitting}
+              />
+            </CurrencyInput>
+          </div>
+        )}
+      </OrderType>
 
       {error && <ErrorAlert message={error.message} />}
 
@@ -162,6 +197,7 @@ export default function SendForm() {
         isLoading={isSendingOrder}
         onClose={() => setModalVisible(false)}
         onCloseComplete={onNavigateToOrder}
+        type="action"
         actions={{
           confirm: {
             label: 'Send',

@@ -23,7 +23,7 @@ export default function OrderItem({
     <Link
       to="/order/$orderId"
       params={{ orderId }}
-      className="group mb-2 flex cursor-pointer flex-row items-center justify-between py-4 ring-primary ring-offset-4 hover:bg-zinc-50 focus:outline-none focus:ring-1"
+      className="group mb-2 flex cursor-pointer flex-row items-center justify-between rounded-lg py-4 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4"
     >
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">

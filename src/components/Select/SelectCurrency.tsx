@@ -4,27 +4,27 @@ import {
   ChevronDownIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/20/solid';
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { type Currency } from '@/src/schema/currency';
 
-interface Props<T> {
-  currencies: T[];
-  selected: T | undefined;
+type Props = {
+  list: Currency[];
+  selected: Currency;
+  onChange: (currency: Currency) => void;
   disabled?: boolean;
-  onChange: (currency: T) => void;
-  hideChevron?: boolean;
-}
+  hideChevron?: true;
+};
 
-export default function SelectCurrency<T extends Currency>({
-  currencies,
+export default memo(function SelectCurrency({
+  list,
   selected,
-  disabled,
   onChange,
-  hideChevron = false,
-}: Props<T>) {
-  if (currencies.length === 0 || !selected) {
+  disabled,
+  hideChevron,
+}: Props) {
+  if (list.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center space-x-2 px-4 py-2">
         <ExclamationCircleIcon className="h-6 w-6 text-red-400" />
@@ -61,16 +61,16 @@ export default function SelectCurrency<T extends Currency>({
           leaveTo="opacity-0"
         >
           <Listbox.Options className="absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {currencies.map((c, idx) => (
+            {list.map(currency => (
               <Listbox.Option
-                key={idx}
+                key={currency.currency}
                 className={({ active }) =>
                   twMerge(
                     active ? ' text-primary' : '',
                     'relative cursor-default select-none py-2 pl-10 pr-4'
                   )
                 }
-                value={c}
+                value={currency}
               >
                 {({ selected }) => (
                   <>
@@ -80,7 +80,7 @@ export default function SelectCurrency<T extends Currency>({
                         'block truncate'
                       )}
                     >
-                      {c.currency}
+                      {currency.currency}
                     </span>
 
                     {selected && (
@@ -97,4 +97,4 @@ export default function SelectCurrency<T extends Currency>({
       </div>
     </Listbox>
   );
-}
+});

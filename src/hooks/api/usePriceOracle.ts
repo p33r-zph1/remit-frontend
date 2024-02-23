@@ -11,11 +11,10 @@ export type Pair = {
 export default function usePriceOracle({ from, to }: Pair) {
   return useSuspenseQuery({
     queryKey: ['price-oracle', { from, to }],
-    queryFn: () =>
-      genericFetch(
-        `https://9tbw1uqhph.execute-api.ap-southeast-1.amazonaws.com/main/${from}/${to}`,
-        priceOracleApiSchema
-      ),
+    queryFn: () => {
+      const apiUrl = `https://9tbw1uqhph.execute-api.ap-southeast-1.amazonaws.com/main/${from}/${to}`;
+      return genericFetch(apiUrl, priceOracleApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 10_000,
   });

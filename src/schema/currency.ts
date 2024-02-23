@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { makeApiSchema } from './api/fetch';
 import { priceOracleSchema } from './price-oracle';
 
-const currencySchema = z.object({
+export const currencySchema = z.object({
   icon: z.string(),
   currency: z.string(),
   countryIsoCode: z.string(),

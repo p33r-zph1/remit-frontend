@@ -1,14 +1,16 @@
 import { useCallback, useState } from 'react';
 
 import { getCustomChainId } from '../configs/wagmi';
+import type { OrderType } from '../schema/order';
 import useAcceptOrder from './api/useAcceptOrder';
 import useRejectOrder from './api/useRejectOrder';
 
 type Props = {
+  orderType: OrderType;
   orderId: string;
 };
 
-export default function useTakeOrder({ orderId }: Props) {
+export default function useTakeOrder({ orderType, orderId }: Props) {
   const {
     mutateAsync: acceptOrderAsync,
     isPending: isAccepting,
@@ -34,6 +36,7 @@ export default function useTakeOrder({ orderId }: Props) {
         try {
           await acceptOrderAsync({
             type: 'customer',
+            orderType,
             orderId,
             body: { recipientAgentId },
           });
@@ -48,7 +51,7 @@ export default function useTakeOrder({ orderId }: Props) {
       setExecuteFn(() => acceptOrder);
       setModalState({ state: 'accept', visible: true });
     },
-    [acceptOrderAsync, orderId]
+    [acceptOrderAsync, orderId, orderType]
   );
 
   const onSenderAgentAcceptOrder = useCallback(
@@ -57,6 +60,7 @@ export default function useTakeOrder({ orderId }: Props) {
         try {
           await acceptOrderAsync({
             type: 'senderagent',
+            orderType,
             orderId,
             body: { chain: getCustomChainId(chainId) },
           });
@@ -71,7 +75,7 @@ export default function useTakeOrder({ orderId }: Props) {
       setExecuteFn(() => acceptOrder);
       setModalState({ state: 'accept', visible: true });
     },
-    [acceptOrderAsync, orderId]
+    [acceptOrderAsync, orderId, orderType]
   );
 
   const onRecipientAgentAcceptOrder = useCallback(() => {
@@ -79,6 +83,7 @@ export default function useTakeOrder({ orderId }: Props) {
       try {
         await acceptOrderAsync({
           type: 'recipientagent',
+          orderType,
           orderId,
         });
 
@@ -91,12 +96,13 @@ export default function useTakeOrder({ orderId }: Props) {
 
     setExecuteFn(() => acceptOrder);
     setModalState({ state: 'accept', visible: true });
-  }, [acceptOrderAsync, orderId]);
+  }, [acceptOrderAsync, orderId, orderType]);
 
   const onRejectOrder = useCallback(() => {
     async function rejectOrder() {
       try {
         await rejectOrderAsync({
+          orderType,
           orderId,
         });
 
@@ -108,7 +114,7 @@ export default function useTakeOrder({ orderId }: Props) {
     }
     setExecuteFn(() => rejectOrder);
     setModalState({ state: 'reject', visible: true });
-  }, [orderId, rejectOrderAsync]);
+  }, [orderId, orderType, rejectOrderAsync]);
 
   return {
     // callbacks

@@ -4,14 +4,17 @@ import { useForm } from 'react-hook-form';
 import { coerce, z } from 'zod';
 
 import { platformFee } from '../constants';
+import { type Currency } from '../schema/currency';
 import { calculateFees } from '../schema/fees';
+import { orderTypeSchema } from '../schema/order';
 import useAgents from './api/useAgents';
 import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
 
-const formSchema = z.object({
-  recipientId: z.string().min(1, 'Please enter a valid recipient'),
-  sendAmount: z.string().min(1, 'Please enter a valid amount'),
+const sendMoneySchema = z.object({
+  orderType: orderTypeSchema.refine(type => Boolean(type)),
+  recipientId: z.string().min(1, 'Please enter a valid recipient').optional(),
+  senderAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
   agentId: z
     .string()
@@ -21,7 +24,7 @@ const formSchema = z.object({
     }),
 });
 
-export type SendMoney = z.infer<typeof formSchema>;
+export type SendMoney = z.infer<typeof sendMoneySchema>;
 
 export default function useSendMoney() {
   const {
@@ -32,8 +35,10 @@ export default function useSendMoney() {
     },
   } = useExchangeCurrency();
 
-  const [senderCurrency, setSenderCurrency] = useState(defaultSenderCurrency);
-  const [recipientCurrency, setRecipientCurrency] = useState(
+  const [senderCurrency, setSenderCurrency] = useState<Currency>(
+    defaultSenderCurrency
+  );
+  const [recipientCurrency, setRecipientCurrency] = useState<Currency>(
     defaultRecipientCurrency
   );
 
@@ -50,13 +55,14 @@ export default function useSendMoney() {
   });
 
   const formProps = useForm<SendMoney>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(sendMoneySchema),
     defaultValues: {
+      senderAmount: '',
       recipientId: '',
       recipientAmount: '',
-      sendAmount: '',
       agentId: 'default',
     },
+    shouldUnregister: true,
   });
 
   const { setValue, getValues, watch } = formProps;
@@ -86,9 +92,9 @@ export default function useSendMoney() {
   useEffect(() => {
     // re-calculates the conversion amount when the pair(exchange rate) updated
     if (pairUpdated) {
-      conversionHandler(getValues('sendAmount'));
+      conversionHandler(getValues('senderAmount'));
     }
-  }, [conversionHandler, getValues, pairUpdated, setValue]);
+  }, [conversionHandler, getValues, pairUpdated]);
 
   useEffect(() => {
     // reset the selected agent to default when sender select's a new currency

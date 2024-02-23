@@ -1,38 +1,32 @@
-import {
-  type FieldValues,
-  useController,
-  type UseControllerProps,
-} from 'react-hook-form';
+import { type ReactNode } from 'react';
+import { useController, type UseControllerProps } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
+import { z } from 'zod';
 
-import type { Currency } from '@/src/schema/currency';
+import type { SendMoney } from '@/src/hooks/useSendMoney';
 
-import SelectCurrency from '../Select/SelectCurrency';
-
-type Props<T extends FieldValues> = UseControllerProps<T> & {
+type Props = UseControllerProps<SendMoney> & {
   label: string;
-  list: Currency[];
-  selected: Currency | undefined;
-  onCurrencyChange: (currency: Currency) => void;
+  children: ReactNode;
   onValueChange?: (value: string) => void;
-  readOnly?: boolean;
+  readOnly?: true;
 };
 
-export default function CurrencyInput<T extends FieldValues>({
+export default function CurrencyInput({
   label,
-  list,
-  selected,
-  onCurrencyChange,
-  onValueChange,
   readOnly,
+  children,
+  onValueChange,
   ...controllerProps
-}: Props<T>) {
+}: Props) {
   const {
-    field: { ref, onChange, ...otherFields },
+    field: { ref, onChange, value, disabled, ...otherFields },
     formState: { isSubmitting },
     fieldState: { error },
   } = useController(controllerProps);
+
+  const inputValue = z.coerce.string().parse(value);
 
   return (
     <div className="relative flex flex-col">
@@ -45,15 +39,14 @@ export default function CurrencyInput<T extends FieldValues>({
         autoComplete="off"
         inputMode="decimal"
         className={twMerge(
-          'rounded-full border pb-3 pl-8 pr-32 pt-9 text-xl font-bold transition-shadow duration-200 disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100 disabled:text-gray-400',
-          error
-            ? 'border-error outline-error'
-            : 'border-primary outline-primary'
+          'input h-20 rounded-full pb-3 pl-8 pr-32 pt-9 text-xl font-bold disabled:cursor-not-allowed disabled:border-slate-400 disabled:bg-slate-100 disabled:text-gray-400',
+          error ? 'input-error' : 'input-primary'
         )}
         placeholder="0.00"
         readOnly={readOnly}
-        disabled={isSubmitting}
+        disabled={disabled || isSubmitting}
         {...otherFields}
+        value={inputValue}
         getInputRef={ref}
         onValueChange={values => {
           onChange(values.value);
@@ -62,13 +55,7 @@ export default function CurrencyInput<T extends FieldValues>({
       />
 
       <div className="absolute inset-y-0 right-0 flex items-center border-l">
-        <SelectCurrency<Currency>
-          selected={selected}
-          currencies={list}
-          disabled={isSubmitting}
-          hideChevron={false}
-          onChange={onCurrencyChange}
-        />
+        {children}
       </div>
     </div>
   );

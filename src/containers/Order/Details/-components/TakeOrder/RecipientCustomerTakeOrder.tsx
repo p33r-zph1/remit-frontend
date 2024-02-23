@@ -25,7 +25,7 @@ type Inputs = z.infer<typeof formSchema>;
 
 export default memo(function RecipientCustomerTakeOrder() {
   const {
-    order: { orderId, transferDetails },
+    order: { orderType, orderId, transferDetails },
   } = useOrderDetails();
 
   const {
@@ -59,7 +59,7 @@ export default memo(function RecipientCustomerTakeOrder() {
     // errors
     acceptOrderError,
     rejectOrderError,
-  } = useTakeOrder({ orderId });
+  } = useTakeOrder({ orderType, orderId });
 
   const onSubmit: SubmitHandler<Inputs> = ({ agentId }) => {
     onAcceptOrder(agentId);
@@ -114,6 +114,7 @@ export default memo(function RecipientCustomerTakeOrder() {
         onClose={() =>
           setModalState(prevState => ({ ...prevState, visible: false }))
         }
+        type="action"
         actions={{
           confirm: {
             label: modalState.state || '?',

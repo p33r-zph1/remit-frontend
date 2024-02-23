@@ -9,7 +9,7 @@ import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 export default function ScanQrCode() {
   const {
-    order: { orderId },
+    order: { orderType, orderId },
   } = useOrderDetails();
 
   const {
@@ -37,10 +37,11 @@ export default function ScanQrCode() {
     if (scannedResult) {
       confirmDeliveryAsync({
         body: { deliveryCode: scannedResult },
+        orderType,
         orderId,
       });
     }
-  }, [confirmDeliveryAsync, orderId, scannedResult]);
+  }, [confirmDeliveryAsync, orderId, orderType, scannedResult]);
 
   useEffect(() => {
     if (videoEl?.current && !scanner.current) {

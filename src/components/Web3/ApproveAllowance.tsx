@@ -139,6 +139,7 @@ export default memo(function ApproveAllowance({
         open={modalVisible}
         isLoading={isApproving || isConfirming}
         onClose={() => setModalVisible(false)}
+        type="action"
         actions={{
           confirm: {
             label: 'Approve',

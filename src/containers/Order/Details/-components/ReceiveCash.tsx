@@ -18,6 +18,7 @@ export default memo(function ReceiveCash() {
     order: {
       deliveryDetails,
       recipientAgentId,
+      orderType,
       orderId,
       contactDetails: { recipientAgent },
     },
@@ -86,11 +87,14 @@ export default memo(function ReceiveCash() {
         isLoading={isGeneratingQr}
         onClose={() => setModalVisible(false)}
         onCloseComplete={onNavigateToShowQr}
+        type="action"
         actions={{
           confirm: {
             label: 'Proceed',
             action: () =>
-              generateQrAsync({ orderId }).then(() => setModalVisible(false)),
+              generateQrAsync({ orderType, orderId }).then(() =>
+                setModalVisible(false)
+              ),
           },
           cancel: {
             label: 'Cancel',

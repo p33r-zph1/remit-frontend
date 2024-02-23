@@ -7,8 +7,10 @@ import exchangeCurrencyApiSchema from '@/src/schema/currency';
 export default function useExchangeCurrency() {
   return useSuspenseQuery({
     queryKey: ['exchange-currency'],
-    queryFn: () =>
-      genericFetch(makeApiUrl(`/config/currency`), exchangeCurrencyApiSchema),
+    queryFn: () => {
+      const apiUrl = makeApiUrl(`/config/currency`);
+      return genericFetch(apiUrl, exchangeCurrencyApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 20_000,
   });

@@ -26,7 +26,7 @@ export default memo(function SenderAgentTakeOrder() {
   });
 
   const {
-    order: { fees, orderId },
+    order: { fees, orderType, orderId },
   } = useOrderDetails();
 
   const {
@@ -44,7 +44,7 @@ export default memo(function SenderAgentTakeOrder() {
     // errors
     acceptOrderError,
     rejectOrderError,
-  } = useTakeOrder({ orderId });
+  } = useTakeOrder({ orderType, orderId });
 
   const onSubmit: SubmitHandler<TakeOrderSchema> = ({ chainId }) => {
     onAcceptOrder(chainId);
@@ -92,6 +92,7 @@ export default memo(function SenderAgentTakeOrder() {
         onClose={() =>
           setModalState(prevState => ({ ...prevState, visible: false }))
         }
+        type="action"
         actions={{
           confirm: {
             label: modalState.state || '?',
