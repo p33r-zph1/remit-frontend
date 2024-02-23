@@ -9,4 +9,6 @@ const agentListApiSchema = makeApiSchema(agentListSchema);
 
 export type AgentList = z.infer<typeof agentListSchema>;
 
+export type AgentListApi = z.infer<typeof agentListApiSchema>;
+
 export default agentListApiSchema;

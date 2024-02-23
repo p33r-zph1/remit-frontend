@@ -25,6 +25,7 @@ type ActionButton = {
     confirm: {
       label: string;
       action: () => void;
+      disabled?: boolean;
     };
     cancel?: {
       label: string;
@@ -145,9 +146,9 @@ export default function Modal(props: Props) {
                     return (
                       <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
                         <button
+                          onClick={confirm.action || confirm.disabled}
                           disabled={isLoading}
                           className="btn btn-primary rounded-lg px-6 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-                          onClick={confirm.action}
                         >
                           <span className="flex items-center gap-3">
                             {isLoading && (
@@ -160,9 +161,9 @@ export default function Modal(props: Props) {
 
                         {cancel && (
                           <button
+                            onClick={cancel.action ? cancel.action : onClose}
                             disabled={isLoading}
                             className="btn btn-outline btn-primary rounded-lg font-semibold shadow-sm"
-                            onClick={cancel.action ? cancel.action : onClose}
                           >
                             <span className="capitalize">{cancel.label}</span>
                           </button>
