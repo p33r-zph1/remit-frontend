@@ -1,19 +1,18 @@
-import {
-  type FieldValues,
-  useController,
-  type UseControllerProps,
-} from 'react-hook-form';
-// import { NumericFormat } from 'react-number-format';
+import { useController, type UseControllerProps } from 'react-hook-form';
+import { NumericFormat } from 'react-number-format';
+import { twMerge } from 'tailwind-merge';
+import { z } from 'zod';
 
-export default function RecipientInput<T extends FieldValues>(
-  props: UseControllerProps<T>
-) {
+import type { SendMoney } from '@/src/hooks/useSendMoney';
+
+export default function RecipientInput(props: UseControllerProps<SendMoney>) {
   const {
-    // field: { ref, onChange, ...otherFields },
-    field,
+    field: { ref, value, onChange, disabled, ...otherFields },
     formState: { isSubmitting },
     fieldState: { error },
   } = useController(props);
+
+  const inputValue = z.coerce.string().parse(value);
 
   return (
     <label className="form-control">
@@ -27,15 +26,19 @@ export default function RecipientInput<T extends FieldValues>(
         )}
       </div>
 
-      <input
+      <NumericFormat
         inputMode="numeric"
         autoComplete="off"
         placeholder="Enter recipient number"
-        className="input input-ghost rounded-lg border-0 p-0 text-2xl font-bold placeholder:text-lg placeholder:opacity-50 focus:outline-none disabled:bg-white"
-        disabled={isSubmitting}
-        {...field}
-        // getInputRef={ref}
-        // onValueChange={values => onChange(values.value)}
+        className={twMerge(
+          'input input-ghost rounded-none border-0 p-0 text-2xl font-bold placeholder:text-lg placeholder:opacity-50 focus:outline-none disabled:bg-white',
+          error && 'border-b border-error'
+        )}
+        disabled={disabled || isSubmitting}
+        {...otherFields}
+        getInputRef={ref}
+        value={inputValue}
+        onValueChange={values => onChange(values.value)}
       />
     </label>
   );

@@ -7,11 +7,16 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
+import SelectChain from '@/src/components/Select/SelectChain';
+import SelectCurrency from '@/src/components/Select/SelectCurrency';
+import wagmi from '@/src/configs/wagmi';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
 import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
 import { Route } from '@/src/routes/_auth/';
+import { delay } from '@/src/utils';
 
 import SendDetails from './SendDetails';
+import SendOrderType from './SendOrderType';
 
 // let renderCount = 0;
 
@@ -25,7 +30,7 @@ export default function SendForm() {
     recipientCurrency,
     setRecipientCurrency,
 
-    // callback function for calculating the conversion
+    // callback function for calculating the `recipientAmount`
     conversionHandler,
 
     // list of exchange currencies
@@ -35,7 +40,13 @@ export default function SendForm() {
     agents,
 
     // hook form props
-    formProps: { control, handleSubmit, getValues, reset },
+    formProps: {
+      control,
+      handleSubmit,
+      getValues,
+      reset,
+      formState: { isSubmitting },
+    },
   } = useSendMoney();
 
   const {
@@ -50,28 +61,32 @@ export default function SendForm() {
   const [onConfirmSend, setOnConfirmSend] = useState<() => void>();
 
   const orderAmountSummary = useCallback(() => {
+    const sendAmount = getValues('senderAmount');
     const recipientAmount = getValues('recipientAmount');
-    const sendAmount = getValues('sendAmount');
 
     const str = `${sendAmount} ${senderCurrency.currency} (${recipientAmount} ${recipientCurrency.currency})`;
 
     return numericFormatter(str, { thousandSeparator: ',' });
   }, [getValues, recipientCurrency.currency, senderCurrency.currency]);
 
-  const onSubmit: SubmitHandler<SendMoney> = ({
-    recipientId,
-    sendAmount,
-    agentId,
-  }) => {
+  const onSubmit: SubmitHandler<SendMoney> = async data => {
+    const { senderAmount, recipientId, agentId } = data;
+
+    if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE') {
+      await delay(3000);
+      return alert(JSON.stringify(JSON.stringify(data))); // TODO: handle other orderTypes
+    }
+
     async function confirmSend() {
       try {
         await sendOrderAsync({
+          orderType: getValues('orderType'),
           body: {
-            recipientId,
+            transferAmount: Number(senderAmount),
             senderCurrency: senderCurrency.currency,
+            recipientId: recipientId || '??', // FIXME: refactor `orderBodySchema` that considers orderType requirements
             recipientCurrency: recipientCurrency.currency,
             senderAgentId: agentId,
-            transferAmount: Number(sendAmount),
           },
         });
 
@@ -99,60 +114,92 @@ export default function SendForm() {
   // renderCount++;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-8 space-y-12 sm:mt-16"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-8 sm:mt-8">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <RecipientInput name="recipientId" control={control} />
+      <SendOrderType name="orderType" control={control}>
+        {orderType => (
+          <div>
+            {(() => {
+              switch (orderType) {
+                case 'CROSS_BORDER_REMITTANCE':
+                  return (
+                    <RecipientInput name="recipientId" control={control} />
+                  );
 
-      <div>
-        <CurrencyInput
-          label="You send"
-          name="sendAmount"
-          control={control}
-          selected={senderCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setSenderCurrency(prevCurrency => {
-              if (newCurrency.currency === recipientCurrency.currency) {
-                setRecipientCurrency(prevCurrency); // swaps currency
+                case 'LOCAL_SELL_STABLECOINS':
+                case 'LOCAL_BUY_STABLECOINS':
+                  return (
+                    <SelectChain
+                      name="chainId"
+                      control={control}
+                      list={wagmi.chains}
+                      label="Blockchain Network"
+                    />
+                  );
+
+                default:
+                  return null;
               }
+            })()}
 
-              return newCurrency;
-            })
-          }
-          onValueChange={conversionHandler}
-        />
+            <div className="divider my-8"></div>
 
-        <SendDetails name="agentId" control={control} list={agents} />
+            <CurrencyInput
+              label="You send"
+              name="senderAmount"
+              control={control}
+              onValueChange={conversionHandler}
+            >
+              <SelectCurrency
+                selected={senderCurrency}
+                list={supportedCurrencies}
+                onChange={newCurrency =>
+                  setSenderCurrency(prevCurrency => {
+                    if (newCurrency.currency === recipientCurrency.currency) {
+                      setRecipientCurrency(prevCurrency); // swaps currency
+                    }
 
-        <CurrencyInput
-          label="Recipient will get (estimate)"
-          name="recipientAmount"
-          control={control}
-          selected={recipientCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setRecipientCurrency(prevCurrency => {
-              if (newCurrency.currency === senderCurrency.currency) {
-                setSenderCurrency(prevCurrency); // swaps currency
-              }
+                    return newCurrency;
+                  })
+                }
+                disabled={isSubmitting}
+              />
+            </CurrencyInput>
 
-              return newCurrency;
-            })
-          }
-          readOnly
-        />
-      </div>
+            <SendDetails name="agentId" control={control} list={agents} />
+
+            <CurrencyInput
+              label="Recipient will get (estimate)"
+              name="recipientAmount"
+              control={control}
+              readOnly
+            >
+              <SelectCurrency
+                selected={recipientCurrency}
+                list={supportedCurrencies}
+                onChange={newCurrency =>
+                  setRecipientCurrency(prevCurrency => {
+                    if (newCurrency.currency === senderCurrency.currency) {
+                      setSenderCurrency(prevCurrency); // swaps currency
+                    }
+
+                    return newCurrency;
+                  })
+                }
+                disabled={isSubmitting}
+              />
+            </CurrencyInput>
+          </div>
+        )}
+      </SendOrderType>
 
       {error && <ErrorAlert message={error.message} />}
 
       <button
         type="submit"
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-        disabled={isSendingOrder}
+        disabled={isSubmitting || isSendingOrder}
       >
         Send money
       </button>
@@ -162,6 +209,7 @@ export default function SendForm() {
         isLoading={isSendingOrder}
         onClose={() => setModalVisible(false)}
         onCloseComplete={onNavigateToOrder}
+        type="action"
         actions={{
           confirm: {
             label: 'Send',

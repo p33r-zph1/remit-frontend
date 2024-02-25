@@ -63,7 +63,7 @@ export default function Login() {
 
         <input
           {...register('username')}
-          type="text"
+          inputMode="numeric"
           autoComplete="off"
           className="input input-bordered w-full"
           disabled={isSubmitting}

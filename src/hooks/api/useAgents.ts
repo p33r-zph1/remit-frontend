@@ -14,10 +14,10 @@ export const agentsQueryOptiions = ({ isoCode }: AgentsQueryProps) =>
   queryOptions({
     queryKey: agentKeys.list({ isoCode }),
     queryFn: () => {
-      const url = makeApiUrl(`/agents`);
-      url.searchParams.append('country_iso_code', isoCode);
+      const apiUrl = makeApiUrl('/agents');
+      apiUrl.searchParams.append('country_iso_code', isoCode);
 
-      return genericFetch(url, agentListApiSchema);
+      return genericFetch(apiUrl, agentListApiSchema);
     },
     select: response => response.data,
     refetchInterval: 20_000,

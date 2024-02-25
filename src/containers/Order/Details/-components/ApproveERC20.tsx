@@ -33,6 +33,7 @@ export default memo(function ApproveERC20() {
         chainId: prefferedChainId,
       },
       transferDetails: { recipient },
+      orderType,
       orderId,
     },
   } = useOrderDetails();
@@ -51,13 +52,14 @@ export default memo(function ApproveERC20() {
 
     try {
       await escrowDepositAsync({
+        orderType,
         orderId,
         body: { walletAddress: address },
       });
     } catch (err) {
       console.log(err);
     }
-  }, [address, escrowDepositAsync, orderId]);
+  }, [address, escrowDepositAsync, orderId, orderType]);
 
   return (
     <div className="flex flex-col space-y-12">

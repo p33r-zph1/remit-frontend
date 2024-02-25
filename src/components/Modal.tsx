@@ -6,27 +6,35 @@ import { twMerge } from 'tailwind-merge';
 export type ModalProps = {
   open: boolean;
   isLoading?: boolean;
-  actions: {
-    cancel?: {
-      label: string;
-      action?: () => void;
-    };
-    confirm: {
-      label: string;
-      action: () => void;
-      disabled?: boolean;
-    };
-  };
   onClose: () => void;
   onCloseComplete?: () => void;
 };
 
-type Props = ModalProps & {
+type BaseProps = ModalProps & {
   title: string;
   children: ReactNode;
   size?: 'small' | 'medium' | 'large';
   slideFrom?: 'top' | 'right' | 'bottom' | 'left';
 };
+
+type FormAction = { type: 'form' };
+
+type ActionButton = {
+  type: 'action';
+  actions: {
+    confirm: {
+      label: string;
+      action: () => void;
+      disabled?: boolean;
+    };
+    cancel?: {
+      label: string;
+      action?: () => void;
+    };
+  };
+};
+
+type Props = BaseProps & (FormAction | ActionButton);
 
 const sizeClasses: Record<NonNullable<Props['size']>, string> = {
   small: 'sm:max-w-sm',
@@ -56,17 +64,19 @@ const slideFromClasses: Record<
   },
 };
 
-export default function Modal({
-  open,
-  isLoading = false,
-  onClose,
-  onCloseComplete = () => {},
-  title,
-  children,
-  actions,
-  size = 'medium',
-  slideFrom = 'top',
-}: Props) {
+export default function Modal(props: Props) {
+  const {
+    open,
+    isLoading = false,
+    onClose,
+    onCloseComplete = () => {},
+    title,
+    children,
+    type,
+    size = 'medium',
+    slideFrom = 'top',
+  } = props;
+
   useBlocker(
     () =>
       window.confirm(
@@ -129,35 +139,38 @@ export default function Modal({
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
-                  <button
-                    disabled={isLoading || actions.confirm.disabled}
-                    className="btn btn-primary rounded-lg px-6 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-                    onClick={actions.confirm.action}
-                  >
-                    <span className="flex items-center gap-3">
-                      {isLoading && (
-                        <span className="loading loading-spinner loading-sm"></span>
-                      )}
+                {type === 'action' &&
+                  (() => {
+                    const { confirm, cancel } = props.actions;
 
-                      <span className="capitalize">
-                        {actions.confirm.label}
-                      </span>
-                    </span>
-                  </button>
+                    return (
+                      <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
+                        <button
+                          onClick={confirm.action || confirm.disabled}
+                          disabled={isLoading}
+                          className="btn btn-primary rounded-lg px-6 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
+                        >
+                          <span className="flex items-center gap-3">
+                            {isLoading && (
+                              <span className="loading loading-spinner loading-sm"></span>
+                            )}
 
-                  {actions.cancel && (
-                    <button
-                      disabled={isLoading}
-                      className="btn btn-outline btn-primary rounded-lg font-semibold shadow-sm"
-                      onClick={
-                        actions.cancel.action ? actions.cancel.action : onClose
-                      }
-                    >
-                      <span className="capitalize">{actions.cancel.label}</span>
-                    </button>
-                  )}
-                </div>
+                            <span className="capitalize">{confirm.label}</span>
+                          </span>
+                        </button>
+
+                        {cancel && (
+                          <button
+                            onClick={cancel.action ? cancel.action : onClose}
+                            disabled={isLoading}
+                            className="btn btn-outline btn-primary rounded-lg font-semibold shadow-sm"
+                          >
+                            <span className="capitalize">{cancel.label}</span>
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
               </Dialog.Panel>
             </Transition.Child>
           </div>

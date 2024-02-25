@@ -23,4 +23,4 @@ export type CognitoPayload = z.infer<typeof cognitoPayloadSchema>;
 
 export type CognitoGroup = z.infer<typeof cognitoGroupSchema>;
 
-export type Group = ExtractSingleElementType<CognitoGroup>;
+export type Group = ElementType<CognitoGroup>;

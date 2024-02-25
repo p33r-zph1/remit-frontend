@@ -3,7 +3,11 @@ import { z } from 'zod';
 
 import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema, { type OrderApi } from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
 import { orderKeys } from './keys/order.key';
 
@@ -14,6 +18,7 @@ const confirmDeliveryBodySchema = z.object({
 export type ConfirmDeliveryBody = z.infer<typeof confirmDeliveryBodySchema>;
 
 export type MutationProps = {
+  orderType: OrderType;
   orderId: string;
   body: ConfirmDeliveryBody;
 };
@@ -23,17 +28,16 @@ export default function useConfirmDelivery() {
 
   return useMutation({
     mutationKey: ['confirm-delivery'],
-    mutationFn: ({ orderId, body }: MutationProps) =>
-      genericFetch(
-        makeApiUrl(
-          `/orders/cross-border-remittance/${orderId}/delivery/confirm`
-        ),
-        orderApiSchema,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(confirmDeliveryBodySchema.parse(body)),
-        }
-      ),
+    mutationFn: ({ orderType, orderId, body }: MutationProps) => {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/delivery/confirm`
+      );
+
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+        body: JSON.stringify(confirmDeliveryBodySchema.parse(body)),
+      });
+    },
     onSettled: (data, _, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });
 

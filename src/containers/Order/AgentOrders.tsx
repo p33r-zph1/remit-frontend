@@ -74,6 +74,7 @@ export default function AgentOrders() {
         isLoading={isUpdatingCommission}
         onClose={() => setCommissionModalVisible(false)}
         onCloseComplete={() => setCommissionAmount('')}
+        type="action"
         title="Confirm commission update"
         actions={{
           confirm: {
@@ -126,6 +127,7 @@ export default function AgentOrders() {
         open={statusModalVisible}
         isLoading={isUpdatingStatus}
         onClose={() => setStatusModalVisible(false)}
+        type="action"
         title="Confirm status update"
         actions={{
           confirm: {

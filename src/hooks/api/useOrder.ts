@@ -13,8 +13,10 @@ export type OrderQueryProps = {
 export const orderQueryOptions = ({ orderId }: OrderQueryProps) =>
   queryOptions({
     queryKey: orderKeys.listItem({ orderId }),
-    queryFn: () =>
-      genericFetch(makeApiUrl(`/orders/${orderId}`), orderApiSchema),
+    queryFn: () => {
+      const apiUrl = makeApiUrl(`/orders/${orderId}`);
+      return genericFetch(apiUrl, orderApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 10_000,
   });

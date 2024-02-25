@@ -8,7 +8,7 @@ import { formatCommissionDetails } from '@/src/schema/fees';
 
 export default memo(function RecipientAgentTakeOrder() {
   const {
-    order: { fees, orderId },
+    order: { fees, orderType, orderId },
   } = useOrderDetails();
 
   const {
@@ -26,7 +26,7 @@ export default memo(function RecipientAgentTakeOrder() {
     // errors
     acceptOrderError,
     rejectOrderError,
-  } = useTakeOrder({ orderId });
+  } = useTakeOrder({ orderType, orderId });
 
   if (!fees.recipientAgent)
     throw new Error('Recipient agent fees cannot be missing!');
@@ -72,6 +72,7 @@ export default memo(function RecipientAgentTakeOrder() {
         onClose={() =>
           setModalState(prevState => ({ ...prevState, visible: false }))
         }
+        type="action"
         actions={{
           confirm: {
             label: modalState.state || '?',

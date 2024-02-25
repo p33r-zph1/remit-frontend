@@ -3,7 +3,11 @@ import { z } from 'zod';
 
 import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema, { type OrderApi } from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
 import { orderKeys } from './keys/order.key';
 
@@ -19,21 +23,23 @@ export type CustomerOrderBody = z.infer<typeof customerOrderBodySchema>;
 
 export type SenderAgentOrderBody = z.infer<typeof senderAgentOrderBodySchema>;
 
-type CustomerMutation = {
-  type: 'customer';
+type MutationBase = {
   orderId: string;
+  orderType: OrderType;
+};
+
+type CustomerMutation = MutationBase & {
+  type: 'customer';
   body: CustomerOrderBody;
 };
 
-type SenderAgentMutation = {
+type SenderAgentMutation = MutationBase & {
   type: 'senderagent';
-  orderId: string;
   body: SenderAgentOrderBody;
 };
 
-type RecipientAgentMutation = {
+type RecipientAgentMutation = MutationBase & {
   type: 'recipientagent';
-  orderId: string;
 };
 
 export type MutationProps =
@@ -60,16 +66,16 @@ export default function useAcceptOrder() {
   return useMutation({
     mutationKey: ['accept-order'],
     mutationFn: (props: MutationProps) => {
-      const { orderId } = props;
+      const { orderType, orderId } = props;
 
-      return genericFetch(
-        makeApiUrl(`/orders/cross-border-remittance/${orderId}/accept`),
-        orderApiSchema,
-        {
-          method: 'PATCH',
-          body: handleRequestBody(props),
-        }
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/accept`
       );
+
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+        body: handleRequestBody(props),
+      });
     },
     onSettled: (data, _, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });

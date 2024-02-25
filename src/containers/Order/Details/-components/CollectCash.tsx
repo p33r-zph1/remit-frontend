@@ -12,6 +12,7 @@ import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 export default memo(function CollectCash() {
   const {
     order: {
+      orderType,
       orderId,
       collectionDetails,
       transferDetails,
@@ -62,10 +63,11 @@ export default memo(function CollectCash() {
         open={modalVisible}
         isLoading={isPending}
         onClose={() => setModalVisible(false)}
+        type="action"
         actions={{
           confirm: {
             label: 'Confirm',
-            action: () => collectCashAsync({ orderId }),
+            action: () => collectCashAsync({ orderType, orderId }),
           },
           cancel: {
             label: 'Cancel',

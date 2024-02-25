@@ -4,7 +4,11 @@ import { z } from 'zod';
 
 import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema, { type OrderApi } from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
 import { orderKeys } from './keys/order.key';
 
@@ -15,6 +19,7 @@ const escrowDepositBodySchema = z.object({
 export type EscrowDepositBody = z.infer<typeof escrowDepositBodySchema>;
 
 export type MutationProps = {
+  orderType: OrderType;
   orderId: string;
   body: EscrowDepositBody;
 };
@@ -24,15 +29,16 @@ export default function useEscrowDeposit() {
 
   return useMutation({
     mutationKey: ['escrow-deposit'],
-    mutationFn: ({ orderId, body }: MutationProps) =>
-      genericFetch(
-        makeApiUrl(`/orders/cross-border-remittance/${orderId}/escrow/deposit`),
-        orderApiSchema,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(escrowDepositBodySchema.parse(body)),
-        }
-      ),
+    mutationFn: ({ orderType, orderId, body }: MutationProps) => {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/escrow/deposit`
+      );
+
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+        body: JSON.stringify(escrowDepositBodySchema.parse(body)),
+      });
+    },
     onSettled: (data, _, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });
 

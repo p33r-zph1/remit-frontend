@@ -3,7 +3,11 @@ import { z } from 'zod';
 
 import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema, { type OrderApi } from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
 import { orderKeys } from './keys/order.key';
 
@@ -24,6 +28,7 @@ const meetupSchema = z.object({
 export type MeetUpBody = z.infer<typeof meetupSchema>;
 
 export type MutationProps = {
+  orderType: OrderType;
   orderId: string;
   body: MeetUpBody;
   meetupType: 'collection' | 'delivery';
@@ -34,17 +39,15 @@ export default function useSetCollection() {
 
   return useMutation({
     mutationKey: ['set-collection'],
-    mutationFn: ({ orderId, meetupType, body }: MutationProps) =>
-      genericFetch(
-        makeApiUrl(
-          `/orders/cross-border-remittance/${orderId}/${meetupType}/details`
-        ),
-        orderApiSchema,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(meetupSchema.parse(body)),
-        }
-      ),
+    mutationFn: ({ orderType, orderId, meetupType, body }: MutationProps) => {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/${meetupType}/details`
+      );
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+        body: JSON.stringify(meetupSchema.parse(body)),
+      });
+    },
     onSettled: (data, _, { orderId }) => {
       const queryKey = orderKeys.listItem({ orderId });
 

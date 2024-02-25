@@ -73,6 +73,7 @@ export default memo(function DeliverCash() {
         open={modalVisible}
         onClose={() => setModalVisible(false)}
         onCloseComplete={onNavigateToScanQr}
+        type="action"
         actions={{
           confirm: {
             label: 'Yes',

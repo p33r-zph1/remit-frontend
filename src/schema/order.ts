@@ -17,6 +17,16 @@ export const orderStatusSchema = z.enum([
   'EXPIRED',
 ]);
 
+export const orderTypeSchema = z.enum(
+  [
+    'CROSS_BORDER_REMITTANCE',
+    'CROSS_BORDER_SELF_REMITTANCE',
+    'LOCAL_SELL_STABLECOINS',
+    'LOCAL_BUY_STABLECOINS',
+  ],
+  { required_error: 'Please select your order type' }
+);
+
 export const orderSchema = z.object({
   orderId: z.string(),
   createdAt: z.coerce.date(),
@@ -36,6 +46,7 @@ export const orderSchema = z.object({
   collectionDetails: locationDetailsSchema.optional(),
   deliveryDetails: locationDetailsSchema.optional(),
   escrowDetails: escrowDetailsSchema,
+  orderType: orderTypeSchema,
 });
 
 const orderApiSchema = makeApiSchema(orderSchema);
@@ -45,5 +56,7 @@ export type Order = z.infer<typeof orderSchema>;
 export type OrderApi = z.infer<typeof orderApiSchema>;
 
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
+
+export type OrderType = z.infer<typeof orderTypeSchema>;
 
 export default orderApiSchema;

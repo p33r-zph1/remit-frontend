@@ -13,8 +13,10 @@ export type AgentQueryProps = {
 export const agentQueryOptions = ({ agentId }: AgentQueryProps) =>
   queryOptions({
     queryKey: agentKeys.listItem({ agentId }),
-    queryFn: () =>
-      genericFetch(makeApiUrl(`/agents/${agentId}`), agentApiSchema),
+    queryFn: () => {
+      const apiUrl = makeApiUrl(`/agents/${agentId}`);
+      return genericFetch(apiUrl, agentApiSchema);
+    },
     select: response => response.data,
     refetchInterval: 15_000,
   });

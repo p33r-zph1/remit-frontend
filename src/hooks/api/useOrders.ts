@@ -25,13 +25,13 @@ export const ordersQueryOptions = ({ pageSize, status }: OrdersQueryProps) =>
       if (hasPreviousPage) return pageNumber - 1;
     },
     queryFn: ({ pageParam }) => {
-      const url = makeApiUrl('/orders');
-      url.searchParams.append('pageSize', String(pageSize));
-      url.searchParams.append('pageNumber', String(pageParam));
+      const apiUrl = makeApiUrl('/orders');
+      apiUrl.searchParams.append('pageSize', String(pageSize));
+      apiUrl.searchParams.append('pageNumber', String(pageParam));
 
-      if (status) url.searchParams.append('status', status);
+      if (status) apiUrl.searchParams.append('status', status);
 
-      return genericFetch(url, orderListApiSchema);
+      return genericFetch(apiUrl, orderListApiSchema);
     },
   });
 

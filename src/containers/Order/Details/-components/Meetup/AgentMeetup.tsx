@@ -69,7 +69,7 @@ export default function AgentMeetup({ meetupType }: Props) {
   });
 
   const {
-    order: { orderId },
+    order: { orderType, orderId },
   } = useOrderDetails();
 
   const {
@@ -91,6 +91,7 @@ export default function AgentMeetup({ meetupType }: Props) {
     async function confirmMeetup() {
       try {
         await setCollectionAsync({
+          orderType,
           orderId,
           meetupType,
           body: {
@@ -231,6 +232,7 @@ export default function AgentMeetup({ meetupType }: Props) {
         open={modalVisible}
         isLoading={isConfirming}
         onClose={() => setModalVisible(false)}
+        type="action"
         actions={{
           confirm: {
             label: 'Confirm',
