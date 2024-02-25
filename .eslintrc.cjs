@@ -10,8 +10,8 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:@tanstack/eslint-plugin-query/recommended',
+    'plugin:react-hooks/recommended', // Rule of hooks
+    'plugin:@tanstack/eslint-plugin-query/recommended', // React query
     'plugin:react/jsx-runtime', // Runtime prefers to be at the last
     'prettier', // Prettier must be last
   ],
