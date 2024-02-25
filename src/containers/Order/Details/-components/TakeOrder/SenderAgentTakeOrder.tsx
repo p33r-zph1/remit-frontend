@@ -12,7 +12,7 @@ import useTakeOrder from '@/src/hooks/useTakeOrder';
 import { formatCommissionDetails } from '@/src/schema/fees';
 
 const takeOrderSchema = z.object({
-  chainId: z.number().min(1),
+  chainId: z.number().min(1, { message: 'Please select a chain' }),
 });
 
 export type TakeOrderSchema = z.infer<typeof takeOrderSchema>;

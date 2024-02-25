@@ -13,9 +13,10 @@ import usePriceOracle from './api/usePriceOracle';
 
 const sendMoneySchema = z.object({
   orderType: orderTypeSchema.refine(type => Boolean(type)),
-  recipientId: z.string().min(1, 'Please enter a valid recipient').optional(),
   senderAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
+  chainId: z.number().min(1, { message: 'Please select a chain' }).optional(),
+  recipientId: z.string().min(1, 'Please enter a valid recipient').optional(),
   agentId: z
     .string()
     .min(1)
@@ -58,8 +59,9 @@ export default function useSendMoney() {
     resolver: zodResolver(sendMoneySchema),
     defaultValues: {
       senderAmount: '',
-      recipientId: '',
       recipientAmount: '',
+      chainId: 0,
+      recipientId: '',
       agentId: 'default',
     },
     shouldUnregister: true,

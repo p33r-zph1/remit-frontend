@@ -7,13 +7,16 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
+import SelectChain from '@/src/components/Select/SelectChain';
 import SelectCurrency from '@/src/components/Select/SelectCurrency';
+import wagmi from '@/src/configs/wagmi';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
 import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
 import { Route } from '@/src/routes/_auth/';
+import { delay } from '@/src/utils';
 
-import OrderType from './OrderType';
 import SendDetails from './SendDetails';
+import SendOrderType from './SendOrderType';
 
 // let renderCount = 0;
 
@@ -42,11 +45,9 @@ export default function SendForm() {
       handleSubmit,
       getValues,
       reset,
-      formState: { isSubmitting, errors },
+      formState: { isSubmitting },
     },
   } = useSendMoney();
-
-  console.log(errors);
 
   const {
     data: sendOrderData,
@@ -68,13 +69,13 @@ export default function SendForm() {
     return numericFormatter(str, { thousandSeparator: ',' });
   }, [getValues, recipientCurrency.currency, senderCurrency.currency]);
 
-  const onSubmit: SubmitHandler<SendMoney> = ({
-    senderAmount,
-    recipientId,
-    agentId,
-  }) => {
-    if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE')
-      return alert('submitted!'); // TODO: handle other orderTypes
+  const onSubmit: SubmitHandler<SendMoney> = async data => {
+    const { senderAmount, recipientId, agentId } = data;
+
+    if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE') {
+      await delay(3000);
+      return alert(JSON.stringify(JSON.stringify(data))); // TODO: handle other orderTypes
+    }
 
     async function confirmSend() {
       try {
@@ -116,7 +117,7 @@ export default function SendForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-8 sm:mt-8">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <OrderType name="orderType" control={control}>
+      <SendOrderType name="orderType" control={control}>
         {orderType => (
           <div>
             {(() => {
@@ -124,6 +125,17 @@ export default function SendForm() {
                 case 'CROSS_BORDER_REMITTANCE':
                   return (
                     <RecipientInput name="recipientId" control={control} />
+                  );
+
+                case 'LOCAL_SELL_STABLECOINS':
+                case 'LOCAL_BUY_STABLECOINS':
+                  return (
+                    <SelectChain
+                      name="chainId"
+                      control={control}
+                      list={wagmi.chains}
+                      label="Blockchain Network"
+                    />
                   );
 
                 default:
@@ -180,14 +192,14 @@ export default function SendForm() {
             </CurrencyInput>
           </div>
         )}
-      </OrderType>
+      </SendOrderType>
 
       {error && <ErrorAlert message={error.message} />}
 
       <button
         type="submit"
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-        disabled={isSendingOrder}
+        disabled={isSubmitting || isSendingOrder}
       >
         Send money
       </button>

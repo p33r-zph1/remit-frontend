@@ -4,17 +4,18 @@ import { useController, type UseControllerProps } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import Modal from '@/src/components/Modal';
+import SelectModal from '@/src/components/Select/SelectViaModal';
 import type { SendMoney } from '@/src/hooks/useSendMoney';
 import { type OrderType, orderTypeSchema } from '@/src/schema/order';
 
-type TransactionType = {
+type Order = {
   title: string;
   description: string;
   icon: JSX.Element;
   disabled?: true;
 };
 
-const types: Record<OrderType, TransactionType> = {
+const types: Record<OrderType, Order> = {
   CROSS_BORDER_REMITTANCE: {
     title: 'Cross-border Remittance',
     description:
@@ -26,6 +27,7 @@ const types: Record<OrderType, TransactionType> = {
     description:
       'Convert currencies and remit to yourself. A local agent will collect your cash and another agent will deliver cash to you in your selected currency abroad.',
     icon: <GlobeAltIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
+    disabled: true,
   },
   LOCAL_SELL_STABLECOINS: {
     title: 'Sell Stablecoins (Local)',
@@ -39,7 +41,6 @@ const types: Record<OrderType, TransactionType> = {
     description:
       'Buy stablecoins locally with cash. An agent will collect your cash and the stablecoins will be released from escrow to your wallet upon payment to the agent.',
     icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
-    disabled: true,
   },
 };
 
@@ -47,9 +48,9 @@ type Props = UseControllerProps<SendMoney> & {
   children: (orderType: OrderType | null | undefined) => ReactNode;
 };
 
-export default function OrderType({ children, ...controllerProps }: Props) {
+export default function SendOrderType({ children, ...controllerProps }: Props) {
   const {
-    field: { onChange, value, ...otherFields },
+    field: { onChange, value, disabled, ...otherFields },
     fieldState: { error },
     formState: { isSubmitting },
   } = useController(controllerProps);
@@ -60,33 +61,15 @@ export default function OrderType({ children, ...controllerProps }: Props) {
 
   return (
     <>
-      <label className="form-control" onClick={() => setModalVisible(true)}>
-        <div className="label">
-          <span className="label-text text-base text-zinc-400">
-            Transaction Type
-          </span>
-
-          {error?.message && (
-            <span className="label-text text-xs font-bold text-error">
-              {error.message}
-            </span>
-          )}
-        </div>
-
-        <input
-          inputMode="text"
-          autoComplete="off"
-          placeholder="Select transaction type"
-          value={selected ? types[selected].title : ''}
-          className={twMerge(
-            'input rounded-full bg-slate-50 text-base font-bold hover:cursor-pointer',
-            error ? 'input-error' : 'input-primary'
-          )}
-          disabled={isSubmitting}
-          readOnly
-          {...otherFields}
-        />
-      </label>
+      <SelectModal
+        value={selected ? types[selected].title : ''}
+        onClick={() => setModalVisible(true)}
+        disabled={isSubmitting || Boolean(disabled)}
+        placeholder="Select transaction type"
+        label="Transaction Type"
+        error={error}
+        {...otherFields}
+      />
 
       {children(selected)}
 
@@ -103,6 +86,7 @@ export default function OrderType({ children, ...controllerProps }: Props) {
             ([orderType, { icon, title, description, disabled }]) => (
               <li
                 key={orderType}
+                tabIndex={0}
                 className={twMerge(
                   'rounded-md p-4 shadow-md ring-primary duration-200',
                   selected === orderType && 'ring-2',
