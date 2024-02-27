@@ -1,13 +1,35 @@
 import { z } from 'zod';
 
 import { makeApiSchema } from './api/fetch';
-import contactDetailsSchema from './contact';
+import {
+  crossBorderContactDetailsSchema,
+  crossBorderSelfContactDetailsSchema,
+  localBuyContactDetailsSchema,
+  localSellContactDetailsSchema,
+} from './contact';
 import escrowDetailsSchema from './escrow';
-import feesSchema from './fees';
+import {
+  crossBorderFeesSchema,
+  crossBorderSelfFeesSchema,
+  localBuyFeesSchema,
+  localSellFeesSchema,
+} from './fees';
 import locationDetailsSchema from './location';
-import transferDetailsSchema from './order/transfer-details';
-import transferTimelineSchema, {
-  transferTimelineStatusSchema,
+import {
+  crossBorderSelfTransferDetailsSchema,
+  crossBorderTransferDetailsSchema,
+  localBuyTransferDetailsSchema,
+  localSellTransferDetailsSchema,
+} from './order/transfer-details';
+import {
+  crossBorderSelfTimelineSchema,
+  crossBorderSelfTimelineStatusSchema,
+  crossBorderTimelineSchema,
+  crossBorderTimelineStatusSchema,
+  localBuyTimelineSchema,
+  localBuyTimelineStatusSchema,
+  localSellTimelineSchema,
+  localSellTimelineStatusSchema,
 } from './order/transfer-timeline';
 
 export const orderStatusSchema = z.enum([
@@ -17,46 +39,126 @@ export const orderStatusSchema = z.enum([
   'EXPIRED',
 ]);
 
-export const orderTypeSchema = z.enum(
+const crossBorderLiteral = z.literal('CROSS_BORDER_REMITTANCE');
+const crossBorderSelfLiteral = z.literal('CROSS_BORDER_SELF_REMITTANCE');
+const localBuyLiteral = z.literal('LOCAL_BUY_STABLECOINS');
+const localSellLiteral = z.literal('LOCAL_SELL_STABLECOINS');
+
+export const orderTypeSchema = z.union(
   [
-    'CROSS_BORDER_REMITTANCE',
-    'CROSS_BORDER_SELF_REMITTANCE',
-    'LOCAL_SELL_STABLECOINS',
-    'LOCAL_BUY_STABLECOINS',
+    crossBorderLiteral,
+    crossBorderSelfLiteral,
+    localBuyLiteral,
+    localSellLiteral,
   ],
-  { required_error: 'Please select your order type' }
+  {
+    required_error: 'Please select your order type',
+  }
 );
 
-export const orderSchema = z.object({
+export const baseOrderSchema = z.object({
   orderId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   expiresAt: z.coerce.date(),
+  orderStatus: orderStatusSchema,
+  priceOracleRates: z.record(z.string(), z.number()),
+  escrowDetails: escrowDetailsSchema,
+});
+
+export const crossBorderSchema = baseOrderSchema.extend({
   senderId: z.string(),
   recipientId: z.string(),
   senderAgentId: z.string(),
   recipientAgentId: z.string().optional(),
-  orderStatus: orderStatusSchema,
-  transferTimelineStatus: transferTimelineStatusSchema,
-  contactDetails: contactDetailsSchema,
-  fees: feesSchema,
-  priceOracleRates: z.record(z.string(), z.number()),
-  transferDetails: transferDetailsSchema,
-  transferTimeline: z.array(transferTimelineSchema),
+  fees: crossBorderFeesSchema,
+  transferTimelineStatus: crossBorderTimelineStatusSchema,
+  transferTimeline: z.array(crossBorderTimelineSchema),
+  transferDetails: crossBorderTransferDetailsSchema,
   collectionDetails: locationDetailsSchema.optional(),
   deliveryDetails: locationDetailsSchema.optional(),
-  escrowDetails: escrowDetailsSchema,
-  orderType: orderTypeSchema,
+  contactDetails: crossBorderContactDetailsSchema,
 });
+
+export const crossBorderSelfSchema = baseOrderSchema.extend({
+  senderId: z.string(),
+  senderAgentId: z.string(),
+  recipientAgentId: z.string(),
+  arrivesAt: z.coerce.date(),
+  fees: crossBorderSelfFeesSchema,
+  transferTimelineStatus: crossBorderSelfTimelineStatusSchema,
+  transferTimeline: z.array(crossBorderSelfTimelineSchema),
+  transferDetails: crossBorderSelfTransferDetailsSchema,
+  collectionDetails: locationDetailsSchema.optional(),
+  deliveryDetails: locationDetailsSchema.optional(),
+  contactDetails: crossBorderSelfContactDetailsSchema,
+});
+
+export const localBuySchema = baseOrderSchema.extend({
+  senderId: z.string(),
+  senderAgentId: z.string(),
+  fees: localBuyFeesSchema,
+  transferTimelineStatus: localBuyTimelineStatusSchema,
+  transferTimeline: z.array(localBuyTimelineSchema),
+  transferDetails: localBuyTransferDetailsSchema,
+  collectionDetails: locationDetailsSchema.optional(),
+  deliveryDetails: locationDetailsSchema.optional(),
+  contactDetails: localBuyContactDetailsSchema,
+});
+
+export const localSellSchema = baseOrderSchema.extend({
+  recipientId: z.string(),
+  recipientAgentId: z.string(),
+  fees: localSellFeesSchema,
+  transferTimelineStatus: localSellTimelineStatusSchema,
+  transferTimeline: z.array(localSellTimelineSchema),
+  transferDetails: localSellTransferDetailsSchema,
+  deliveryDetails: locationDetailsSchema.optional(),
+  contactDetails: localSellContactDetailsSchema,
+});
+
+export const orderSchema = z.discriminatedUnion('orderType', [
+  crossBorderSchema.extend({ orderType: crossBorderLiteral }),
+
+  crossBorderSelfSchema.extend({ orderType: crossBorderSelfLiteral }),
+
+  localBuySchema.extend({ orderType: localBuyLiteral }),
+
+  localSellSchema.extend({ orderType: localSellLiteral }),
+]);
 
 const orderApiSchema = makeApiSchema(orderSchema);
 
 export type Order = z.infer<typeof orderSchema>;
+
+export type CrossBorderOrder = z.infer<typeof crossBorderSchema>;
+
+export type CrossBorderSelfOrder = z.infer<typeof crossBorderSelfSchema>;
+
+export type LocalBuyOrder = z.infer<typeof localBuySchema>;
+
+export type LocalSellOrder = z.infer<typeof localSellSchema>;
 
 export type OrderApi = z.infer<typeof orderApiSchema>;
 
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type OrderType = z.infer<typeof orderTypeSchema>;
+
+export function recipient(order: Order) {
+  switch (order.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'LOCAL_SELL_STABLECOINS':
+      return order.recipientId;
+
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+    case 'LOCAL_BUY_STABLECOINS':
+      return order.senderId;
+  }
+}
+
+export function isRecipient(order: Order, userId: string | undefined) {
+  return recipient(order) === userId;
+}
 
 export default orderApiSchema;

@@ -6,9 +6,11 @@ import useOrders from '@/src/hooks/api/useOrders';
 import useAuth from '@/src/hooks/useAuth';
 
 import EmptyOrder from '../components/Empty/EmptyOrder';
+import { isRecipient, recipient } from '../schema/order';
+import { getTransferInfo } from '../schema/order/transfer-details';
 
 export default function HistoryList() {
-  const { user, hasGroup } = useAuth();
+  const { user: userId, hasGroup } = useAuth();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrders({
     pageSize: 10,
@@ -22,13 +24,21 @@ export default function HistoryList() {
     <>
       {data.pages.map(({ data: { orders, pageNumber } }) => (
         <Fragment key={pageNumber}>
-          {orders.map(order => (
-            <HistoryItem
-              {...order}
-              key={order.orderId}
-              isRecipient={user === order.recipientId}
-            />
-          ))}
+          {orders.map(order => {
+            const { orderId, orderStatus, createdAt, transferDetails } = order;
+
+            return (
+              <HistoryItem
+                key={orderId}
+                orderId={orderId}
+                orderStatus={orderStatus}
+                transferInfo={getTransferInfo(transferDetails)}
+                createdAt={createdAt}
+                recipientId={recipient(order)}
+                isRecipient={isRecipient(order, userId)}
+              />
+            );
+          })}
         </Fragment>
       ))}
 

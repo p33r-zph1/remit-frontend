@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { numericFormatter } from 'react-number-format';
 import { useAccount } from 'wagmi';
 
@@ -10,6 +10,7 @@ import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getTransferInfo } from '@/src/schema/order/transfer-details';
 
 export default memo(function ApproveERC20() {
   const { address, chain, chainId, isDisconnected } = useAccount();
@@ -32,7 +33,7 @@ export default memo(function ApproveERC20() {
         chain: chainName,
         chainId: prefferedChainId,
       },
-      transferDetails: { recipient },
+      transferDetails,
       orderType,
       orderId,
     },
@@ -61,17 +62,20 @@ export default memo(function ApproveERC20() {
     }
   }, [address, escrowDepositAsync, orderId, orderType]);
 
+  const approveAmountSummary = useMemo(() => {
+    const transferInfo = getTransferInfo(transferDetails);
+
+    const str = `${tokenSymbol} ${tokenAmount} (${transferInfo.currency} ${transferInfo.amount})`;
+    return numericFormatter(str, { thousandSeparator: ',' });
+  }, [tokenAmount, tokenSymbol, transferDetails]);
+
   return (
     <div className="flex flex-col space-y-12">
       <HeaderTitle className="text-xl md:text-2xl">
         <span className="text-gray-400">Send </span>
-        {numericFormatter(`${tokenSymbol} ${tokenAmount}`, {
-          thousandSeparator: ',',
-        })}
-        {` `}
-        {numericFormatter(`(${recipient.currency} ${recipient.amount})`, {
-          thousandSeparator: ',',
-        })}
+
+        {approveAmountSummary}
+
         <span className="text-gray-400"> to escrow</span>
       </HeaderTitle>
 

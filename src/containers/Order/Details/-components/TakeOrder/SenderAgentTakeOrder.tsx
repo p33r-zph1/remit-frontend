@@ -25,9 +25,9 @@ export default memo(function SenderAgentTakeOrder() {
     },
   });
 
-  const {
-    order: { fees, orderType, orderId },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
+
+  const { orderType, orderId } = order;
 
   const {
     // callbacks
@@ -50,7 +50,9 @@ export default memo(function SenderAgentTakeOrder() {
     onAcceptOrder(chainId);
   };
 
-  const { commission } = fees.senderAgent;
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+
+  const { commission } = order.fees.senderAgent;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
@@ -58,7 +60,7 @@ export default memo(function SenderAgentTakeOrder() {
         <span className="text-gray-400">Your commission at {commission}%</span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(fees.senderAgent)}
+          {formatCommissionDetails(order.fees.senderAgent)}
         </span>
       </div>
 
@@ -110,7 +112,7 @@ export default memo(function SenderAgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(fees.senderAgent)} ({commission}%)
+            {formatCommissionDetails(order.fees.senderAgent)} ({commission}%)
           </span>
         </p>
       </Modal>

@@ -1,37 +1,117 @@
 import { z } from 'zod';
 
-export const transferTimelineStatusSchema = z.enum([
+export const baseTimelineStatusSchema = z.enum([
   'PENDING',
-  'RECIPIENT_ACCEPTED',
-  'RECIPIENT_REJECTED',
-  'SENDER_AGENT_ACCEPTED',
-  'SENDER_AGENT_REJECTED',
-  'RECIPIENT_AGENT_ACCEPTED',
-  'RECIPIENT_AGENT_REJECTED',
-  'ORDER_ACCEPTED',
-  'COLLECTION_MEETUP_SET',
-  'CASH_COLLECTED',
   'ESCROW_DEPOSITED',
-  'DELIVERY_MEETUP_SET',
-  'CASH_DELIVERED',
   'ESCROW_RELEASED',
+
+  // Negative statuses
   'ORDER_EXPIRED',
 ]);
 
-const transferTimelineSchema = z.object({
+export const crossBorderTimelineStatusSchema = z.enum([
+  ...baseTimelineStatusSchema.options,
+  'RECIPIENT_ACCEPTED',
+  'SENDER_AGENT_ACCEPTED',
+  'RECIPIENT_AGENT_ACCEPTED',
+  'ORDER_ACCEPTED',
+  'COLLECTION_MEETUP_SET',
+  'CASH_COLLECTED',
+  'DELIVERY_MEETUP_SET',
+  'CASH_DELIVERED',
+
+  // Negative statuses
+  'RECIPIENT_REJECTED',
+  'SENDER_AGENT_REJECTED',
+  'RECIPIENT_AGENT_REJECTED',
+]);
+
+export const crossBorderSelfTimelineStatusSchema = z.enum([
+  ...baseTimelineStatusSchema.options,
+  'SENDER_AGENT_ACCEPTED',
+  'RECIPIENT_AGENT_ACCEPTED',
+  'ORDER_ACCEPTED',
+  'COLLECTION_MEETUP_SET',
+  'CASH_COLLECTED',
+
+  'SENDER_ARRIVED',
+  'DELIVERY_MEETUP_SET',
+  'CASH_DELIVERED',
+
+  // Negative statuses
+  'SENDER_AGENT_REJECTED',
+  'RECIPIENT_AGENT_REJECTED',
+]);
+
+export const localBuyTimelineStatusSchema = z.enum([
+  ...baseTimelineStatusSchema.options,
+  'SENDER_AGENT_ACCEPTED',
+  'COLLECTION_MEETUP_SET',
+  'CASH_COLLECTED',
+
+  // Negative statuses
+  'SENDER_AGENT_REJECTED',
+]);
+
+export const localSellTimelineStatusSchema = z.enum([
+  ...baseTimelineStatusSchema.options,
+  'RECIPIENT_AGENT_ACCEPTED',
+  'DELIVERY_MEETUP_SET',
+  'CASH_DELIVERED',
+
+  // Negative statuses
+  'RECIPIENT_AGENT_REJECTED',
+]);
+
+const baseTimelineSchema = z.object({
   title: z.string(),
   description: z.string(),
   dateTime: z.coerce.date(),
-  status: transferTimelineStatusSchema,
 });
 
-export type TransferTimeline = z.infer<typeof transferTimelineSchema>;
+export const crossBorderTimelineSchema = baseTimelineSchema.extend({
+  status: crossBorderTimelineStatusSchema,
+});
 
-export type TransferTimelineStatus = z.infer<
-  typeof transferTimelineStatusSchema
+export const crossBorderSelfTimelineSchema = baseTimelineSchema.extend({
+  status: crossBorderSelfTimelineStatusSchema,
+});
+
+export const localBuyTimelineSchema = baseTimelineSchema.extend({
+  status: localBuyTimelineStatusSchema,
+});
+
+export const localSellTimelineSchema = baseTimelineSchema.extend({
+  status: localSellTimelineStatusSchema,
+});
+
+export type CrossBorderTimelineStatus = z.infer<
+  typeof crossBorderTimelineStatusSchema
 >;
 
-export function isOrderSettled(status: TransferTimelineStatus) {
+export type CrossBorderSelfTimelineStatus = z.infer<
+  typeof crossBorderSelfTimelineStatusSchema
+>;
+
+export type LocalBuyTimelineStatus = z.infer<
+  typeof localBuyTimelineStatusSchema
+>;
+
+export type LocalSellTimelineStatus = z.infer<
+  typeof localSellTimelineStatusSchema
+>;
+
+export type TimelineStatus =
+  | CrossBorderTimelineStatus
+  | CrossBorderSelfTimelineStatus
+  | LocalBuyTimelineStatus
+  | LocalSellTimelineStatus;
+
+export type Timeline = z.infer<typeof baseTimelineSchema> & {
+  status: TimelineStatus;
+};
+
+export function isOrderSettled(status: TimelineStatus) {
   switch (status) {
     case 'RECIPIENT_REJECTED':
     case 'RECIPIENT_AGENT_REJECTED':
@@ -45,4 +125,4 @@ export function isOrderSettled(status: TransferTimelineStatus) {
   }
 }
 
-export default transferTimelineSchema;
+export default baseTimelineSchema;

@@ -1,13 +1,12 @@
 import HeaderTitle from '@/src/components/HeaderTitle';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId/showQr';
 
-export default function ShowQrCode() {
-  const { qrCode } = Route.useSearch();
+type Props = {
+  senderAgentId: string;
+};
 
-  const {
-    order: { senderAgentId },
-  } = useOrderDetails();
+export default function ShowQrCode({ senderAgentId }: Props) {
+  const { qrCode } = Route.useSearch();
 
   return (
     <div className="flex flex-1 flex-col space-y-10">

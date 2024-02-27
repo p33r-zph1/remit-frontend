@@ -10,6 +10,7 @@ import Page from '@/src/components/Page';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import ScanQrCode from '@/src/containers/Order/QrCode/ScanQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
+import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 import { Route as ScanQrRoute } from './scanQr';
@@ -33,14 +34,18 @@ export const Route = createLazyFileRoute('/_auth/order/$orderId/scanQr')({
 });
 
 function ScanQrComponent() {
+  const { user: userId } = useAuth();
   const navigate = useNavigate({ from: ScanQrRoute.fullPath });
 
-  const {
-    agent: { isRecipient: isRecipientAgent },
-    order: { transferTimelineStatus: status },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
 
-  switch (status) {
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') {
+    return <HeroAccessDenied className="bg-white" />;
+  }
+
+  const { transferTimelineStatus, recipientAgentId } = order;
+
+  switch (transferTimelineStatus) {
     case 'CASH_DELIVERED':
     case 'ESCROW_RELEASED': {
       navigate({
@@ -52,7 +57,7 @@ function ScanQrComponent() {
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      if (isRecipientAgent) {
+      if (userId === recipientAgentId) {
         return <ScanQrCode />;
       }
 

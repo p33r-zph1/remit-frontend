@@ -14,15 +14,7 @@ import CustomerMeetup from './Meetup/CustomerMeetup';
 export default memo(function ReceiveCash() {
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const {
-    order: {
-      deliveryDetails,
-      recipientAgentId,
-      orderType,
-      orderId,
-      contactDetails: { recipientAgent },
-    },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -43,6 +35,16 @@ export default memo(function ReceiveCash() {
       });
     }
   }, [generatedQrData?.data.qrCode, isQrGenerated, navigate]);
+
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+
+  const {
+    deliveryDetails,
+    orderType,
+    orderId,
+    recipientAgentId,
+    contactDetails: { recipientAgent },
+  } = order;
 
   if (!deliveryDetails) throw new Error('Delivery details is not present.');
 

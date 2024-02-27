@@ -22,7 +22,7 @@ export default function useRejectOrder() {
     mutationKey: ['reject-order'],
     mutationFn: ({ orderType, orderId }: MutationProps) => {
       const apiUrl = makeApiUrl(
-        `/orders${slugify(orderType)}/${orderId}/reject`
+        `/orders/${slugify(orderType)}/${orderId}/reject`
       );
 
       return genericFetch(apiUrl, orderApiSchema, {

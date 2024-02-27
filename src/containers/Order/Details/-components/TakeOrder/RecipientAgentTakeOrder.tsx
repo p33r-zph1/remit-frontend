@@ -7,9 +7,9 @@ import useTakeOrder from '@/src/hooks/useTakeOrder';
 import { formatCommissionDetails } from '@/src/schema/fees';
 
 export default memo(function RecipientAgentTakeOrder() {
-  const {
-    order: { fees, orderType, orderId },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
+
+  const { orderType, orderId } = order;
 
   const {
     // callbacks
@@ -28,10 +28,12 @@ export default memo(function RecipientAgentTakeOrder() {
     rejectOrderError,
   } = useTakeOrder({ orderType, orderId });
 
-  if (!fees.recipientAgent)
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+
+  if (!order.fees.recipientAgent)
     throw new Error('Recipient agent fees cannot be missing!');
 
-  const { commission } = fees.recipientAgent;
+  const { commission } = order.fees.recipientAgent;
 
   return (
     <div className="flex flex-col space-y-4">
@@ -39,7 +41,7 @@ export default memo(function RecipientAgentTakeOrder() {
         <span className="text-gray-400">Your commission at {commission}%</span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(fees.recipientAgent)}
+          {formatCommissionDetails(order.fees.recipientAgent)}
         </span>
       </div>
 
@@ -90,7 +92,7 @@ export default memo(function RecipientAgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(fees.recipientAgent)} ({commission}%)
+            {formatCommissionDetails(order.fees.recipientAgent)} ({commission}%)
           </span>
         </p>
       </Modal>
