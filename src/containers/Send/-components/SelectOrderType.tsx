@@ -34,7 +34,6 @@ const types: Record<OrderType, Order> = {
     description:
       'Cash out your stablecoins locally. An agent will deliver your cash once your stablecoins are in escrow.',
     icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
-    disabled: true,
   },
   LOCAL_BUY_STABLECOINS: {
     title: 'Buy Stablecoins (Local)',

@@ -52,7 +52,7 @@ export default function OrderItem({
         <div className="text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
           {formatTranferInfo(transferInfo)}
         </div>
-        <div className="text-xs text-gray-400 md:text-base">
+        <div className="text-xs text-gray-400 first-letter:capitalize md:text-base">
           {safeFormatRelative(createdAt)}
         </div>
       </div>
