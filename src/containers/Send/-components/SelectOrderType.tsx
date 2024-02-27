@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 
 import Modal from '@/src/components/Modal';
 import SelectViaModal from '@/src/components/Select/SelectViaModal';
-import type { SendMoney } from '@/src/hooks/useSendMoney';
+import type { OrderForm } from '@/src/hooks/useOrder';
 import { type OrderType, orderTypeSchema } from '@/src/schema/order';
 
 type Order = {
@@ -43,7 +43,7 @@ const types: Record<OrderType, Order> = {
   },
 };
 
-type Props = UseControllerProps<SendMoney>;
+type Props = UseControllerProps<OrderForm>;
 
 export default memo(function SelectOrderType(props: Props) {
   const {

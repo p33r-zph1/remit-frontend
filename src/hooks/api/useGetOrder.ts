@@ -21,7 +21,7 @@ export const orderQueryOptions = ({ orderId }: OrderQueryProps) =>
     refetchInterval: 10_000,
   });
 
-export default function useOrder(
+export default function useGetOrder(
   props: Parameters<typeof orderQueryOptions>[0]
 ) {
   return useSuspenseQuery(orderQueryOptions(props));

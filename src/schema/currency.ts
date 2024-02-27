@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 import { makeApiSchema } from './api/fetch';
+import { oracleSchema } from './oracle';
 import { orderTypeSchema } from './order';
-import { priceOracleSchema } from './price-oracle';
 
 const fiatCurrencySchema = z.object({
   type: z.literal('fiat'),
@@ -30,7 +30,7 @@ export const currencyConfigSchema = z.object({
   //   })
   defaultSenderCurrency: currencySchema,
   defaultRecipientCurrency: currencySchema,
-  priceOracle: priceOracleSchema,
+  priceOracle: oracleSchema,
 });
 
 export const exchangeCurrencySchema = z.object({

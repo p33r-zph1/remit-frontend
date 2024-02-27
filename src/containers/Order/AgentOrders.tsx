@@ -7,9 +7,9 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import CommissionCard from '@/src/components/Card/CommissionCard';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
-import useAgent from '@/src/hooks/api/useAgent';
 import useAgentCommission from '@/src/hooks/api/useAgentCommission';
 import useAgentStatus from '@/src/hooks/api/useAgentStatus';
+import useGetAgent from '@/src/hooks/api/useGetAgent';
 import useAuth from '@/src/hooks/useAuth';
 
 import OrderList from './OrderList';
@@ -23,7 +23,7 @@ export default function AgentOrders() {
     });
   }
 
-  const { data: agent } = useAgent({ agentId: user });
+  const { data: agent } = useGetAgent({ agentId: user });
 
   const {
     mutateAsync: setCommissionAsync,

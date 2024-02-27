@@ -8,20 +8,20 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import useAuth from '@/src/hooks/useAuth';
 import { Route } from '@/src/routes/login';
 
-const loginSchema = z.object({
+const loginFormSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
   password: z.string().min(1, { message: 'Password is required' }),
 });
 
-type LoginSchema = z.infer<typeof loginSchema>;
+type LoginForm = z.infer<typeof loginFormSchema>;
 
 export default function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginFormSchema),
   });
 
   const { authenticate, error } = useAuth();
@@ -32,7 +32,7 @@ export default function Login() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit: SubmitHandler<LoginSchema> = ({ username, password }) => {
+  const onSubmit: SubmitHandler<LoginForm> = ({ username, password }) => {
     setIsSubmitting(true);
 
     authenticate({ username, password }).then(() => {

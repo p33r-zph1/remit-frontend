@@ -22,7 +22,7 @@ import useSetCollection, {
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { safeFormatRelativeDistance } from '@/src/utils/date';
 
-const deliveryProps = z.object({
+const meetupFormSchema = z.object({
   startDate: z.date({
     required_error: 'Enter a valid date',
   }),
@@ -35,7 +35,7 @@ const deliveryProps = z.object({
   }),
 });
 
-type Delivery = z.infer<typeof deliveryProps>;
+type MeetupForm = z.infer<typeof meetupFormSchema>;
 
 const libraries: Libraries = ['places'];
 
@@ -53,8 +53,8 @@ export default function AgentMeetup({ meetupType }: Props) {
     watch,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<Delivery>({
-    resolver: zodResolver(deliveryProps),
+  } = useForm<MeetupForm>({
+    resolver: zodResolver(meetupFormSchema),
     defaultValues: {
       radius: '200',
       areaName: '',
@@ -81,7 +81,7 @@ export default function AgentMeetup({ meetupType }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [onConfirmMeetup, setOnConfirmMeetup] = useState<() => void>();
 
-  const onSubmit: SubmitHandler<Delivery> = async ({
+  const onSubmit: SubmitHandler<MeetupForm> = async ({
     areaName,
     coordinates,
     startDate,

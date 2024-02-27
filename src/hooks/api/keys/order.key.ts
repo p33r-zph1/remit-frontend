@@ -1,5 +1,5 @@
-import type { OrderQueryProps } from '../useOrder';
-import type { OrdersQueryProps } from '../useOrders';
+import type { OrderQueryProps } from '../useGetOrder';
+import type { OrdersQueryProps } from '../useGetOrders';
 
 export const orderKeys = {
   /**

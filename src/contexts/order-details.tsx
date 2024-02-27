@@ -1,6 +1,6 @@
 import { createContext, type ReactNode } from 'react';
 
-import useOrder from '@/src/hooks/api/useOrder';
+import useGetOrder from '@/src/hooks/api/useGetOrder';
 // import useAuth from '@/src/hooks/useAuth';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Order } from '@/src/schema/order';
@@ -28,7 +28,7 @@ export default function OrderDetailsProvider({
   const { orderId } = Route.useParams();
 
   // const { user: userId } = useAuth();
-  const { data: order } = useOrder({ orderId });
+  const { data: order } = useGetOrder({ orderId });
 
   // const { recipientId, senderId, recipientAgentId, senderAgentId } = order;
 

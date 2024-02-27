@@ -9,7 +9,7 @@ import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
 import wagmi from '@/src/configs/wagmi';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
-import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
+import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
 import { Route } from '@/src/routes/_auth/';
 
 import CurrencyForm from './-components/CurrencyForm';
@@ -45,7 +45,7 @@ export default function SendForm() {
       setError,
       formState: { isSubmitting },
     },
-  } = useSendMoney();
+  } = useOrder();
 
   const {
     data: sendOrderData,
@@ -70,7 +70,7 @@ export default function SendForm() {
     return numericFormatter(str, { thousandSeparator: ',' });
   }, [getValues, recipientCurrency?.currency, senderCurrency?.currency]);
 
-  const onSubmit: SubmitHandler<SendMoney> = data => {
+  const onSubmit: SubmitHandler<OrderForm> = data => {
     const { senderAmount, recipientId, agentId } = data;
 
     if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE') {

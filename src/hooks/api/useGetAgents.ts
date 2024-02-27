@@ -23,7 +23,7 @@ export const agentsQueryOptiions = ({ isoCode }: AgentsQueryProps) =>
     refetchInterval: 20_000,
   });
 
-export default function useAgents(
+export default function useGetAgents(
   props: Parameters<typeof agentsQueryOptiions>[0]
 ) {
   return useSuspenseQuery(agentsQueryOptiions(props));

@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import EmptyHistory from '@/src/components/Empty/EmptyHistory';
 import HistoryItem from '@/src/components/Item/HistoryItem';
-import useOrders from '@/src/hooks/api/useOrders';
+import useGetOrders from '@/src/hooks/api/useGetOrders';
 import useAuth from '@/src/hooks/useAuth';
 
 import EmptyOrder from '../components/Empty/EmptyOrder';
@@ -12,9 +12,11 @@ import { getTransferInfo } from '../schema/order/transfer-details';
 export default function HistoryList() {
   const { user: userId, hasGroup } = useAuth();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrders({
-    pageSize: 10,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetOrders(
+    {
+      pageSize: 10,
+    }
+  );
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
     return <EmptyHistory isCustomer={hasGroup('customer')} />;

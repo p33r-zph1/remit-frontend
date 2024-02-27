@@ -7,11 +7,11 @@ import { platformFee } from '../constants';
 import { getIsoCode } from '../schema/currency';
 import { calculateFees } from '../schema/fees';
 import { orderTypeSchema } from '../schema/order';
-import useAgents from './api/useAgents';
-import useExchangeCurrency from './api/useExchangeCurrency';
-import usePriceOracle from './api/usePriceOracle';
+import useGetAgents from './api/useGetAgents';
+import useGetCurrency from './api/useGetCurrency';
+import useGetOracle from './api/useGetOracle';
 
-const sendMoneySchema = z.object({
+const orderFormSchema = z.object({
   orderType: orderTypeSchema,
   senderAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
@@ -25,11 +25,11 @@ const sendMoneySchema = z.object({
     }),
 });
 
-export type SendMoney = z.infer<typeof sendMoneySchema>;
+export type OrderForm = z.infer<typeof orderFormSchema>;
 
-export default function useSendMoney() {
-  const formProps = useForm<SendMoney>({
-    resolver: zodResolver(sendMoneySchema),
+export default function useOrder() {
+  const formProps = useForm<OrderForm>({
+    resolver: zodResolver(orderFormSchema),
     defaultValues: {
       orderType: 'CROSS_BORDER_REMITTANCE',
       senderAmount: '',
@@ -44,34 +44,34 @@ export default function useSendMoney() {
   const { setValue, getValues, watch } = formProps;
 
   const agentId = watch('agentId');
-  const orderType = watch('orderType');
+  const orderTypeKey = watch('orderType');
 
   const {
-    data: { orderType: orderTypeRecord },
-  } = useExchangeCurrency();
+    data: { orderType },
+  } = useGetCurrency();
 
-  const [senderCurrency, setSenderCurrency] = useState(
-    orderTypeRecord[orderType]?.defaultSenderCurrency
+  const [fromCurrency, setFromCurrency] = useState(
+    orderType[orderTypeKey]?.defaultSenderCurrency
   );
 
-  const [recipientCurrency, setRecipientCurrency] = useState(
-    orderTypeRecord[orderType]?.defaultRecipientCurrency
+  const [toCurrency, setToCurrency] = useState(
+    orderType[orderTypeKey]?.defaultRecipientCurrency
   );
 
   const {
     data: { rate: exchangeRate },
     isSuccess: pairUpdated,
-  } = usePriceOracle({
-    from: senderCurrency?.currency,
-    to: recipientCurrency?.currency,
+  } = useGetOracle({
+    from: fromCurrency?.currency,
+    to: toCurrency?.currency,
   });
 
   const countryIsoCode = useMemo(
-    () => getIsoCode(senderCurrency, recipientCurrency),
-    [senderCurrency, recipientCurrency]
+    () => getIsoCode(fromCurrency, toCurrency),
+    [fromCurrency, toCurrency]
   );
 
-  const { data: agents } = useAgents({
+  const { data: agents } = useGetAgents({
     isoCode: countryIsoCode,
   });
 
@@ -96,10 +96,10 @@ export default function useSendMoney() {
   );
 
   useEffect(() => {
-    // restore the selected currency to default when `orderType` changes
-    setSenderCurrency(orderTypeRecord[orderType]?.defaultSenderCurrency);
-    setRecipientCurrency(orderTypeRecord[orderType]?.defaultRecipientCurrency);
-  }, [orderType, orderTypeRecord]);
+    // restore the selected currency to default when `orderTypeKey` changes
+    setFromCurrency(orderType[orderTypeKey]?.defaultSenderCurrency);
+    setToCurrency(orderType[orderTypeKey]?.defaultRecipientCurrency);
+  }, [orderTypeKey, orderType]);
 
   useEffect(() => {
     // reset the selected agent to default when sender select's a new currency
@@ -115,18 +115,18 @@ export default function useSendMoney() {
 
   return {
     // currency dropdown controlled state
-    senderCurrency,
-    setSenderCurrency,
-    recipientCurrency,
-    setRecipientCurrency,
+    senderCurrency: fromCurrency,
+    setSenderCurrency: setFromCurrency,
+    recipientCurrency: toCurrency,
+    setRecipientCurrency: setToCurrency,
 
     // callback function for calculating the conversion
     conversionHandler,
 
     // list of exchange currencies
-    supportedCurrencies: orderTypeRecord[orderType]?.supportedCurrencies || [],
+    supportedCurrencies: orderType[orderTypeKey]?.supportedCurrencies || [],
 
-    supportedTokens: orderTypeRecord[orderType]?.supportedTokens || [],
+    supportedTokens: orderType[orderTypeKey]?.supportedTokens || [],
 
     // agents list
     agents,
