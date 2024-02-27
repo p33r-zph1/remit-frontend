@@ -25,13 +25,20 @@ export default function HistoryList() {
       {data.pages.map(({ data: { orders, pageNumber } }) => (
         <Fragment key={pageNumber}>
           {orders.map(order => {
-            const { orderId, orderStatus, createdAt, transferDetails } = order;
+            const {
+              orderId,
+              orderStatus,
+              transferTimelineStatus: timelineStatus,
+              createdAt,
+              transferDetails,
+            } = order;
 
             return (
               <HistoryItem
                 key={orderId}
                 orderId={orderId}
                 orderStatus={orderStatus}
+                timelineStatus={timelineStatus}
                 transferInfo={getTransferInfo(transferDetails)}
                 createdAt={createdAt}
                 recipientId={recipient(order)}

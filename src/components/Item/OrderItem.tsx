@@ -5,6 +5,7 @@ import {
   formatTranferInfo,
   type TransferInfo,
 } from '@/src/schema/order/transfer-info';
+import type { TimelineStatus } from '@/src/schema/order/transfer-timeline';
 import { safeFormatRelative } from '@/src/utils/date';
 
 import StatusIcon from '../Icon/StatusIcon';
@@ -12,6 +13,7 @@ import StatusIcon from '../Icon/StatusIcon';
 type Item = {
   orderId: string;
   orderStatus: OrderStatus;
+  timelineStatus: TimelineStatus;
   transferInfo: TransferInfo;
   createdAt: Date;
   recipientId: string;
@@ -21,6 +23,7 @@ type Item = {
 export default function OrderItem({
   orderId,
   orderStatus,
+  timelineStatus,
   transferInfo,
   createdAt,
   recipientId,
@@ -30,7 +33,7 @@ export default function OrderItem({
     <Link
       to="/order/$orderId"
       params={{ orderId }}
-      className="group mb-2 flex cursor-pointer flex-row items-center justify-between rounded-lg py-4 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4"
+      className="group mb-2 flex cursor-pointer flex-row items-center justify-between text-balance rounded-lg py-4 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4"
     >
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">
@@ -39,13 +42,13 @@ export default function OrderItem({
         <div className="flex flex-col items-start justify-center">
           <div className="text-sm font-semibold md:text-lg">{recipientId}</div>
           <div className="text-xs capitalize text-gray-500 md:text-lg">
-            {orderStatus.replace(/_/g, ' ').toLowerCase()}
+            {timelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
       </div>
 
       {/* Amount & Conversion Details */}
-      <div className="flex flex-col items-end justify-center text-end">
+      <div className="ml-2 flex flex-col items-end justify-center text-end">
         <div className="text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
           {formatTranferInfo(transferInfo)}
         </div>

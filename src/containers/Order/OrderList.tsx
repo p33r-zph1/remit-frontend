@@ -21,13 +21,20 @@ export default memo(function OrderList(props: Props) {
   return data.pages.map(({ data: { orders, pageNumber } }) => (
     <Fragment key={pageNumber}>
       {orders.map(order => {
-        const { orderId, orderStatus, createdAt, transferDetails } = order;
+        const {
+          orderId,
+          orderStatus,
+          transferTimelineStatus: timelineStatus,
+          createdAt,
+          transferDetails,
+        } = order;
 
         return (
           <OrderItem
             key={orderId}
             orderId={orderId}
             orderStatus={orderStatus}
+            timelineStatus={timelineStatus}
             transferInfo={getTransferInfo(transferDetails)}
             createdAt={createdAt}
             recipientId={recipient(order)}
