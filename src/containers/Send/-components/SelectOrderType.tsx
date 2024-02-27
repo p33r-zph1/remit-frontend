@@ -1,10 +1,10 @@
 import { GlobeAltIcon, MapPinIcon } from '@heroicons/react/24/outline';
-import { type ReactNode, useState } from 'react';
+import { memo, useState } from 'react';
 import { useController, type UseControllerProps } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import Modal from '@/src/components/Modal';
-import SelectModal from '@/src/components/Select/SelectViaModal';
+import SelectViaModal from '@/src/components/Select/SelectViaModal';
 import type { SendMoney } from '@/src/hooks/useSendMoney';
 import { type OrderType, orderTypeSchema } from '@/src/schema/order';
 
@@ -44,25 +44,23 @@ const types: Record<OrderType, Order> = {
   },
 };
 
-type Props = UseControllerProps<SendMoney> & {
-  children: (orderType: OrderType | null | undefined) => ReactNode;
-};
+type Props = UseControllerProps<SendMoney>;
 
-export default function SendOrderType({ children, ...controllerProps }: Props) {
+export default memo(function SelectOrderType(props: Props) {
   const {
     field: { onChange, value, disabled, ...otherFields },
     fieldState: { error },
     formState: { isSubmitting },
-  } = useController(controllerProps);
+  } = useController(props);
 
-  const selected = orderTypeSchema.nullish().parse(value);
+  const orderType = orderTypeSchema.parse(value);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
-      <SelectModal
-        value={selected ? types[selected].title : ''}
+      <SelectViaModal
+        value={orderType ? types[orderType].title : ''}
         onClick={() => setModalVisible(true)}
         disabled={isSubmitting || Boolean(disabled)}
         placeholder="Select transaction type"
@@ -70,8 +68,6 @@ export default function SendOrderType({ children, ...controllerProps }: Props) {
         error={error}
         {...otherFields}
       />
-
-      {children(selected)}
 
       <Modal
         open={modalVisible}
@@ -83,13 +79,13 @@ export default function SendOrderType({ children, ...controllerProps }: Props) {
       >
         <ul className="space-y-2 text-left">
           {Object.entries(types).map(
-            ([orderType, { icon, title, description, disabled }]) => (
+            ([mappedType, { icon, title, description, disabled }]) => (
               <li
-                key={orderType}
+                key={mappedType}
                 tabIndex={0}
                 className={twMerge(
                   'rounded-md p-4 shadow-md ring-primary duration-200',
-                  selected === orderType && 'ring-2',
+                  mappedType === orderType && 'ring-2',
                   disabled
                     ? 'cursor-not-allowed opacity-35'
                     : 'cursor-pointer hover:shadow-lg'
@@ -97,7 +93,7 @@ export default function SendOrderType({ children, ...controllerProps }: Props) {
                 onClick={() => {
                   if (disabled) return;
 
-                  onChange(orderType);
+                  onChange(mappedType);
                   setModalVisible(false);
                 }}
               >
@@ -113,4 +109,4 @@ export default function SendOrderType({ children, ...controllerProps }: Props) {
       </Modal>
     </>
   );
-}
+});

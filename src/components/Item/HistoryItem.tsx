@@ -1,24 +1,31 @@
 import { Link } from '@tanstack/react-router';
 
-import type { Order } from '@/src/schema/order';
-import { formatTranferInfo } from '@/src/schema/order/transfer-info';
+import type { OrderStatus } from '@/src/schema/order';
+import {
+  formatTranferInfo,
+  type TransferInfo,
+} from '@/src/schema/order/transfer-info';
+import { safeFormatRelative } from '@/src/utils/date';
 
 import StatusIcon from '../Icon/StatusIcon';
 
-type Item = Order & {
+type Item = {
+  orderId: string;
+  orderStatus: OrderStatus;
+  transferInfo: TransferInfo;
+  createdAt: Date;
+  recipientId: string;
   isRecipient: boolean;
 };
 
 export default function HistoryItem({
   orderId,
-  recipientId,
   orderStatus,
-  transferDetails,
+  transferInfo,
+  createdAt,
+  recipientId,
   isRecipient,
-  transferTimelineStatus,
 }: Item) {
-  const { sender, recipient } = transferDetails;
-
   return (
     <Link
       to="/order/$orderId"
@@ -30,22 +37,20 @@ export default function HistoryItem({
         <StatusIcon status={orderStatus} isRecipient={isRecipient} />
 
         <div className="flex flex-col items-start justify-center">
-          <div className="max-w-sm text-sm font-semibold md:text-lg">
-            {recipientId}
-          </div>
-          <div className="max-w-sm text-sm capitalize text-gray-400 md:text-lg">
-            {transferTimelineStatus.replace(/_/g, ' ').toLowerCase()}
+          <div className="text-sm font-semibold md:text-lg">{recipientId}</div>
+          <div className="text-xs capitalize text-gray-500 md:text-lg">
+            {orderStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
       </div>
 
       {/* Amount & Conversion Details */}
-      <div className="flex flex-col items-end justify-center">
-        <div className="max-w-sm text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
-          {formatTranferInfo(sender)}
+      <div className="flex flex-col items-end justify-center text-end">
+        <div className="text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
+          {formatTranferInfo(transferInfo)}
         </div>
-        <div className="text-sm text-gray-400 md:text-lg">
-          {formatTranferInfo(recipient)}
+        <div className="text-xs text-gray-400 md:text-base">
+          {safeFormatRelative(createdAt)}
         </div>
       </div>
     </Link>

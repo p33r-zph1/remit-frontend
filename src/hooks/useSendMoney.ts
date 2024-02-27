@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { coerce, z } from 'zod';
 
 import { platformFee } from '../constants';
-import { type Currency } from '../schema/currency';
+import { getIsoCode } from '../schema/currency';
 import { calculateFees } from '../schema/fees';
 import { orderTypeSchema } from '../schema/order';
 import useAgents from './api/useAgents';
@@ -12,7 +12,7 @@ import useExchangeCurrency from './api/useExchangeCurrency';
 import usePriceOracle from './api/usePriceOracle';
 
 const sendMoneySchema = z.object({
-  orderType: orderTypeSchema.refine(type => Boolean(type)),
+  orderType: orderTypeSchema,
   senderAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
   chainId: z.number().min(1, { message: 'Please select a chain' }).optional(),
@@ -28,36 +28,10 @@ const sendMoneySchema = z.object({
 export type SendMoney = z.infer<typeof sendMoneySchema>;
 
 export default function useSendMoney() {
-  const {
-    data: {
-      defaultRecipientCurrency,
-      defaultSenderCurrency,
-      supportedCurrencies,
-    },
-  } = useExchangeCurrency();
-
-  const [senderCurrency, setSenderCurrency] = useState<Currency>(
-    defaultSenderCurrency
-  );
-  const [recipientCurrency, setRecipientCurrency] = useState<Currency>(
-    defaultRecipientCurrency
-  );
-
-  const {
-    data: { rate: exchangeRate },
-    isSuccess: pairUpdated,
-  } = usePriceOracle({
-    from: senderCurrency.currency,
-    to: recipientCurrency.currency,
-  });
-
-  const { data: agents } = useAgents({
-    isoCode: senderCurrency.countryIsoCode,
-  });
-
   const formProps = useForm<SendMoney>({
     resolver: zodResolver(sendMoneySchema),
     defaultValues: {
+      orderType: 'CROSS_BORDER_REMITTANCE',
       senderAmount: '',
       recipientAmount: '',
       chainId: 0,
@@ -70,6 +44,36 @@ export default function useSendMoney() {
   const { setValue, getValues, watch } = formProps;
 
   const agentId = watch('agentId');
+  const orderType = watch('orderType');
+
+  const {
+    data: { orderType: orderTypeRecord },
+  } = useExchangeCurrency();
+
+  const [senderCurrency, setSenderCurrency] = useState(
+    orderTypeRecord[orderType]?.defaultSenderCurrency
+  );
+
+  const [recipientCurrency, setRecipientCurrency] = useState(
+    orderTypeRecord[orderType]?.defaultRecipientCurrency
+  );
+
+  const {
+    data: { rate: exchangeRate },
+    isSuccess: pairUpdated,
+  } = usePriceOracle({
+    from: senderCurrency?.currency,
+    to: recipientCurrency?.currency,
+  });
+
+  const countryIsoCode = useMemo(
+    () => getIsoCode(senderCurrency, recipientCurrency),
+    [senderCurrency, recipientCurrency]
+  );
+
+  const { data: agents } = useAgents({
+    isoCode: countryIsoCode,
+  });
 
   const conversionHandler = useCallback(
     (value: number | string | null) => {
@@ -80,7 +84,7 @@ export default function useSendMoney() {
 
       const recipientAmount = calculateFees({
         amount: result.data,
-        precision: recipientCurrency.decimals,
+        precision: 2,
         exchangeRate,
         platformFee,
         agent,
@@ -88,8 +92,19 @@ export default function useSendMoney() {
 
       setValue('recipientAmount', recipientAmount);
     },
-    [agentId, agents, exchangeRate, recipientCurrency.decimals, setValue]
+    [agentId, agents, exchangeRate, setValue]
   );
+
+  useEffect(() => {
+    // restore the selected currency to default when `orderType` changes
+    setSenderCurrency(orderTypeRecord[orderType]?.defaultSenderCurrency);
+    setRecipientCurrency(orderTypeRecord[orderType]?.defaultRecipientCurrency);
+  }, [orderType, orderTypeRecord]);
+
+  useEffect(() => {
+    // reset the selected agent to default when sender select's a new currency
+    setValue('agentId', 'default');
+  }, [countryIsoCode, setValue]);
 
   useEffect(() => {
     // re-calculates the conversion amount when the pair(exchange rate) updated
@@ -97,11 +112,6 @@ export default function useSendMoney() {
       conversionHandler(getValues('senderAmount'));
     }
   }, [conversionHandler, getValues, pairUpdated]);
-
-  useEffect(() => {
-    // reset the selected agent to default when sender select's a new currency
-    setValue('agentId', 'default');
-  }, [senderCurrency.countryIsoCode, setValue]);
 
   return {
     // currency dropdown controlled state
@@ -114,7 +124,9 @@ export default function useSendMoney() {
     conversionHandler,
 
     // list of exchange currencies
-    supportedCurrencies,
+    supportedCurrencies: orderTypeRecord[orderType]?.supportedCurrencies || [],
+
+    supportedTokens: orderTypeRecord[orderType]?.supportedTokens || [],
 
     // agents list
     agents,

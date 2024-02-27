@@ -9,10 +9,26 @@ const commissionDetailsSchema = z.object({
   token: z.string(),
 });
 
-const feesSchema = z.object({
+const baseFeesSchema = z.object({
   platform: commissionDetailsSchema,
+});
+
+export const crossBorderFeesSchema = baseFeesSchema.extend({
   senderAgent: commissionDetailsSchema,
-  recipientAgent: commissionDetailsSchema.nullish(),
+  recipientAgent: commissionDetailsSchema.nullish(), // FIXME: is it really nullish?
+});
+
+export const crossBorderSelfFeesSchema = baseFeesSchema.extend({
+  senderAgent: commissionDetailsSchema,
+  recipientAgent: commissionDetailsSchema,
+});
+
+export const localBuyFeesSchema = baseFeesSchema.extend({
+  senderAgent: commissionDetailsSchema,
+});
+
+export const localSellFeesSchema = baseFeesSchema.extend({
+  recipientAgent: commissionDetailsSchema,
 });
 
 export type TransferInfo = z.infer<typeof commissionDetailsSchema>;
@@ -62,4 +78,4 @@ export function calculateAgentFee(amount: number, agent: Agent): string {
   return fiatAmount === 0 ? '' : String(fiatAmount);
 }
 
-export default feesSchema;
+export default baseFeesSchema;

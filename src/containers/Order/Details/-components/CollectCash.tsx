@@ -10,19 +10,21 @@ import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 export default memo(function CollectCash() {
-  const {
-    order: {
-      orderType,
-      orderId,
-      collectionDetails,
-      transferDetails,
-      contactDetails: { sender },
-    },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
 
   const { mutateAsync: collectCashAsync, isPending, error } = useConfirmCash();
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+
+  const {
+    orderType,
+    orderId,
+    collectionDetails,
+    transferDetails,
+    contactDetails: { sender },
+  } = order;
 
   if (!collectionDetails) throw new Error('Collection details is not present.');
 

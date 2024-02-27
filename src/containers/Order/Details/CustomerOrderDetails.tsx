@@ -1,32 +1,58 @@
 import CountdownCard from '@/src/components/Card/CountdownCard';
 import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
+import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { isRecipient } from '@/src/schema/order';
+import { getTransferInfo } from '@/src/schema/order/transfer-details';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import RecipientOrder from './Recipient/RecipientCustomerOrder';
-import SenderOrder from './Sender/SenderCustomerOrder';
+import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
 
 export default function CustomerOrderDetails() {
-  const { customer, order } = useOrderDetails();
+  const { order } = useOrderDetails();
 
-  const { isSender, isRecipient } = customer;
-  const { transferTimeline, transferTimelineStatus, expiresAt } = order;
+  const { user: userId } = useAuth();
+
+  const {
+    orderType,
+    transferTimeline,
+    orderStatus,
+    transferTimelineStatus: timelineStatus,
+    expiresAt,
+    transferDetails,
+  } = order;
 
   return (
     <section className="flex flex-col space-y-12">
-      <OrderDetailsNav {...order} isRecipient={isRecipient} />
+      <OrderDetailsNav
+        orderStatus={orderStatus}
+        timelineStatus={timelineStatus}
+        transferInfo={getTransferInfo(transferDetails)}
+        isRecipientCustomer={isRecipient(order, userId)}
+      />
 
       <div className="divider" />
 
-      {!isOrderSettled(transferTimelineStatus) && (
-        <CountdownCard endDate={expiresAt} />
-      )}
+      {!isOrderSettled(timelineStatus) && <CountdownCard endDate={expiresAt} />}
 
-      <main>
-        {isSender && <SenderOrder status={transferTimelineStatus} />}
-        {isRecipient && <RecipientOrder status={transferTimelineStatus} />}
-      </main>
+      {(() => {
+        switch (orderType) {
+          case 'CROSS_BORDER_REMITTANCE': {
+            const { senderId, recipientId } = order;
+
+            const customerRole = {
+              isSender: userId === senderId,
+              isRecipient: userId === recipientId,
+            };
+
+            return <CrossBorderCustomer role={customerRole} {...order} />;
+          }
+
+          default:
+            return null;
+        }
+      })()}
 
       <TransferTimeline timeline={transferTimeline} />
     </section>

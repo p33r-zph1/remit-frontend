@@ -11,7 +11,7 @@ import { type Currency } from '@/src/schema/currency';
 
 type Props = {
   list: Currency[];
-  selected: Currency;
+  selected: Currency | undefined;
   onChange: (currency: Currency) => void;
   disabled?: boolean;
 };
@@ -22,7 +22,7 @@ export default memo(function SelectCurrency({
   onChange,
   disabled,
 }: Props) {
-  if (list.length === 0) {
+  if (list.length === 0 || !selected) {
     return (
       <div className="flex h-20 w-20 flex-col items-center justify-center space-y-1">
         <ExclamationCircleIcon className="h-6 w-6 text-error" />

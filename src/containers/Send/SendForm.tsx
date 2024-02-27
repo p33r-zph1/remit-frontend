@@ -4,19 +4,16 @@ import type { SubmitHandler } from 'react-hook-form';
 import { numericFormatter } from 'react-number-format';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
-import SelectCurrency from '@/src/components/Select/SelectCurrency';
 import wagmi from '@/src/configs/wagmi';
 import useCreateOrder from '@/src/hooks/api/useCreateOrder';
 import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
 import { Route } from '@/src/routes/_auth/';
-import { delay } from '@/src/utils';
 
-import SendDetails from './SendDetails';
-import SendOrderType from './SendOrderType';
+import CurrencyForm from './-components/CurrencyForm';
+import SelectOrderType from './-components/SelectOrderType';
 
 // let renderCount = 0;
 
@@ -35,6 +32,7 @@ export default function SendForm() {
 
     // list of exchange currencies
     supportedCurrencies,
+    supportedTokens,
 
     // agents list
     agents,
@@ -44,7 +42,7 @@ export default function SendForm() {
       control,
       handleSubmit,
       getValues,
-      reset,
+      setError,
       formState: { isSubmitting },
     },
   } = useSendMoney();
@@ -64,21 +62,32 @@ export default function SendForm() {
     const sendAmount = getValues('senderAmount');
     const recipientAmount = getValues('recipientAmount');
 
+    if (!senderCurrency?.currency || !recipientCurrency?.currency)
+      throw new Error('Sender/Recipient currency not found...');
+
     const str = `${sendAmount} ${senderCurrency.currency} (${recipientAmount} ${recipientCurrency.currency})`;
 
     return numericFormatter(str, { thousandSeparator: ',' });
-  }, [getValues, recipientCurrency.currency, senderCurrency.currency]);
+  }, [getValues, recipientCurrency?.currency, senderCurrency?.currency]);
 
-  const onSubmit: SubmitHandler<SendMoney> = async data => {
+  const onSubmit: SubmitHandler<SendMoney> = data => {
     const { senderAmount, recipientId, agentId } = data;
 
     if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE') {
-      await delay(3000);
+      // await delay(3000);
       return alert(JSON.stringify(JSON.stringify(data))); // TODO: handle other orderTypes
     }
 
     async function confirmSend() {
       try {
+        if (!senderCurrency?.currency || !recipientCurrency?.currency) {
+          setError('senderAmount', {
+            message: 'Sender/Recipient currency not found...',
+          });
+          setModalVisible(false);
+          return;
+        }
+
         await sendOrderAsync({
           orderType: getValues('orderType'),
           body: {
@@ -90,7 +99,6 @@ export default function SendForm() {
           },
         });
 
-        reset();
         setModalVisible(false);
       } catch (e: unknown) {
         setModalVisible(false);
@@ -117,82 +125,88 @@ export default function SendForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-8 sm:mt-8">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <SendOrderType name="orderType" control={control}>
-        {orderType => (
-          <div>
-            {(() => {
-              switch (orderType) {
-                case 'CROSS_BORDER_REMITTANCE':
-                  return (
-                    <RecipientInput name="recipientId" control={control} />
-                  );
+      {(() => {
+        switch (getValues('orderType')) {
+          case 'CROSS_BORDER_REMITTANCE':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
 
-                case 'LOCAL_SELL_STABLECOINS':
-                case 'LOCAL_BUY_STABLECOINS':
-                  return (
-                    <SelectChain
-                      name="chainId"
-                      control={control}
-                      list={wagmi.chains}
-                      label="Blockchain Network"
-                    />
-                  );
+                <RecipientInput name="recipientId" control={control} />
 
-                default:
-                  return null;
-              }
-            })()}
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedCurrencies}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedCurrencies}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
 
-            <div className="divider my-8"></div>
+          case 'LOCAL_SELL_STABLECOINS':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
 
-            <CurrencyInput
-              label="You send"
-              name="senderAmount"
-              control={control}
-              onValueChange={conversionHandler}
-            >
-              <SelectCurrency
-                selected={senderCurrency}
-                list={supportedCurrencies}
-                onChange={newCurrency =>
-                  setSenderCurrency(prevCurrency => {
-                    if (newCurrency.currency === recipientCurrency.currency) {
-                      setRecipientCurrency(prevCurrency); // swaps currency
-                    }
+                <SelectChain
+                  name="chainId"
+                  control={control}
+                  list={wagmi.chains}
+                  label="Blockchain Network"
+                />
 
-                    return newCurrency;
-                  })
-                }
-                disabled={isSubmitting}
-              />
-            </CurrencyInput>
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedTokens}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedCurrencies}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
 
-            <SendDetails name="agentId" control={control} list={agents} />
+          case 'LOCAL_BUY_STABLECOINS':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
 
-            <CurrencyInput
-              label="Recipient will get (estimate)"
-              name="recipientAmount"
-              control={control}
-              readOnly
-            >
-              <SelectCurrency
-                selected={recipientCurrency}
-                list={supportedCurrencies}
-                onChange={newCurrency =>
-                  setRecipientCurrency(prevCurrency => {
-                    if (newCurrency.currency === senderCurrency.currency) {
-                      setSenderCurrency(prevCurrency); // swaps currency
-                    }
+                <SelectChain
+                  name="chainId"
+                  control={control}
+                  list={wagmi.chains}
+                  label="Blockchain Network"
+                />
 
-                    return newCurrency;
-                  })
-                }
-                disabled={isSubmitting}
-              />
-            </CurrencyInput>
-          </div>
-        )}
-      </SendOrderType>
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedCurrencies}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedTokens}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
+
+          default:
+            return null;
+        }
+      })()}
 
       {error && <ErrorAlert message={error.message} />}
 

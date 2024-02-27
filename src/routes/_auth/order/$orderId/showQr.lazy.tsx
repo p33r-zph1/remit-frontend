@@ -10,6 +10,7 @@ import Page from '@/src/components/Page';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import ShowQrCode from '@/src/containers/Order/QrCode/ShowQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
+import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 import { Route as ShowQrRoute } from './showQr';
@@ -33,14 +34,18 @@ export const Route = createLazyFileRoute('/_auth/order/$orderId/showQr')({
 });
 
 function ShowQrComponent() {
+  const { user: userId } = useAuth();
   const navigate = useNavigate({ from: ShowQrRoute.fullPath });
 
-  const {
-    customer: { isRecipient: isRecipientCustomer },
-    order: { transferTimelineStatus: status },
-  } = useOrderDetails();
+  const { order } = useOrderDetails();
 
-  switch (status) {
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') {
+    return <HeroAccessDenied className="bg-white" />;
+  }
+
+  const { transferTimelineStatus, recipientId, senderAgentId } = order;
+
+  switch (transferTimelineStatus) {
     case 'CASH_DELIVERED':
     case 'ESCROW_RELEASED': {
       navigate({
@@ -52,8 +57,8 @@ function ShowQrComponent() {
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      if (isRecipientCustomer) {
-        return <ShowQrCode />;
+      if (userId === recipientId) {
+        return <ShowQrCode senderAgentId={senderAgentId} />;
       }
 
       return <HeroAccessDenied className="bg-white" />;

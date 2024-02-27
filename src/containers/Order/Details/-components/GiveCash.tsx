@@ -7,13 +7,15 @@ import useOrderDetails from '@/src/hooks/useOrderDetails';
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
 export default memo(function GiveCash() {
+  const { order } = useOrderDetails();
+
+  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+
   const {
-    order: {
-      senderAgentId,
-      collectionDetails,
-      contactDetails: { senderAgent },
-    },
-  } = useOrderDetails();
+    senderAgentId,
+    collectionDetails,
+    contactDetails: { senderAgent },
+  } = order;
 
   if (!collectionDetails) throw new Error('Collection details is not present.');
 

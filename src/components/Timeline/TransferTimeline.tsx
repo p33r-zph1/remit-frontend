@@ -10,12 +10,12 @@ import {
 } from '@heroicons/react/24/outline';
 
 import type {
-  TransferTimeline,
-  TransferTimelineStatus,
+  Timeline,
+  TimelineStatus,
 } from '@/src/schema/order/transfer-timeline';
 
-function getIconByStatus(status: TransferTimelineStatus) {
-  switch (status) {
+function getIconByStatus(timelineStatus: TimelineStatus) {
+  switch (timelineStatus) {
     case 'PENDING':
       return <CurrencyDollarIcon className="h-6 w-6 text-primary" />;
 
@@ -29,6 +29,7 @@ function getIconByStatus(status: TransferTimelineStatus) {
 
     case 'COLLECTION_MEETUP_SET':
     case 'DELIVERY_MEETUP_SET':
+    case 'SENDER_ARRIVED':
       return <MapPinIcon className="h-6 w-6 text-primary" />;
 
     case 'ESCROW_DEPOSITED':
@@ -49,8 +50,8 @@ function getIconByStatus(status: TransferTimelineStatus) {
   }
 }
 
-function getLineDividerByStatus(status: TransferTimelineStatus) {
-  switch (status) {
+function getLineDividerByStatus(timelineStatus: TimelineStatus) {
+  switch (timelineStatus) {
     case 'PENDING':
     case 'RECIPIENT_ACCEPTED':
     case 'SENDER_AGENT_ACCEPTED':
@@ -58,6 +59,7 @@ function getLineDividerByStatus(status: TransferTimelineStatus) {
     case 'ORDER_ACCEPTED':
     case 'COLLECTION_MEETUP_SET':
     case 'DELIVERY_MEETUP_SET':
+    case 'SENDER_ARRIVED':
     case 'ESCROW_DEPOSITED':
     case 'CASH_COLLECTED':
     case 'CASH_DELIVERED':
@@ -77,7 +79,7 @@ function Item({
   description,
   status,
   isLastItem,
-}: TransferTimeline & { isLastItem: boolean }) {
+}: Timeline & { isLastItem: boolean }) {
   return (
     <li>
       {getLineDividerByStatus(status)}
@@ -103,7 +105,7 @@ function Item({
 }
 
 type Props = {
-  timeline: TransferTimeline[];
+  timeline: Timeline[];
 };
 
 export default function TransferTimeline({ timeline }: Props) {

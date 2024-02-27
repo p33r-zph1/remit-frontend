@@ -8,7 +8,7 @@ export type Pair = {
   to: string;
 };
 
-export default function usePriceOracle({ from, to }: Pair) {
+export default function usePriceOracle({ from, to }: Partial<Pair>) {
   return useSuspenseQuery({
     queryKey: ['price-oracle', { from, to }],
     queryFn: () => {
