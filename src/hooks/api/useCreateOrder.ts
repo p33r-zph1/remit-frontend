@@ -20,7 +20,6 @@ const crossBorderBodySchema = z.object({
 });
 
 const crossBorderSelfBodySchema = z.object({
-  recipientId: z.string(),
   senderAgentId: z.string(),
   transferAmount: z.number(),
   senderCurrency: z.string(),
@@ -51,9 +50,15 @@ export type LocalBuyBody = z.infer<typeof localBuyBodySchema>;
 
 export type LocalSellBody = z.infer<typeof localSellBodySchema>;
 
+export type CreateOrderBody =
+  | CrossBorderBody
+  | CrossBorderSelfBody
+  | LocalBuyBody
+  | LocalSellBody;
+
 export type MutationProps = {
   orderType: OrderType;
-  body: CrossBorderBody | CrossBorderSelfBody | LocalBuyBody | LocalSellBody;
+  body: CreateOrderBody;
 };
 
 function handleRequestBody(props: MutationProps) {

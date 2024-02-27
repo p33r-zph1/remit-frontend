@@ -6,17 +6,19 @@ import { coerce, z } from 'zod';
 import { platformFee } from '../constants';
 import { getIsoCode } from '../schema/currency';
 import { calculateFees } from '../schema/fees';
-import { orderTypeSchema } from '../schema/order';
+import {
+  crossBorderLiteral,
+  crossBorderSelfLiteral,
+  localBuyLiteral,
+  localSellLiteral,
+} from '../schema/order';
 import useGetAgents from './api/useGetAgents';
 import useGetCurrency from './api/useGetCurrency';
 import useGetOracle from './api/useGetOracle';
 
-const orderFormSchema = z.object({
-  orderType: orderTypeSchema,
+const baseOrderFormSchema = z.object({
   senderAmount: z.string().min(1, 'Please enter a valid amount'),
   recipientAmount: z.string().min(1),
-  chainId: z.number().min(1, { message: 'Please select a chain' }).optional(),
-  recipientId: z.string().min(1, 'Please enter a valid recipient').optional(),
   agentId: z
     .string()
     .min(1)
@@ -24,6 +26,28 @@ const orderFormSchema = z.object({
       message: 'Please select an agent',
     }),
 });
+
+const orderFormSchema = z.discriminatedUnion('orderType', [
+  baseOrderFormSchema.extend({
+    orderType: crossBorderLiteral,
+    recipientId: z.string().min(1, 'Please enter a valid recipient'),
+  }),
+
+  baseOrderFormSchema.extend({
+    orderType: crossBorderSelfLiteral,
+    estimatedArrival: z.date({ required_error: 'Enter a valid date' }),
+  }),
+
+  baseOrderFormSchema.extend({
+    orderType: localBuyLiteral,
+    chainId: z.number().min(1, { message: 'Please select a chain' }),
+  }),
+
+  baseOrderFormSchema.extend({
+    orderType: localSellLiteral,
+    chainId: z.number().min(1, { message: 'Please select a chain' }),
+  }),
+]);
 
 export type OrderForm = z.infer<typeof orderFormSchema>;
 
@@ -34,7 +58,6 @@ export default function useOrder() {
       orderType: 'CROSS_BORDER_REMITTANCE',
       senderAmount: '',
       recipientAmount: '',
-      chainId: 0,
       recipientId: '',
       agentId: 'default',
     },

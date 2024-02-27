@@ -27,7 +27,7 @@ export default function SelectChain<T extends FieldValues>({
     fieldState: { error },
   } = useController(controllerProps);
 
-  const chainId = z.coerce.number().parse(value);
+  const chainId = z.coerce.number().parse(value || '');
 
   return (
     <div className="form-control z-10 space-y-1">

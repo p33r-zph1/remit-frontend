@@ -39,10 +39,10 @@ export const orderStatusSchema = z.enum([
   'EXPIRED',
 ]);
 
-const crossBorderLiteral = z.literal('CROSS_BORDER_REMITTANCE');
-const crossBorderSelfLiteral = z.literal('CROSS_BORDER_SELF_REMITTANCE');
-const localBuyLiteral = z.literal('LOCAL_BUY_STABLECOINS');
-const localSellLiteral = z.literal('LOCAL_SELL_STABLECOINS');
+export const crossBorderLiteral = z.literal('CROSS_BORDER_REMITTANCE');
+export const crossBorderSelfLiteral = z.literal('CROSS_BORDER_SELF_REMITTANCE');
+export const localBuyLiteral = z.literal('LOCAL_BUY_STABLECOINS');
+export const localSellLiteral = z.literal('LOCAL_SELL_STABLECOINS');
 
 export const orderTypeSchema = z.union(
   [
