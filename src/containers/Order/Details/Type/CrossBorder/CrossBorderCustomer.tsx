@@ -20,10 +20,10 @@ export default memo(function CrossBorderCustomer({
   role,
   ...orderProps
 }: Props) {
-  const { transferTimelineStatus } = orderProps;
+  const { transferTimelineStatus: timelineStatus } = orderProps;
 
   if (role.isSender) {
-    switch (transferTimelineStatus) {
+    switch (timelineStatus) {
       case 'COLLECTION_MEETUP_SET':
         return <GiveCash />;
 
@@ -33,10 +33,9 @@ export default memo(function CrossBorderCustomer({
   }
 
   if (role.isRecipient) {
-    switch (transferTimelineStatus) {
-      case 'PENDING': {
+    switch (timelineStatus) {
+      case 'PENDING':
         return <RecipientCustomerTakeOrder />;
-      }
 
       case 'DELIVERY_MEETUP_SET':
         return <ReceiveCash />;

@@ -7,6 +7,9 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getSenderContactDetails } from '@/src/schema/contact';
+import { getCollectionDetails } from '@/src/schema/order';
+import { getSenderTransferDetails } from '@/src/schema/order/transfer-details';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 export default memo(function CollectCash() {
@@ -16,15 +19,10 @@ export default memo(function CollectCash() {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+  const { orderType, orderId, transferDetails, contactDetails } = order;
 
-  const {
-    orderType,
-    orderId,
-    collectionDetails,
-    transferDetails,
-    contactDetails: { sender },
-  } = order;
+  const senderContact = getSenderContactDetails(contactDetails);
+  const collectionDetails = getCollectionDetails(order);
 
   if (!collectionDetails) throw new Error('Collection details is not present.');
 
@@ -54,7 +52,7 @@ export default memo(function CollectCash() {
         <button
           type="button"
           disabled={isPending}
-          onClick={() => window.open(sender.telegram.url, '_blank')}
+          onClick={() => window.open(senderContact.telegram.url, '_blank')}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact sender
@@ -82,7 +80,7 @@ export default memo(function CollectCash() {
         <p className="text-balance text-slate-500">
           Have you collected{' '}
           <span className="font-bold">
-            {formatTranferInfo(transferDetails.sender)}?
+            {formatTranferInfo(getSenderTransferDetails(transferDetails))}?
           </span>
         </p>
       </Modal>

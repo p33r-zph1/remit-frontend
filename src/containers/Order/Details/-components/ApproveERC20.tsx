@@ -10,7 +10,7 @@ import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
+import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
 
 export default memo(function ApproveERC20() {
   const { address, chain, chainId, isDisconnected } = useAccount();
@@ -63,9 +63,9 @@ export default memo(function ApproveERC20() {
   }, [address, escrowDepositAsync, orderId, orderType]);
 
   const approveAmountSummary = useMemo(() => {
-    const transferInfo = getTransferInfo(transferDetails);
+    const transfer = getRecipientTransferDetails(transferDetails);
 
-    const str = `${tokenSymbol} ${tokenAmount} (${transferInfo.currency} ${transferInfo.amount})`;
+    const str = `${tokenSymbol} ${tokenAmount} (${transfer.currency} ${transfer.amount})`;
     return numericFormatter(str, { thousandSeparator: ',' });
   }, [tokenAmount, tokenSymbol, transferDetails]);
 

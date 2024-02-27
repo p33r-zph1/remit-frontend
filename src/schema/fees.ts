@@ -31,9 +31,23 @@ export const localSellFeesSchema = baseFeesSchema.extend({
   recipientAgent: commissionDetailsSchema,
 });
 
-export type TransferInfo = z.infer<typeof commissionDetailsSchema>;
+type CommissionDetails = z.infer<typeof commissionDetailsSchema>;
 
-export function formatCommissionDetails({ amount, token }: TransferInfo) {
+export type CrossBorderFees = z.infer<typeof crossBorderFeesSchema>;
+
+export type CrossBorderSelfFees = z.infer<typeof crossBorderSelfFeesSchema>;
+
+export type LocalBuyFees = z.infer<typeof localBuyFeesSchema>;
+
+export type LocalSellFees = z.infer<typeof localSellFeesSchema>;
+
+export type Fees =
+  | CrossBorderFees
+  | CrossBorderSelfFees
+  | LocalBuyFees
+  | LocalSellFees;
+
+export function formatCommissionDetails({ amount, token }: CommissionDetails) {
   return numericFormatter(`${amount} ${token}`, {
     thousandSeparator: ',',
   });
@@ -76,6 +90,21 @@ export function calculateAgentFee(amount: number, agent: Agent): string {
 
   // Return the final amount
   return fiatAmount === 0 ? '' : String(fiatAmount);
+}
+
+export function getRecipientAgentFees(fees: Fees) {
+  if ('recipientAgent' in fees) {
+    return fees.recipientAgent;
+  }
+
+  // senderAgent is recipients agent
+  if ('senderAgent' in fees) {
+    return fees.senderAgent;
+  }
+
+  throw new Error(
+    'Expected recipientAgent/senderAgent fees but none was received.'
+  );
 }
 
 export default baseFeesSchema;

@@ -2,10 +2,10 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import { Route } from '@/src/routes/_auth/order/$orderId/showQr';
 
 type Props = {
-  senderAgentId: string;
+  recipientAgentId: string;
 };
 
-export default function ShowQrCode({ senderAgentId }: Props) {
+export default function ShowQrCode({ recipientAgentId }: Props) {
   const { qrCode } = Route.useSearch();
 
   return (
@@ -18,7 +18,7 @@ export default function ShowQrCode({ senderAgentId }: Props) {
         <p className="text-xs font-medium text-gray-400 md:text-base">
           Show this QR code to{' '}
           <span className="font-semibold text-gray-600">
-            Agent #{senderAgentId}
+            Agent #{recipientAgentId}
           </span>{' '}
           to confirm delivery.
         </p>

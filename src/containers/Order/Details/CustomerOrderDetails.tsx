@@ -3,11 +3,12 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { isRecipient } from '@/src/schema/order';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
+import { isUserRecipient } from '@/src/schema/order';
+import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
+import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
 
 export default function CustomerOrderDetails() {
   const { order } = useOrderDetails();
@@ -28,8 +29,8 @@ export default function CustomerOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        transferInfo={getTransferInfo(transferDetails)}
-        isRecipientCustomer={isRecipient(order, userId)}
+        transferInfo={getRecipientTransferDetails(transferDetails)}
+        isRecipientCustomer={isUserRecipient(order, userId)}
       />
 
       <div className="divider" />
@@ -47,6 +48,10 @@ export default function CustomerOrderDetails() {
             };
 
             return <CrossBorderCustomer role={customerRole} {...order} />;
+          }
+
+          case 'LOCAL_SELL_STABLECOINS': {
+            return <LocalSellCustomer {...order} />;
           }
 
           default:

@@ -6,8 +6,8 @@ import useGetOrders from '@/src/hooks/api/useGetOrders';
 import useAuth from '@/src/hooks/useAuth';
 
 import EmptyOrder from '../components/Empty/EmptyOrder';
-import { isRecipient, recipient } from '../schema/order';
-import { getTransferInfo } from '../schema/order/transfer-details';
+import { getRecipient, isUserRecipient } from '../schema/order';
+import { getRecipientTransferDetails } from '../schema/order/transfer-details';
 
 export default function HistoryList() {
   const { user: userId, hasGroup } = useAuth();
@@ -41,10 +41,10 @@ export default function HistoryList() {
                 orderId={orderId}
                 orderStatus={orderStatus}
                 timelineStatus={timelineStatus}
-                transferInfo={getTransferInfo(transferDetails)}
+                transferInfo={getRecipientTransferDetails(transferDetails)}
                 createdAt={createdAt}
-                recipientId={recipient(order)}
-                isRecipient={isRecipient(order, userId)}
+                recipientId={getRecipient(order)}
+                isRecipient={isUserRecipient(order, userId)}
               />
             );
           })}

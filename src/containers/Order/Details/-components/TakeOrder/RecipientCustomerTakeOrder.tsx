@@ -10,7 +10,7 @@ import SelectAgent from '@/src/components/Select/SelectAgent';
 import useGetAgents from '@/src/hooks/api/useGetAgents';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
+import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 const takeOrderFormSchema = z.object({
@@ -42,7 +42,7 @@ export default memo(function RecipientCustomerTakeOrder() {
   });
 
   const { data: agents } = useGetAgents({
-    isoCode: getTransferInfo(transferDetails).countryIsoCode,
+    isoCode: getRecipientTransferDetails(transferDetails).countryIsoCode,
   });
 
   const {
@@ -72,8 +72,6 @@ export default memo(function RecipientCustomerTakeOrder() {
     () => agents.find(a => a.agentId === agentId),
     [agentId, agents]
   );
-
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -134,7 +132,7 @@ export default memo(function RecipientCustomerTakeOrder() {
         <p className="text-balance text-slate-500">
           You&apos;re about to {modalState.state} an order amounting of {` `}
           <span className="font-bold">
-            ~ {formatTranferInfo(getTransferInfo(transferDetails))}
+            ~ {formatTranferInfo(getRecipientTransferDetails(transferDetails))}
           </span>
           {modalState.state === 'accept' && (
             <>

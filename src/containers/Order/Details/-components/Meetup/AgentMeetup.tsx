@@ -4,7 +4,7 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { type ElementRef, useRef, useState } from 'react';
+import { type ElementRef, memo, useRef, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -43,7 +43,7 @@ type Props = {
   meetupType: MutationProps['meetupType'];
 };
 
-export default function AgentMeetup({ meetupType }: Props) {
+export default memo(function AgentMeetup({ meetupType }: Props) {
   const {
     control,
     register,
@@ -260,4 +260,4 @@ export default function AgentMeetup({ meetupType }: Props) {
       </Modal>
     </form>
   );
-}
+});

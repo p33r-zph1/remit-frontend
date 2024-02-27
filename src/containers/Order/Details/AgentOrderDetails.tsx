@@ -3,10 +3,11 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
+import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
+import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
 
 export default function AgentOrderDetails() {
   const { order } = useOrderDetails();
@@ -27,7 +28,7 @@ export default function AgentOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        transferInfo={getTransferInfo(transferDetails)}
+        transferInfo={getRecipientTransferDetails(transferDetails)}
         isRecipientCustomer={false}
       />
 
@@ -47,6 +48,9 @@ export default function AgentOrderDetails() {
 
             return <CrossBorderAgent role={agentRole} {...order} />;
           }
+
+          case 'LOCAL_SELL_STABLECOINS':
+            return <LocalSellAgent {...order} />;
 
           default:
             return null;

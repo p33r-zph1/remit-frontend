@@ -42,15 +42,32 @@ export type TranferDetails =
   | LocalBuyTransferDetails
   | LocalSellTransferDetails;
 
-export function getTransferInfo(transferDetails: TranferDetails) {
+export function getSenderTransferDetails(transferDetails: TranferDetails) {
+  if ('sender' in transferDetails) {
+    return transferDetails.sender;
+  }
+
+  // recipient is same as sender
   if ('recipient' in transferDetails) {
     return transferDetails.recipient;
   }
+
+  throw new Error(
+    'Expected recipient/sender transfer info but none was received.'
+  );
+}
+
+export function getRecipientTransferDetails(transferDetails: TranferDetails) {
+  if ('recipient' in transferDetails) {
+    return transferDetails.recipient;
+  }
+
+  // sender is same as recipient
   if ('sender' in transferDetails) {
     return transferDetails.sender;
   }
 
   throw new Error(
-    'Expected recipient/sender transfer info but none was found.'
+    'Expected recipient/sender transfer info but none was received.'
   );
 }

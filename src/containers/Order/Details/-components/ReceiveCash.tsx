@@ -8,6 +8,8 @@ import Modal from '@/src/components/Modal';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
+import { getRecipientAgentContactDetails } from '@/src/schema/contact';
+import { getRecipientAgent } from '@/src/schema/order';
 
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
@@ -36,27 +38,20 @@ export default memo(function ReceiveCash() {
     }
   }, [generatedQrData?.data.qrCode, isQrGenerated, navigate]);
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
-
-  const {
-    deliveryDetails,
-    orderType,
-    orderId,
-    recipientAgentId,
-    contactDetails: { recipientAgent },
-  } = order;
+  const { orderType, orderId, deliveryDetails, contactDetails } = order;
 
   if (!deliveryDetails) throw new Error('Delivery details is not present.');
 
-  if (!recipientAgentId) throw new Error('Recipient agentId is not present.');
+  const agentId = getRecipientAgent(order);
+  const recipientAgent = getRecipientAgentContactDetails(contactDetails);
 
-  if (!recipientAgent)
-    throw new Error('Recipient agent contact details is not present.');
+  if (!agentId) throw new Error('agentId is not present.');
+  if (!recipientAgent) throw new Error('Agent contact details is not present.');
 
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Collect cash from Agent #{recipientAgentId}
+        Collect cash from Agent #{agentId}
       </HeaderTitle>
 
       {error && <ErrorAlert message={error.message} />}

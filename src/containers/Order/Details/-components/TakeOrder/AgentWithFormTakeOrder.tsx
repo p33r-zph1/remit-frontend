@@ -1,12 +1,30 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { memo } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import Modal from '@/src/components/Modal';
+import SelectChain from '@/src/components/Select/SelectChain';
+import wagmi from '@/src/configs/wagmi';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
 import { formatCommissionDetails } from '@/src/schema/fees';
 
-export default memo(function RecipientAgentTakeOrder() {
+const takeOrderSchema = z.object({
+  chainId: z.number().min(1, { message: 'Please select a chain' }),
+});
+
+export type TakeOrderSchema = z.infer<typeof takeOrderSchema>;
+
+export default memo(function AgentWithFormTakeOrder() {
+  const { control, handleSubmit } = useForm<TakeOrderSchema>({
+    resolver: zodResolver(takeOrderSchema),
+    defaultValues: {
+      chainId: 0,
+    },
+  });
+
   const { order } = useOrderDetails();
 
   const { orderType, orderId } = order;
@@ -14,7 +32,7 @@ export default memo(function RecipientAgentTakeOrder() {
   const {
     // callbacks
     executeFn,
-    onRecipientAgentAcceptOrder: onAcceptOrder,
+    onSenderAgentAcceptOrder: onAcceptOrder,
     onRejectOrder,
 
     // state
@@ -28,30 +46,32 @@ export default memo(function RecipientAgentTakeOrder() {
     rejectOrderError,
   } = useTakeOrder({ orderType, orderId });
 
+  const onSubmit: SubmitHandler<TakeOrderSchema> = ({ chainId }) => {
+    onAcceptOrder(chainId);
+  };
+
   if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
 
-  if (!order.fees.recipientAgent)
-    throw new Error('Recipient agent fees cannot be missing!');
-
-  const { commission } = order.fees.recipientAgent;
+  const { commission } = order.fees.senderAgent;
 
   return (
-    <div className="flex flex-col space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
         <span className="text-gray-400">Your commission at {commission}%</span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(order.fees.recipientAgent)}
+          {formatCommissionDetails(order.fees.senderAgent)}
         </span>
       </div>
+
+      <SelectChain control={control} name="chainId" list={wagmi.chains} />
 
       {acceptOrderError && <ErrorAlert message={acceptOrderError.message} />}
       {rejectOrderError && <ErrorAlert message={rejectOrderError.message} />}
 
       <div className="flex flex-col space-y-2">
         <button
-          type="button"
-          onClick={onAcceptOrder}
+          type="submit"
           disabled={isAccepting || isRejecting}
           className="btn btn-primary btn-block rounded-full text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content md:text-lg"
         >
@@ -92,10 +112,10 @@ export default memo(function RecipientAgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(order.fees.recipientAgent)} ({commission}%)
+            {formatCommissionDetails(order.fees.senderAgent)} ({commission}%)
           </span>
         </p>
       </Modal>
-    </div>
+    </form>
   );
 });

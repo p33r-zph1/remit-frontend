@@ -56,7 +56,7 @@ function getRecipientDescription(timelineStatus: TimelineStatus) {
       return <p>Cash has been collected by senderagent</p>;
 
     case 'CASH_DELIVERED':
-      return <p>Cash gas been delivererd by recipientagent</p>;
+      return <p>Cash has been delivererd by recipientagent</p>;
 
     case 'ESCROW_RELEASED':
       return <p className="text-success">Order is completed</p>;
