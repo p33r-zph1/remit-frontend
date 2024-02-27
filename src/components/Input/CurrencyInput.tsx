@@ -4,9 +4,9 @@ import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
-import type { SendMoney } from '@/src/hooks/useSendMoney';
+import type { OrderForm } from '@/src/hooks/useOrder';
 
-type Props = UseControllerProps<SendMoney> & {
+type Props = UseControllerProps<OrderForm> & {
   label: string;
   children: ReactNode;
   onValueChange?: (value: string) => void;

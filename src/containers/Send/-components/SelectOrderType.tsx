@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 
 import Modal from '@/src/components/Modal';
 import SelectViaModal from '@/src/components/Select/SelectViaModal';
-import type { SendMoney } from '@/src/hooks/useSendMoney';
+import type { OrderForm } from '@/src/hooks/useOrder';
 import { type OrderType, orderTypeSchema } from '@/src/schema/order';
 
 type Order = {
@@ -34,7 +34,6 @@ const types: Record<OrderType, Order> = {
     description:
       'Cash out your stablecoins locally. An agent will deliver your cash once your stablecoins are in escrow.',
     icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
-    disabled: true,
   },
   LOCAL_BUY_STABLECOINS: {
     title: 'Buy Stablecoins (Local)',
@@ -44,7 +43,7 @@ const types: Record<OrderType, Order> = {
   },
 };
 
-type Props = UseControllerProps<SendMoney>;
+type Props = UseControllerProps<OrderForm>;
 
 export default memo(function SelectOrderType(props: Props) {
   const {

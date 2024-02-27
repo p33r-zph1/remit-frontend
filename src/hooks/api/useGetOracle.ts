@@ -1,19 +1,19 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { genericFetch } from '@/src/schema/api/fetch';
-import priceOracleApiSchema from '@/src/schema/price-oracle';
+import oracleApiSchema from '@/src/schema/oracle';
 
 export type Pair = {
   from: string;
   to: string;
 };
 
-export default function usePriceOracle({ from, to }: Partial<Pair>) {
+export default function useGetOracle({ from, to }: Partial<Pair>) {
   return useSuspenseQuery({
-    queryKey: ['price-oracle', { from, to }],
+    queryKey: ['oracle', { from, to }],
     queryFn: () => {
       const apiUrl = `https://9tbw1uqhph.execute-api.ap-southeast-1.amazonaws.com/main/${from}/${to}`;
-      return genericFetch(apiUrl, priceOracleApiSchema);
+      return genericFetch(apiUrl, oracleApiSchema);
     },
     select: response => response.data,
     refetchInterval: 10_000,

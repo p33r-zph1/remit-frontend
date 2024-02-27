@@ -3,9 +3,9 @@ import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
-import type { SendMoney } from '@/src/hooks/useSendMoney';
+import type { OrderForm } from '@/src/hooks/useOrder';
 
-export default function RecipientInput(props: UseControllerProps<SendMoney>) {
+export default function RecipientInput(props: UseControllerProps<OrderForm>) {
   const {
     field: { ref, value, onChange, disabled, ...otherFields },
     formState: { isSubmitting },

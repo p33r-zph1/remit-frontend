@@ -1,16 +1,12 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import { numericFormatter } from 'react-number-format';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
-import wagmi from '@/src/configs/wagmi';
-import useCreateOrder from '@/src/hooks/api/useCreateOrder';
-import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
-import { Route } from '@/src/routes/_auth/';
+import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
+import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
+import useOrderType from '@/src/hooks/useOrderType';
 
 import CurrencyForm from './-components/CurrencyForm';
 import SelectOrderType from './-components/SelectOrderType';
@@ -18,8 +14,6 @@ import SelectOrderType from './-components/SelectOrderType';
 // let renderCount = 0;
 
 export default function SendForm() {
-  const navigate = useNavigate({ from: Route.fullPath });
-
   const {
     // currency dropdown controlled state
     senderCurrency,
@@ -45,79 +39,45 @@ export default function SendForm() {
       setError,
       formState: { isSubmitting },
     },
-  } = useSendMoney();
+  } = useOrder();
 
   const {
-    data: sendOrderData,
-    mutateAsync: sendOrderAsync,
-    isPending: isSendingOrder,
-    isSuccess: isSendOrderSuccess,
-    error,
-  } = useCreateOrder();
+    // callbacks
+    executeFn,
+    onCrossBorderCreateOrder,
+    orderAmountSummary,
+    onNavigateToOrder,
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [onConfirmSend, setOnConfirmSend] = useState<() => void>();
+    // state
+    modalVisible,
+    setModalVisible,
+    isSendingOrder,
 
-  const orderAmountSummary = useCallback(() => {
-    const sendAmount = getValues('senderAmount');
-    const recipientAmount = getValues('recipientAmount');
+    // error
+    createOrderError,
+  } = useOrderType();
 
-    if (!senderCurrency?.currency || !recipientCurrency?.currency)
-      throw new Error('Sender/Recipient currency not found...');
-
-    const str = `${sendAmount} ${senderCurrency.currency} (${recipientAmount} ${recipientCurrency.currency})`;
-
-    return numericFormatter(str, { thousandSeparator: ',' });
-  }, [getValues, recipientCurrency?.currency, senderCurrency?.currency]);
-
-  const onSubmit: SubmitHandler<SendMoney> = data => {
-    const { senderAmount, recipientId, agentId } = data;
-
-    if (getValues('orderType') !== 'CROSS_BORDER_REMITTANCE') {
-      // await delay(3000);
-      return alert(JSON.stringify(JSON.stringify(data))); // TODO: handle other orderTypes
-    }
-
-    async function confirmSend() {
-      try {
-        if (!senderCurrency?.currency || !recipientCurrency?.currency) {
-          setError('senderAmount', {
-            message: 'Sender/Recipient currency not found...',
-          });
-          setModalVisible(false);
-          return;
-        }
-
-        await sendOrderAsync({
-          orderType: getValues('orderType'),
-          body: {
-            transferAmount: Number(senderAmount),
-            senderCurrency: senderCurrency.currency,
-            recipientId: recipientId || '??', // FIXME: refactor `orderBodySchema` that considers orderType requirements
-            recipientCurrency: recipientCurrency.currency,
-            senderAgentId: agentId,
-          },
-        });
-
-        setModalVisible(false);
-      } catch (e: unknown) {
-        setModalVisible(false);
-        console.error(e);
-      }
-    }
-
-    setOnConfirmSend(() => confirmSend);
-    setModalVisible(true);
-  };
-
-  const onNavigateToOrder = useCallback(() => {
-    if (isSendOrderSuccess) {
-      navigate({
-        to: '/order/$orderId',
-        params: { orderId: sendOrderData.data.orderId },
+  const onSubmit: SubmitHandler<OrderForm> = data => {
+    if (!senderCurrency?.currency) {
+      setError('senderAmount', {
+        message: 'Sender currency not found...',
       });
+
+      setModalVisible(false);
+      return;
     }
-  }, [isSendOrderSuccess, navigate, sendOrderData?.data.orderId]);
+
+    if (!recipientCurrency?.currency) {
+      setError('recipientAmount', {
+        message: 'Recipient currency not found...',
+      });
+
+      setModalVisible(false);
+      return;
+    }
+
+    onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
+  };
 
   // renderCount++;
 
@@ -208,7 +168,7 @@ export default function SendForm() {
         }
       })()}
 
-      {error && <ErrorAlert message={error.message} />}
+      {createOrderError && <ErrorAlert message={createOrderError.message} />}
 
       <button
         type="submit"
@@ -227,7 +187,7 @@ export default function SendForm() {
         actions={{
           confirm: {
             label: 'Send',
-            action: () => onConfirmSend?.(),
+            action: () => executeFn?.(),
           },
           cancel: {
             label: 'Cancel',
@@ -239,9 +199,33 @@ export default function SendForm() {
       >
         <p className="text-balance text-slate-500">
           You&apos;re about to send{' '}
-          <span className="font-bold">{orderAmountSummary()}</span> to {` `}
-          <span className="font-bold">{getValues('recipientId')}</span> with
-          agent <span className="font-bold">#{getValues('agentId')}</span>.
+          <span className="font-bold">
+            {orderAmountSummary(
+              getValues('senderAmount'),
+              getValues('recipientAmount'),
+              senderCurrency,
+              recipientCurrency
+            )}
+          </span>
+          {getValues('recipientId') && (
+            <>
+              <br />
+              {` `}to{` `}
+              <span className="font-bold">{getValues('recipientId')}</span>
+            </>
+          )}
+          {getValues('chainId') && (
+            <>
+              <br />
+              via{` `}
+              <span className="font-bold">
+                {getSupportedChain(getValues('chainId'))?.name ||
+                  'Unsupported chain'}
+              </span>
+            </>
+          )}
+          {` `}
+          with agent <span className="font-bold">#{getValues('agentId')}</span>.
         </p>
       </Modal>
     </form>

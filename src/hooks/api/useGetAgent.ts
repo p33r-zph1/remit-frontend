@@ -21,7 +21,7 @@ export const agentQueryOptions = ({ agentId }: AgentQueryProps) =>
     refetchInterval: 15_000,
   });
 
-export default function useAgent(
+export default function useGetAgent(
   props: Parameters<typeof agentQueryOptions>[0]
 ) {
   return useSuspenseQuery(agentQueryOptions(props));

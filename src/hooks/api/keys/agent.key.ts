@@ -1,5 +1,5 @@
-import type { AgentQueryProps } from '../useAgent';
-import type { AgentsQueryProps } from '../useAgents';
+import type { AgentQueryProps } from '../useGetAgent';
+import type { AgentsQueryProps } from '../useGetAgents';
 
 export const agentKeys = {
   /**

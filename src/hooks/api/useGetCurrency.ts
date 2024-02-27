@@ -4,7 +4,7 @@ import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
 import exchangeCurrencyApiSchema from '@/src/schema/currency';
 
-export default function useExchangeCurrency() {
+export default function useGetCurrency() {
   return useSuspenseQuery({
     queryKey: ['exchange-currency'],
     queryFn: () => {

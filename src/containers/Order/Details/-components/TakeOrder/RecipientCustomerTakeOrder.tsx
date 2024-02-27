@@ -7,13 +7,13 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import SelectAgent from '@/src/components/Select/SelectAgent';
-import useAgents from '@/src/hooks/api/useAgents';
+import useGetAgents from '@/src/hooks/api/useGetAgents';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
 import { getTransferInfo } from '@/src/schema/order/transfer-details';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
-const formSchema = z.object({
+const takeOrderFormSchema = z.object({
   agentId: z
     .string()
     .min(1)
@@ -22,7 +22,7 @@ const formSchema = z.object({
     }),
 });
 
-type Inputs = z.infer<typeof formSchema>;
+type TakeOrderForm = z.infer<typeof takeOrderFormSchema>;
 
 export default memo(function RecipientCustomerTakeOrder() {
   const { order } = useOrderDetails();
@@ -34,14 +34,14 @@ export default memo(function RecipientCustomerTakeOrder() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<Inputs>({
-    resolver: zodResolver(formSchema),
+  } = useForm<TakeOrderForm>({
+    resolver: zodResolver(takeOrderFormSchema),
     defaultValues: {
       agentId: 'default',
     },
   });
 
-  const { data: agents } = useAgents({
+  const { data: agents } = useGetAgents({
     isoCode: getTransferInfo(transferDetails).countryIsoCode,
   });
 
@@ -62,7 +62,7 @@ export default memo(function RecipientCustomerTakeOrder() {
     rejectOrderError,
   } = useTakeOrder({ orderType, orderId });
 
-  const onSubmit: SubmitHandler<Inputs> = ({ agentId }) => {
+  const onSubmit: SubmitHandler<TakeOrderForm> = ({ agentId }) => {
     onAcceptOrder(agentId);
   };
 

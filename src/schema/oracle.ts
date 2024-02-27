@@ -7,13 +7,13 @@ type Pair = `${string}:${string}`;
 const isValidPair = (data: string): data is Pair =>
   data.split(':').length === 2;
 
-export const priceOracleSchema = z.object({
+export const oracleSchema = z.object({
   pair: z.string().refine(isValidPair),
   rate: z.number(),
 });
 
-const priceOracleApiSchema = makeApiSchema(priceOracleSchema);
+const oracleApiSchema = makeApiSchema(oracleSchema);
 
-export type PriceOracle = z.infer<typeof priceOracleSchema>;
+export type Oracle = z.infer<typeof oracleSchema>;
 
-export default priceOracleApiSchema;
+export default oracleApiSchema;

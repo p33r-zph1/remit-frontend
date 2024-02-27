@@ -35,7 +35,7 @@ export const ordersQueryOptions = ({ pageSize, status }: OrdersQueryProps) =>
     },
   });
 
-export default function useOrders(
+export default function useGetOrders(
   props: Parameters<typeof ordersQueryOptions>[0]
 ) {
   return useSuspenseInfiniteQuery(ordersQueryOptions(props));

@@ -11,7 +11,7 @@ import { slugify } from '@/src/utils';
 
 import { orderKeys } from './keys/order.key';
 
-const orderBodySchema = z.object({
+const crossBorderBodySchema = z.object({
   recipientId: z.string(),
   senderAgentId: z.string(),
   transferAmount: z.number(),
@@ -19,24 +19,72 @@ const orderBodySchema = z.object({
   recipientCurrency: z.string(),
 });
 
-export type OrderBody = z.infer<typeof orderBodySchema>;
+const crossBorderSelfBodySchema = z.object({
+  senderAgentId: z.string(),
+  transferAmount: z.number(),
+  senderCurrency: z.string(),
+  recipientCurrency: z.string(),
+});
+
+const localSellBodySchema = z.object({
+  recipientAgentId: z.string(),
+  transferAmount: z.number(),
+  recipientCurrency: z.string(),
+  chain: z.string(),
+  token: z.string(),
+});
+
+const localBuyBodySchema = z.object({
+  senderAgentId: z.string(),
+  transferAmount: z.number(),
+  senderCurrency: z.string(),
+  chain: z.string(),
+  token: z.string(),
+});
+
+export type CrossBorderBody = z.infer<typeof crossBorderBodySchema>;
+
+export type CrossBorderSelfBody = z.infer<typeof crossBorderSelfBodySchema>;
+
+export type LocalBuyBody = z.infer<typeof localBuyBodySchema>;
+
+export type LocalSellBody = z.infer<typeof localSellBodySchema>;
+
+export type CreateOrderBody =
+  | CrossBorderBody
+  | CrossBorderSelfBody
+  | LocalBuyBody
+  | LocalSellBody;
 
 export type MutationProps = {
   orderType: OrderType;
-  body: OrderBody;
+  body: CreateOrderBody;
 };
+
+function handleRequestBody(props: MutationProps) {
+  switch (props.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+      return JSON.stringify(crossBorderBodySchema.parse(props.body));
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return JSON.stringify(crossBorderSelfBodySchema.parse(props.body));
+    case 'LOCAL_BUY_STABLECOINS':
+      return JSON.stringify(localBuyBodySchema.parse(props.body));
+    case 'LOCAL_SELL_STABLECOINS':
+      return JSON.stringify(localSellBodySchema.parse(props.body));
+  }
+}
 
 export default function useCreateOrder() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['create-order'],
-    mutationFn: ({ orderType, body }: MutationProps) => {
-      const apiUrl = makeApiUrl(`/orders/${slugify(orderType)}`);
+    mutationFn: (props: MutationProps) => {
+      const apiUrl = makeApiUrl(`/orders/${slugify(props.orderType)}`);
 
       return genericFetch(apiUrl, orderApiSchema, {
         method: 'POST',
-        body: JSON.stringify(orderBodySchema.parse(body)),
+        body: handleRequestBody(props),
       });
     },
     onSuccess: data => {

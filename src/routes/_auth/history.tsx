@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ordersQueryOptions } from '@/src/hooks/api/useOrders';
+import { ordersQueryOptions } from '@/src/hooks/api/useGetOrders';
 
 export const Route = createFileRoute('/_auth/history')({
   loader: opts =>
