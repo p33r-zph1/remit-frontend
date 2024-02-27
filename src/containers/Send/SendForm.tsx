@@ -4,7 +4,7 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
-import wagmi from '@/src/configs/wagmi';
+import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
 import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
 import useOrderType from '@/src/hooks/useOrderType';
 
@@ -206,10 +206,26 @@ export default function SendForm() {
               senderCurrency,
               recipientCurrency
             )}
-          </span>{' '}
-          to {` `}
-          <span className="font-bold">{getValues('recipientId')}</span> with
-          agent <span className="font-bold">#{getValues('agentId')}</span>.
+          </span>
+          {getValues('recipientId') && (
+            <>
+              <br />
+              {` `}to{` `}
+              <span className="font-bold">{getValues('recipientId')}</span>
+            </>
+          )}
+          {getValues('chainId') && (
+            <>
+              <br />
+              via{` `}
+              <span className="font-bold">
+                {getSupportedChain(getValues('chainId'))?.name ||
+                  'Unsupported chain'}
+              </span>
+            </>
+          )}
+          {` `}
+          with agent <span className="font-bold">#{getValues('agentId')}</span>.
         </p>
       </Modal>
     </form>

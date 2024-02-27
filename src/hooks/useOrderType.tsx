@@ -105,7 +105,7 @@ export default function useOrderType() {
       }
 
       return numericFormatter(
-        `${fromAmount} ${from.currency} (${toAmount} ${to.currency})`,
+        `${fromAmount} ${from.currency} (~${toAmount} ${to.currency})`,
         { thousandSeparator: ',' }
       );
     },
