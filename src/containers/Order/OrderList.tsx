@@ -1,5 +1,6 @@
 import { Fragment, memo } from 'react';
 
+import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import EmptyOrder from '@/src/components/Empty/EmptyOrder';
 import OrderItem from '@/src/components/Item/OrderItem';
 import useGetOrders, {
@@ -17,39 +18,45 @@ type Props = OrdersQueryProps;
 export default memo(function OrderList(props: Props) {
   const { user: userId } = useAuth();
 
-  const { data } = useGetOrders(props);
+  const { data, error } = useGetOrders(props);
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
     return <EmptyOrder />;
   }
 
-  return data.pages.map(({ data: { orders, pageNumber } }) => (
-    <Fragment key={pageNumber}>
-      {orders.map(order => {
-        const {
-          orderId,
-          orderStatus,
-          transferTimelineStatus: timelineStatus,
-          createdAt,
-        } = order;
+  return (
+    <>
+      {data.pages.map(({ data: { orders, pageNumber } }) => (
+        <Fragment key={pageNumber}>
+          {orders.map(order => {
+            const {
+              orderId,
+              orderStatus,
+              transferTimelineStatus: timelineStatus,
+              createdAt,
+            } = order;
 
-        const recipientId = getRecipient(order);
-        const isRecipient = isUserRecipient(order, userId);
-        const orderDetails = getOrderDetails(order, isRecipient);
+            const recipientId = getRecipient(order);
+            const isRecipient = isUserRecipient(order, userId);
+            const orderDetails = getOrderDetails(order, isRecipient);
 
-        return (
-          <OrderItem
-            key={orderId}
-            orderId={orderId}
-            orderStatus={orderStatus}
-            timelineStatus={timelineStatus}
-            orderDetails={orderDetails}
-            createdAt={createdAt}
-            recipientId={recipientId}
-            isRecipient={isRecipient}
-          />
-        );
-      })}
-    </Fragment>
-  ));
+            return (
+              <OrderItem
+                key={orderId}
+                orderId={orderId}
+                orderStatus={orderStatus}
+                timelineStatus={timelineStatus}
+                orderDetails={orderDetails}
+                createdAt={createdAt}
+                recipientId={recipientId}
+                isRecipient={isRecipient}
+              />
+            );
+          })}
+        </Fragment>
+      ))}
+
+      {error && <ErrorAlert message={error.message} />}
+    </>
+  );
 });

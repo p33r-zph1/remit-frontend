@@ -5,6 +5,7 @@ import HistoryItem from '@/src/components/Item/HistoryItem';
 import useGetOrders from '@/src/hooks/api/useGetOrders';
 import useAuth from '@/src/hooks/useAuth';
 
+import ErrorAlert from '../components/Alert/ErrorAlert';
 import EmptyOrder from '../components/Empty/EmptyOrder';
 import {
   getOrderDetails,
@@ -15,11 +16,16 @@ import {
 export default function HistoryList() {
   const { user: userId, hasGroup } = useAuth();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetOrders(
-    {
-      pageSize: 10,
-    }
-  );
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+    isError,
+  } = useGetOrders({
+    pageSize: 10,
+  });
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
     return <EmptyHistory isCustomer={hasGroup('customer')} />;
@@ -57,6 +63,8 @@ export default function HistoryList() {
         </Fragment>
       ))}
 
+      {error && <ErrorAlert message={error.message} />}
+
       {hasNextPage ? (
         <button
           onClick={() => fetchNextPage()}
@@ -67,7 +75,7 @@ export default function HistoryList() {
           {isFetchingNextPage && (
             <span className="loading loading-bars text-primary-content"></span>
           )}
-          Load more
+          {isError ? 'Try again' : 'Load more'}
         </button>
       ) : (
         <EmptyOrder title="You've reached the end" />
