@@ -175,9 +175,15 @@ export function getOrderDetails(order: Order, isRecipientCustomer: boolean) {
         ? order.transferDetails.recipient
         : order.transferDetails.sender;
 
-    case 'LOCAL_SELL_STABLECOINS':
     case 'LOCAL_BUY_STABLECOINS':
-      return order.escrowDetails;
+      return isRecipientCustomer
+        ? order.escrowDetails
+        : order.transferDetails.sender;
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return isRecipientCustomer
+        ? order.transferDetails.recipient
+        : order.escrowDetails;
   }
 }
 

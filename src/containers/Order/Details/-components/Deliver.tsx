@@ -1,5 +1,6 @@
 import { QrCodeIcon } from '@heroicons/react/20/solid';
 import { useNavigate } from '@tanstack/react-router';
+import { format } from 'date-fns';
 import { memo, useCallback, useState } from 'react';
 
 import HeaderTitle from '@/src/components/HeaderTitle';
@@ -41,10 +42,16 @@ export default memo(function Deliver({
     throw new Error('Location details cannot be missing.');
   }
 
+  const { areaName, startDate } = locationDetails;
+
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Deliver {asset} to {recipient}
+        <span className="text-gray-400">Deliver {asset} to Recipient</span> #
+        {recipient}
+        <span className="text-gray-400"> on </span>
+        {format(startDate, 'MMMM dd, yyyy')}{' '}
+        <span className="text-gray-400">at </span> {areaName}
       </HeaderTitle>
 
       <div className="flex flex-col space-y-2">

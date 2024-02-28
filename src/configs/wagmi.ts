@@ -4,7 +4,7 @@ import { createConfig } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
 const wagmi = createConfig({
-  chains: [bsc, bscTestnet],
+  chains: import.meta.env.PROD ? [bsc] : [bscTestnet],
   transports: {
     [bsc.id]: http(),
     [bscTestnet.id]: http(),
