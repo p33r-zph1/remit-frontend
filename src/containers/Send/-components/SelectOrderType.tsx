@@ -96,7 +96,7 @@ export default memo(function SelectOrderType(props: Props) {
                   setModalVisible(false);
                 }}
               >
-                <h3 className="w-full truncate text-sm font-bold md:text-base">
+                <h3 className="mb-1 w-full truncate text-sm font-bold md:text-base">
                   {icon} {title}
                 </h3>
 

@@ -10,5 +10,4 @@ _can't find the extensions? do `ctr/command + shift + x` and paste `@recommended
 
 ## Todo's
 
-2. Fix token conversion
-3. Handle all remaining TODO's and FIXME's
+1. Handle all remaining TODO's and FIXME's
