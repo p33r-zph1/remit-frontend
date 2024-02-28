@@ -3,8 +3,10 @@ import { bsc, bscTestnet } from 'viem/chains';
 import { createConfig } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
+import { parsedEnvs } from './env';
+
 const wagmi = createConfig({
-  chains: import.meta.env.PROD ? [bsc] : [bscTestnet],
+  chains: parsedEnvs.MODE === 'production' ? [bsc] : [bscTestnet],
   transports: {
     [bsc.id]: http(),
     [bscTestnet.id]: http(),
