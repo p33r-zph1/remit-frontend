@@ -7,6 +7,7 @@ export const envs = z.object({
   VITE_COGNITO_USER_POOL_CLIENT_ID: z.string().min(1),
   VITE_API_URL: z.string().url(),
   VITE_API_FLAVOR: z.enum(['develop', 'main']),
+  MODE: z.enum(['development', 'production']),
 });
 
 export const parsedEnvs = envs.parse(import.meta.env);
