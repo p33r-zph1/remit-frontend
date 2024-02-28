@@ -97,7 +97,6 @@ export const localBuySchema = baseOrderSchema.extend({
   transferTimeline: z.array(localBuyTimelineSchema),
   transferDetails: localBuyTransferDetailsSchema,
   collectionDetails: locationDetailsSchema.optional(),
-  deliveryDetails: locationDetailsSchema.optional(),
   contactDetails: localBuyContactDetailsSchema,
 });
 
@@ -168,6 +167,7 @@ export function getRecipientAgent(order: Order) {
   }
 }
 
+// TODO: delete
 export function getCollectionDetails(order: Order) {
   switch (order.orderType) {
     case 'CROSS_BORDER_REMITTANCE':
@@ -177,6 +177,20 @@ export function getCollectionDetails(order: Order) {
 
     case 'LOCAL_SELL_STABLECOINS':
       throw new Error('Expected collection details but none was received.');
+  }
+}
+
+export function getOrderDetails(order: Order, isRecipientCustomer: boolean) {
+  switch (order.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return isRecipientCustomer
+        ? order.transferDetails.recipient
+        : order.transferDetails.sender;
+
+    case 'LOCAL_SELL_STABLECOINS':
+    case 'LOCAL_BUY_STABLECOINS':
+      return order.escrowDetails;
   }
 }
 

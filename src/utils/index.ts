@@ -1,3 +1,5 @@
+import { type NumericFormatProps, numericFormatter } from 'react-number-format';
+
 import type { SupportedChains } from '../configs/wagmi';
 import wagmi from '../configs/wagmi';
 
@@ -43,4 +45,21 @@ export function trimErrorMessage(errorMessage: string): string {
   const match = errorMessage.match(/.*?[.!?]/);
 
   return match ? match[0] : errorMessage;
+}
+
+/**
+ * @description Formats a number into a formatted numeric string.
+ *
+ * @param number - The number to format.
+ * @param props - Additional formatting options (optional).
+ * @returns The formatted number string.
+ */
+export function formatNumber(
+  number: string | number,
+  props?: NumericFormatProps
+) {
+  return numericFormatter(String(number), {
+    thousandSeparator: ',',
+    ...props,
+  });
 }

@@ -3,35 +3,35 @@ import { z } from 'zod';
 
 import type { Agent } from './agent';
 
-const commissionDetailsSchema = z.object({
+const commissionSchema = z.object({
   commission: z.number(),
   amount: z.number(),
   token: z.string(),
 });
 
 const baseFeesSchema = z.object({
-  platform: commissionDetailsSchema,
+  platform: commissionSchema,
 });
 
 export const crossBorderFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
-  recipientAgent: commissionDetailsSchema.nullish(), // FIXME: is it really nullish?
+  senderAgent: commissionSchema,
+  recipientAgent: commissionSchema.optional(), // FIXME: is it really optional?
 });
 
 export const crossBorderSelfFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
-  recipientAgent: commissionDetailsSchema,
+  senderAgent: commissionSchema,
+  recipientAgent: commissionSchema,
 });
 
 export const localBuyFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
+  senderAgent: commissionSchema,
 });
 
 export const localSellFeesSchema = baseFeesSchema.extend({
-  recipientAgent: commissionDetailsSchema,
+  recipientAgent: commissionSchema,
 });
 
-type CommissionDetails = z.infer<typeof commissionDetailsSchema>;
+export type Commission = z.infer<typeof commissionSchema>;
 
 export type CrossBorderFees = z.infer<typeof crossBorderFeesSchema>;
 
@@ -47,7 +47,7 @@ export type Fees =
   | LocalBuyFees
   | LocalSellFees;
 
-export function formatCommissionDetails({ amount, token }: CommissionDetails) {
+export function formatCommissionDetails({ amount, token }: Commission) {
   return numericFormatter(`${amount} ${token}`, {
     thousandSeparator: ',',
   });
@@ -90,21 +90,6 @@ export function calculateAgentFee(amount: number, agent: Agent): string {
 
   // Return the final amount
   return fiatAmount === 0 ? '' : String(fiatAmount);
-}
-
-export function getRecipientAgentFees(fees: Fees) {
-  if ('recipientAgent' in fees) {
-    return fees.recipientAgent;
-  }
-
-  // senderAgent is recipients agent
-  if ('senderAgent' in fees) {
-    return fees.senderAgent;
-  }
-
-  throw new Error(
-    'Expected recipientAgent/senderAgent fees but none was received.'
-  );
 }
 
 export default baseFeesSchema;

@@ -6,8 +6,11 @@ import useGetOrders, {
   type OrdersQueryProps,
 } from '@/src/hooks/api/useGetOrders';
 import useAuth from '@/src/hooks/useAuth';
-import { getRecipient, isUserRecipient } from '@/src/schema/order';
-import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
+import {
+  getOrderDetails,
+  getRecipient,
+  isUserRecipient,
+} from '@/src/schema/order';
 
 type Props = OrdersQueryProps;
 
@@ -28,8 +31,11 @@ export default memo(function OrderList(props: Props) {
           orderStatus,
           transferTimelineStatus: timelineStatus,
           createdAt,
-          transferDetails,
         } = order;
+
+        const recipientId = getRecipient(order);
+        const isRecipient = isUserRecipient(order, userId);
+        const orderDetails = getOrderDetails(order, isRecipient);
 
         return (
           <OrderItem
@@ -37,10 +43,10 @@ export default memo(function OrderList(props: Props) {
             orderId={orderId}
             orderStatus={orderStatus}
             timelineStatus={timelineStatus}
-            transferInfo={getRecipientTransferDetails(transferDetails)}
+            orderDetails={orderDetails}
             createdAt={createdAt}
-            recipientId={getRecipient(order)}
-            isRecipient={isUserRecipient(order, userId)}
+            recipientId={recipientId}
+            isRecipient={isRecipient}
           />
         );
       })}

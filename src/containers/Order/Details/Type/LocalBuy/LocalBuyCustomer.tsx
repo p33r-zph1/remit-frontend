@@ -1,17 +1,29 @@
-import { memo } from 'react';
-
 import type { LocalBuyOrder } from '@/src/schema/order';
+
+import Give from '../../-components/Give';
 
 type Props = LocalBuyOrder;
 
-export default memo(function LocalBuyCustomer({
-  transferTimelineStatus: timelineStatus,
-}: Props) {
+export default function LocalBuyCustomer(props: Props) {
+  const {
+    transferTimelineStatus: timelineStatus,
+    senderAgentId,
+    contactDetails,
+    collectionDetails,
+  } = props;
+
   switch (timelineStatus) {
     case 'COLLECTION_MEETUP_SET':
-      return 'show the map + contact details';
+      return (
+        <Give
+          asset="cash"
+          senderAgent={senderAgentId}
+          senderAgentContact={contactDetails.senderAgent}
+          locationDetails={collectionDetails}
+        />
+      );
 
     default:
       return null;
   }
-});
+}

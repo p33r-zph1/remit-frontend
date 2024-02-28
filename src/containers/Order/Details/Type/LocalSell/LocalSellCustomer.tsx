@@ -1,23 +1,45 @@
-import { memo } from 'react';
-
 import type { LocalSellOrder } from '@/src/schema/order';
 
 import ApproveERC20 from '../../-components/ApproveERC20';
-import ReceiveCash from '../../-components/ReceiveCash';
+import ReceiveWithQr from '../../-components/ReceiveWithQr';
 
 type Props = LocalSellOrder;
 
-export default memo(function LocalSellCustomer({
-  transferTimelineStatus: timelineStatus,
-}: Props) {
+export default function LocalSellCustomer(props: Props) {
+  const {
+    transferTimelineStatus: timelineStatus,
+    orderId,
+    recipientAgentId,
+    contactDetails,
+    deliveryDetails,
+    escrowDetails,
+    transferDetails,
+  } = props;
+
   switch (timelineStatus) {
     case 'RECIPIENT_AGENT_ACCEPTED':
-      return <ApproveERC20 />;
+      return (
+        <ApproveERC20
+          orderId={orderId}
+          orderType="LOCAL_SELL_STABLECOINS"
+          transferInfo={transferDetails.recipient}
+          escrowDetails={escrowDetails}
+        />
+      );
 
     case 'DELIVERY_MEETUP_SET':
-      return <ReceiveCash />;
+      return (
+        <ReceiveWithQr
+          orderId={orderId}
+          orderType="LOCAL_SELL_STABLECOINS"
+          asset="cash"
+          agent={recipientAgentId}
+          agentContact={contactDetails.recipientAgent}
+          locationDetails={deliveryDetails}
+        />
+      );
 
     default:
       return null;
   }
-});
+}

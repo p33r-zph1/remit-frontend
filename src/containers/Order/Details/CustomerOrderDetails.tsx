@@ -1,13 +1,15 @@
+import { useMemo } from 'react';
+
 import CountdownCard from '@/src/components/Card/CountdownCard';
 import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { isUserRecipient } from '@/src/schema/order';
-import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
+import { getOrderDetails, isUserRecipient } from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
+import LocalBuyCustomer from './Type/LocalBuy/LocalBuyCustomer';
 import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
 
 export default function CustomerOrderDetails() {
@@ -21,16 +23,25 @@ export default function CustomerOrderDetails() {
     orderStatus,
     transferTimelineStatus: timelineStatus,
     expiresAt,
-    transferDetails,
   } = order;
+
+  const isRecipientCustomer = useMemo(
+    () => isUserRecipient(order, userId),
+    [order, userId]
+  );
+
+  const orderDetails = useMemo(
+    () => getOrderDetails(order, isRecipientCustomer),
+    [isRecipientCustomer, order]
+  );
 
   return (
     <section className="flex flex-col space-y-12">
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        transferInfo={getRecipientTransferDetails(transferDetails)}
-        isRecipientCustomer={isUserRecipient(order, userId)}
+        orderDetails={orderDetails}
+        isRecipientCustomer={isRecipientCustomer}
       />
 
       <div className="divider" />
@@ -50,9 +61,11 @@ export default function CustomerOrderDetails() {
             return <CrossBorderCustomer role={customerRole} {...order} />;
           }
 
-          case 'LOCAL_SELL_STABLECOINS': {
+          case 'LOCAL_BUY_STABLECOINS':
+            return <LocalBuyCustomer {...order} />;
+
+          case 'LOCAL_SELL_STABLECOINS':
             return <LocalSellCustomer {...order} />;
-          }
 
           default:
             return null;

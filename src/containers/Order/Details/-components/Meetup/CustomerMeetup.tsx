@@ -28,7 +28,9 @@ export default memo(function CustomerMeetup({
     libraries,
   });
 
-  if (!isLoaded) return <LoadingRing className="h-32" />;
+  if (!isLoaded) {
+    return <LoadingRing className="h-32" />;
+  }
 
   return (
     <div className="flex flex-col space-y-4">

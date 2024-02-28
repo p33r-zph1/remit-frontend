@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router';
+import { memo } from 'react';
 
+import { type EscrowDetails } from '@/src/schema/escrow';
 import type { OrderStatus } from '@/src/schema/order';
-import {
-  formatTranferInfo,
-  type TransferInfo,
-} from '@/src/schema/order/transfer-info';
+import { type TransferInfo } from '@/src/schema/order/transfer-info';
 import type { TimelineStatus } from '@/src/schema/order/transfer-timeline';
-import { safeFormatRelative } from '@/src/utils/date';
+import { formatNumber } from '@/src/utils';
+import { safeFormatDistance } from '@/src/utils/date';
 
 import StatusIcon from '../Icon/StatusIcon';
 
@@ -14,17 +14,17 @@ type Item = {
   orderId: string;
   orderStatus: OrderStatus;
   timelineStatus: TimelineStatus;
-  transferInfo: TransferInfo;
+  orderDetails: TransferInfo | EscrowDetails;
   createdAt: Date;
   recipientId: string;
   isRecipient: boolean;
 };
 
-export default function OrderItem({
+export default memo(function OrderItem({
   orderId,
   orderStatus,
   timelineStatus,
-  transferInfo,
+  orderDetails,
   createdAt,
   recipientId,
   isRecipient,
@@ -49,13 +49,20 @@ export default function OrderItem({
 
       {/* Amount & Conversion Details */}
       <div className="ml-2 flex flex-col items-end justify-center text-end">
-        <div className="text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
-          {formatTranferInfo(transferInfo)}
+        <div className="flex text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
+          <div className="mr-1 inline-block max-w-20 truncate sm:max-w-full">
+            {'token' in orderDetails
+              ? formatNumber(orderDetails.amount)
+              : formatNumber(orderDetails.amount)}
+          </div>
+
+          {'token' in orderDetails ? orderDetails.token : orderDetails.currency}
         </div>
+
         <div className="text-xs text-gray-400 first-letter:capitalize md:text-base">
-          {safeFormatRelative(createdAt)}
+          {safeFormatDistance(createdAt)} ago
         </div>
       </div>
     </Link>
   );
-}
+});

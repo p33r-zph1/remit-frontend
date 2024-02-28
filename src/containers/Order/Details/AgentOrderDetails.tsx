@@ -1,12 +1,15 @@
+import { useMemo } from 'react';
+
 import CountdownCard from '@/src/components/Card/CountdownCard';
 import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getRecipientTransferDetails } from '@/src/schema/order/transfer-details';
+import { getOrderDetails } from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
+import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
 import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
 
 export default function AgentOrderDetails() {
@@ -20,15 +23,16 @@ export default function AgentOrderDetails() {
     orderStatus,
     transferTimelineStatus: timelineStatus,
     expiresAt,
-    transferDetails,
   } = order;
+
+  const orderDetails = useMemo(() => getOrderDetails(order, false), [order]);
 
   return (
     <section className="flex flex-col space-y-12">
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        transferInfo={getRecipientTransferDetails(transferDetails)}
+        orderDetails={orderDetails}
         isRecipientCustomer={false}
       />
 
@@ -48,6 +52,9 @@ export default function AgentOrderDetails() {
 
             return <CrossBorderAgent role={agentRole} {...order} />;
           }
+
+          case 'LOCAL_BUY_STABLECOINS':
+            return <LocalBuyAgent {...order} />;
 
           case 'LOCAL_SELL_STABLECOINS':
             return <LocalSellAgent {...order} />;

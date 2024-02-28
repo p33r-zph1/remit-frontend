@@ -2,18 +2,21 @@ import { memo } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import Modal from '@/src/components/Modal';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import {
-  formatCommissionDetails,
-  getRecipientAgentFees,
-} from '@/src/schema/fees';
+import { type Commission, formatCommissionDetails } from '@/src/schema/fees';
+import type { OrderType } from '@/src/schema/order';
 
-export default memo(function AgentTakeOrder() {
-  const { order } = useOrderDetails();
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  commission: Commission | undefined;
+};
 
-  const { orderType, orderId } = order;
-
+export default memo(function AgentTakeOrder({
+  orderType,
+  orderId,
+  commission,
+}: Props) {
   const {
     // callbacks
     executeFn,
@@ -31,19 +34,19 @@ export default memo(function AgentTakeOrder() {
     rejectOrderError,
   } = useTakeOrder({ orderType, orderId });
 
-  const fees = getRecipientAgentFees(order.fees);
-
-  if (!fees) throw new Error('Agent fees cannot be missing!');
+  if (!commission) {
+    throw new Error('Agent commision cannot be missing.');
+  }
 
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
         <span className="text-gray-400">
-          Your commission at {fees.commission}%
+          Your commission at {commission.commission}%
         </span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(fees)}
+          {formatCommissionDetails(commission)}
         </span>
       </div>
 
@@ -94,7 +97,7 @@ export default memo(function AgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(fees)} ({fees.commission}%)
+            {formatCommissionDetails(commission)} ({commission.commission}%)
           </span>
         </p>
       </Modal>

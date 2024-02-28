@@ -1,6 +1,7 @@
 import { ArrowLeftIcon } from '@heroicons/react/20/solid';
 import { useRouter } from '@tanstack/react-router';
 
+import { type EscrowDetails, formatEscrowDetails } from '@/src/schema/escrow';
 import type { OrderStatus } from '@/src/schema/order';
 import {
   formatTranferInfo,
@@ -53,10 +54,10 @@ function getRecipientDescription(timelineStatus: TimelineStatus) {
       return <p className="text-error">This order has expired</p>;
 
     case 'CASH_COLLECTED':
-      return <p>Cash has been collected by senderagent</p>;
+      return <p>Cash has been collected</p>;
 
     case 'CASH_DELIVERED':
-      return <p>Cash has been delivererd by recipientagent</p>;
+      return <p>Cash has been delivered</p>;
 
     case 'ESCROW_RELEASED':
       return <p className="text-success">Order is completed</p>;
@@ -79,60 +80,17 @@ function BackButton() {
   );
 }
 
-// export default function OrderDetailsNav({
-//   orderStatus,
-//   isRecipientCustomer,
-//   recipientId,
-//   senderId,
-//   transferDetails,
-//   transferTimelineStatus,
-// }: Props) {
-//   const { sender, recipient } = transferDetails;
-
-//   return (
-//     <div>
-//       <BackButton />
-
-//       <div className="flex flex-col space-y-4 py-1">
-//         {isRecipientCustomer ? (
-//           <div className="text-base font-bold text-gray-400 md:text-lg">
-//             Sender {senderId} sent
-//           </div>
-//         ) : (
-//           getTitleByOrderStatus(orderStatus)
-//         )}
-
-//         <div className="flex flex-row items-center justify-between py-1">
-//           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
-//             {isRecipientCustomer
-//               ? formatTranferInfo(recipient)
-//               : formatTranferInfo(sender)}
-//           </div>
-
-//           <StatusIcon status={orderStatus} isRecipient={isRecipientCustomer} />
-//         </div>
-
-//         <div className="text-base text-gray-400 md:text-lg">
-//           {isRecipientCustomer
-//             ? getRecipientDescription(transferTimelineStatus)
-//             : `Recipient ${recipientId}`}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 type Props = {
   isRecipientCustomer: boolean;
   orderStatus: OrderStatus;
   timelineStatus: TimelineStatus;
-  transferInfo: TransferInfo;
+  orderDetails: TransferInfo | EscrowDetails;
 };
 
 export default function OrderDetailsNav({
   orderStatus,
   isRecipientCustomer,
-  transferInfo,
+  orderDetails,
   timelineStatus,
 }: Props) {
   return (
@@ -144,7 +102,9 @@ export default function OrderDetailsNav({
 
         <div className="flex flex-row items-center justify-between py-1">
           <div className="max-w-sm text-balance text-2xl font-bold transition duration-200 hover:scale-105 sm:text-3xl md:text-4xl">
-            {formatTranferInfo(transferInfo)}
+            {'token' in orderDetails
+              ? formatEscrowDetails(orderDetails)
+              : formatTranferInfo(orderDetails)}
           </div>
 
           <StatusIcon status={orderStatus} isRecipient={isRecipientCustomer} />

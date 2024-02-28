@@ -3,8 +3,8 @@ import { memo } from 'react';
 import HeroNotFound from '@/src/components/Hero/HeroNotFound';
 import type { CrossBorderOrder } from '@/src/schema/order';
 
-import GiveCash from '../../-components/GiveCash';
-import ReceiveCash from '../../-components/ReceiveCash';
+import Give from '../../-components/Give';
+import ReceiveWithQr from '../../-components/ReceiveWithQr';
 import RecipientCustomerTakeOrder from '../../-components/TakeOrder/RecipientCustomerTakeOrder';
 
 type Role = {
@@ -20,12 +20,28 @@ export default memo(function CrossBorderCustomer({
   role,
   ...orderProps
 }: Props) {
-  const { transferTimelineStatus: timelineStatus } = orderProps;
+  const {
+    transferTimelineStatus: timelineStatus,
+    orderId,
+    senderAgentId,
+    recipientAgentId,
+    contactDetails,
+    collectionDetails,
+    deliveryDetails,
+    transferDetails,
+  } = orderProps;
 
   if (role.isSender) {
     switch (timelineStatus) {
       case 'COLLECTION_MEETUP_SET':
-        return <GiveCash />;
+        return (
+          <Give
+            asset="cash"
+            senderAgent={senderAgentId}
+            senderAgentContact={contactDetails.senderAgent}
+            locationDetails={collectionDetails}
+          />
+        );
 
       default:
         return null;
@@ -35,10 +51,25 @@ export default memo(function CrossBorderCustomer({
   if (role.isRecipient) {
     switch (timelineStatus) {
       case 'PENDING':
-        return <RecipientCustomerTakeOrder />;
+        return (
+          <RecipientCustomerTakeOrder
+            orderId={orderId}
+            orderType="CROSS_BORDER_REMITTANCE"
+            transferInfo={transferDetails.recipient}
+          />
+        );
 
       case 'DELIVERY_MEETUP_SET':
-        return <ReceiveCash />;
+        return (
+          <ReceiveWithQr
+            orderId={orderId}
+            orderType="CROSS_BORDER_REMITTANCE"
+            asset="cash"
+            agent={recipientAgentId}
+            agentContact={contactDetails.recipientAgent}
+            locationDetails={deliveryDetails}
+          />
+        );
 
       default:
         return null;

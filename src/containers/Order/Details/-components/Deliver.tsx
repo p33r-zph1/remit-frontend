@@ -4,17 +4,26 @@ import { memo, useCallback, useState } from 'react';
 
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
-import { getRecipientContactDetails } from '@/src/schema/contact';
-import { getRecipient } from '@/src/schema/order';
+import type { Contact } from '@/src/schema/contact';
+import type { LocationDetails } from '@/src/schema/location';
 
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
-export default memo(function DeliverCash() {
-  const navigate = useNavigate({ from: Route.fullPath });
+type Props = {
+  asset: string;
+  recipient: string;
+  recipientContact: Contact;
+  locationDetails: LocationDetails | undefined;
+};
 
-  const { order } = useOrderDetails();
+export default memo(function Deliver({
+  asset,
+  recipient,
+  recipientContact,
+  locationDetails,
+}: Props) {
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const [modalVisible, setModalVisible] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
@@ -28,26 +37,14 @@ export default memo(function DeliverCash() {
     }
   }, [navigate, shouldNavigate]);
 
-  const {
-    deliveryDetails,
-    contactDetails,
-    // recipientAgentId,
-    // recipientId,
-  } = order;
-
-  if (!deliveryDetails) throw new Error('Delivery details is not present.');
-
-  const recipient = getRecipient(order);
-  const recipientDetails = getRecipientContactDetails(contactDetails);
-
-  if (!recipient) throw new Error('Recipient is not present.');
-  if (!recipientDetails)
-    throw new Error('Recipient contact details is not present.');
+  if (!locationDetails) {
+    throw new Error('Location details cannot be missing.');
+  }
 
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Deliver cash to Recipient #{recipient}
+        Deliver {asset} to {recipient}
       </HeaderTitle>
 
       <div className="flex flex-col space-y-2">
@@ -64,14 +61,14 @@ export default memo(function DeliverCash() {
         <button
           type="button"
           disabled={false}
-          onClick={() => window.open(recipientDetails.telegram.url, '_blank')}
+          onClick={() => window.open(recipientContact.telegram.url, '_blank')}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact recipient
         </button>
       </div>
 
-      <CustomerMeetup locationDetails={deliveryDetails} />
+      <CustomerMeetup locationDetails={locationDetails} />
 
       <Modal
         open={modalVisible}
