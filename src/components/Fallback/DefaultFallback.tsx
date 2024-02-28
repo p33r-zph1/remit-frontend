@@ -16,7 +16,9 @@ export default function DefaultFallback({
 
         <div className="mockup-code bg-slate-100 text-gray-600 shadow-md">
           <pre data-prefix="#">
-            <code className="text-balance">{getErrorMessage(error)}</code>
+            <code className="overflow-hidden text-balance break-words">
+              {getErrorMessage(error)}
+            </code>
           </pre>
         </div>
 

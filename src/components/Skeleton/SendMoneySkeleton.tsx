@@ -1,8 +1,17 @@
 import type { ReactNode } from 'react';
 
 function Base({ children }: { children: ReactNode }) {
+  return <div className="mt-4 space-y-8 sm:mt-8">{children}</div>;
+}
+
+function TransactionType() {
   return (
-    <div className="mt-12 flex flex-col space-y-14 sm:mt-16">{children}</div>
+    <div className="flex flex-col space-y-4">
+      {/* label */}
+      <div className="skeleton h-4 w-32 md:h-7" />
+      {/* input */}
+      <div className="skeleton h-8 w-full md:h-12" />
+    </div>
   );
 }
 
@@ -10,15 +19,15 @@ function Recipient() {
   return (
     <div className="flex flex-col space-y-4">
       {/* label */}
-      <div className="skeleton h-6 w-24 md:h-7" />
+      <div className="skeleton h-4 w-20 md:h-7" />
       {/* input */}
-      <div className="skeleton h-8 w-5/12 md:h-7" />
+      <div className="skeleton h-8 w-full md:h-10" />
     </div>
   );
 }
 
 function Button() {
-  return <div className="skeleton mt-14 h-10 w-full" />;
+  return <div className="skeleton h-10 w-full" />;
 }
 
 function Form({
@@ -57,7 +66,10 @@ function Form({
 export default function SendMoneySkeleton() {
   return (
     <Base>
+      <TransactionType />
       <Recipient />
+
+      <div className="divider my-8"></div>
 
       <Form input1 summary input2 />
 
@@ -70,6 +82,8 @@ export function SecondCurrencySkeleton() {
   return (
     <Base>
       <Form summary input2 />
+
+      <div className="divider my-8"></div>
 
       <Button />
     </Base>

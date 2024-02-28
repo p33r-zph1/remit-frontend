@@ -41,7 +41,7 @@ export default memo(function OrderItem({
 
         <div className="flex flex-col items-start justify-center">
           <div className="text-sm font-semibold md:text-lg">{recipientId}</div>
-          <div className="text-xs capitalize text-gray-500 md:text-lg">
+          <div className="text-xs capitalize text-gray-500 md:text-base">
             {timelineStatus.replace(/_/g, ' ').toLowerCase()}
           </div>
         </div>
