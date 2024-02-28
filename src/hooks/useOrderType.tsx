@@ -63,8 +63,8 @@ export default function useOrderType() {
 
           case 'LOCAL_SELL_STABLECOINS': {
             return {
-              recipientCurrency: to.currency,
               token: from.currency,
+              recipientCurrency: to.currency,
               recipientAgentId: props.agentId,
               chain: getCustomChainId(props.chainId),
               transferAmount: Number(props.senderAmount),

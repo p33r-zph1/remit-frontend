@@ -7,9 +7,9 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
 import wagmi from '@/src/configs/wagmi';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import { formatCommissionDetails } from '@/src/schema/fees';
+import { type Commission, formatCommissionDetails } from '@/src/schema/fees';
+import type { OrderType } from '@/src/schema/order';
 
 const takeOrderSchema = z.object({
   chainId: z.number().min(1, { message: 'Please select a chain' }),
@@ -17,17 +17,23 @@ const takeOrderSchema = z.object({
 
 export type TakeOrderSchema = z.infer<typeof takeOrderSchema>;
 
-export default memo(function SenderAgentTakeOrder() {
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  commission: Commission | undefined;
+};
+
+export default memo(function AgentWithFormTakeOrder({
+  orderType,
+  orderId,
+  commission,
+}: Props) {
   const { control, handleSubmit } = useForm<TakeOrderSchema>({
     resolver: zodResolver(takeOrderSchema),
     defaultValues: {
       chainId: 0,
     },
   });
-
-  const { order } = useOrderDetails();
-
-  const { orderType, orderId } = order;
 
   const {
     // callbacks
@@ -50,17 +56,19 @@ export default memo(function SenderAgentTakeOrder() {
     onAcceptOrder(chainId);
   };
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
-
-  const { commission } = order.fees.senderAgent;
+  if (!commission) {
+    throw new Error('Agent commision cannot be missing.');
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
-        <span className="text-gray-400">Your commission at {commission}%</span>
+        <span className="text-gray-400">
+          Your commission at {commission.commission}%
+        </span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(order.fees.senderAgent)}
+          {formatCommissionDetails(commission)}
         </span>
       </div>
 
@@ -112,7 +120,7 @@ export default memo(function SenderAgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(order.fees.senderAgent)} ({commission}%)
+            {formatCommissionDetails(commission)} ({commission.commission}%)
           </span>
         </p>
       </Modal>

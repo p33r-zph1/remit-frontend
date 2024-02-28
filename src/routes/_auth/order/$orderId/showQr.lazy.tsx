@@ -12,6 +12,7 @@ import ShowQrCode from '@/src/containers/Order/QrCode/ShowQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getRecipient, getRecipientAgent } from '@/src/schema/order';
 
 import { Route as ShowQrRoute } from './showQr';
 
@@ -39,13 +40,9 @@ function ShowQrComponent() {
 
   const { order } = useOrderDetails();
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') {
-    return <HeroAccessDenied className="bg-white" />;
-  }
+  const { transferTimelineStatus: timelineStatus } = order;
 
-  const { transferTimelineStatus, recipientId, senderAgentId } = order;
-
-  switch (transferTimelineStatus) {
+  switch (timelineStatus) {
     case 'CASH_DELIVERED':
     case 'ESCROW_RELEASED': {
       navigate({
@@ -57,8 +54,11 @@ function ShowQrComponent() {
     }
 
     case 'DELIVERY_MEETUP_SET': {
-      if (userId === recipientId) {
-        return <ShowQrCode senderAgentId={senderAgentId} />;
+      const recipientId = getRecipient(order);
+      const recipientAgentId = getRecipientAgent(order);
+
+      if (userId === recipientId && recipientAgentId) {
+        return <ShowQrCode recipientAgentId={recipientAgentId} />;
       }
 
       return <HeroAccessDenied className="bg-white" />;

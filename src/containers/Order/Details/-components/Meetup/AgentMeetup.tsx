@@ -4,7 +4,7 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { type ElementRef, useRef, useState } from 'react';
+import { type ElementRef, memo, useRef, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ import { parsedEnvs } from '@/src/configs/env';
 import useSetCollection, {
   type MutationProps,
 } from '@/src/hooks/api/useSetCollection';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
+import type { OrderType } from '@/src/schema/order';
 import { safeFormatRelativeDistance } from '@/src/utils/date';
 
 const meetupFormSchema = z.object({
@@ -40,10 +40,16 @@ type MeetupForm = z.infer<typeof meetupFormSchema>;
 const libraries: Libraries = ['places'];
 
 type Props = {
+  orderType: OrderType;
+  orderId: string;
   meetupType: MutationProps['meetupType'];
 };
 
-export default function AgentMeetup({ meetupType }: Props) {
+export default memo(function AgentMeetup({
+  orderType,
+  orderId,
+  meetupType,
+}: Props) {
   const {
     control,
     register,
@@ -67,10 +73,6 @@ export default function AgentMeetup({ meetupType }: Props) {
     googleMapsApiKey: parsedEnvs.VITE_MAPS_JS_API,
     libraries,
   });
-
-  const {
-    order: { orderType, orderId },
-  } = useOrderDetails();
 
   const {
     mutateAsync: setCollectionAsync,
@@ -117,7 +119,9 @@ export default function AgentMeetup({ meetupType }: Props) {
     setModalVisible(true);
   };
 
-  if (!isLoaded) return <LoadingRing className="h-32" />;
+  if (!isLoaded) {
+    return <LoadingRing className="h-32" />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
@@ -260,4 +264,4 @@ export default function AgentMeetup({ meetupType }: Props) {
       </Modal>
     </form>
   );
-}
+});

@@ -4,7 +4,7 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { type ElementRef, useRef } from 'react';
+import { type ElementRef, memo, useRef } from 'react';
 
 import MapsAPI from '@/src/components/Location/MapsAPI';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
@@ -18,7 +18,7 @@ type Props = {
   locationDetails: LocationDetails;
 };
 
-export default function CustomerMeetup({
+export default memo(function CustomerMeetup({
   locationDetails: { areaName, coordinates, radius, startDate, endDate },
 }: Props) {
   const mapRef = useRef<ElementRef<typeof GoogleMap>>();
@@ -28,7 +28,9 @@ export default function CustomerMeetup({
     libraries,
   });
 
-  if (!isLoaded) return <LoadingRing className="h-32" />;
+  if (!isLoaded) {
+    return <LoadingRing className="h-32" />;
+  }
 
   return (
     <div className="flex flex-col space-y-4">
@@ -75,4 +77,4 @@ export default function CustomerMeetup({
       </div>
     </div>
   );
-}
+});

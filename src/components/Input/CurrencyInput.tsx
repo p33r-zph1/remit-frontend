@@ -36,6 +36,7 @@ export default function CurrencyInput({
 
       <NumericFormat
         thousandSeparator
+        allowNegative={false}
         autoComplete="off"
         inputMode="decimal"
         className={twMerge(

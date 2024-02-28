@@ -8,10 +8,12 @@ import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import SelectAgent from '@/src/components/Select/SelectAgent';
 import useGetAgents from '@/src/hooks/api/useGetAgents';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
-import { formatTranferInfo } from '@/src/schema/order/transfer-info';
+import type { OrderType } from '@/src/schema/order';
+import {
+  formatTranferInfo,
+  type TransferInfo,
+} from '@/src/schema/order/transfer-info';
 
 const takeOrderFormSchema = z.object({
   agentId: z
@@ -24,11 +26,17 @@ const takeOrderFormSchema = z.object({
 
 type TakeOrderForm = z.infer<typeof takeOrderFormSchema>;
 
-export default memo(function RecipientCustomerTakeOrder() {
-  const { order } = useOrderDetails();
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  transferInfo: TransferInfo;
+};
 
-  const { orderType, orderId, transferDetails } = order;
-
+export default memo(function RecipientCustomerTakeOrder({
+  orderType,
+  orderId,
+  transferInfo,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -42,7 +50,7 @@ export default memo(function RecipientCustomerTakeOrder() {
   });
 
   const { data: agents } = useGetAgents({
-    isoCode: getTransferInfo(transferDetails).countryIsoCode,
+    isoCode: transferInfo.countryIsoCode,
   });
 
   const {
@@ -72,8 +80,6 @@ export default memo(function RecipientCustomerTakeOrder() {
     () => agents.find(a => a.agentId === agentId),
     [agentId, agents]
   );
-
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -133,9 +139,7 @@ export default memo(function RecipientCustomerTakeOrder() {
       >
         <p className="text-balance text-slate-500">
           You&apos;re about to {modalState.state} an order amounting of {` `}
-          <span className="font-bold">
-            ~ {formatTranferInfo(getTransferInfo(transferDetails))}
-          </span>
+          <span className="font-bold">~ {formatTranferInfo(transferInfo)}</span>
           {modalState.state === 'accept' && (
             <>
               <br />

@@ -1,3 +1,4 @@
+import { numericFormatter } from 'react-number-format';
 import { isAddress } from 'viem';
 import { z } from 'zod';
 
@@ -15,5 +16,13 @@ const escrowDetailsSchema = z.object({
   releaseTransaction: z.string().url().optional(),
   refundTransaction: z.string().url().optional(),
 });
+
+export type EscrowDetails = z.infer<typeof escrowDetailsSchema>;
+
+export function formatEscrowDetails({ amount, token }: EscrowDetails) {
+  return numericFormatter(`${amount} ${token}`, {
+    thousandSeparator: ',',
+  });
+}
 
 export default escrowDetailsSchema;

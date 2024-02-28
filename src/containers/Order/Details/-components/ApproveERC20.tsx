@@ -9,10 +9,23 @@ import ApproveAllowance from '@/src/components/Web3/ApproveAllowance';
 import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getTransferInfo } from '@/src/schema/order/transfer-details';
+import type { EscrowDetails } from '@/src/schema/escrow';
+import type { OrderType } from '@/src/schema/order';
+import type { TransferInfo } from '@/src/schema/order/transfer-info';
 
-export default memo(function ApproveERC20() {
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  transferInfo: TransferInfo;
+  escrowDetails: EscrowDetails;
+};
+
+export default memo(function ApproveERC20({
+  orderType,
+  orderId,
+  transferInfo,
+  escrowDetails,
+}: Props) {
   const { address, chain, chainId, isDisconnected } = useAccount();
 
   const {
@@ -23,30 +36,23 @@ export default memo(function ApproveERC20() {
   } = useEscrowDeposit();
 
   const {
-    order: {
-      escrowDetails: {
-        escrow: escrowAddress,
-        amount: tokenAmount,
-        token: tokenSymbol,
-        tokenAddress,
-        tokenDecimals,
-        chain: chainName,
-        chainId: prefferedChainId,
-      },
-      transferDetails,
-      orderType,
-      orderId,
-    },
-  } = useOrderDetails();
+    escrow: escrowAddress,
+    amount: tokenAmount,
+    token: tokenSymbol,
+    tokenAddress,
+    tokenDecimals,
+    chain: chainName,
+    chainId: prefferedChainId,
+  } = escrowDetails;
 
   if (!escrowAddress)
-    throw new Error('Escrow contract address cannot be missing!');
+    throw new Error('Escrow contract address cannot be missing.');
 
   if (!tokenAddress || !tokenDecimals)
-    throw new Error('Token address/decimals cannot be missing!');
+    throw new Error('Token address/decimals cannot be missing.');
 
   if (!chainName || !prefferedChainId)
-    throw new Error('Chain/ChainId cannot be missing!');
+    throw new Error('Chain/ChainId cannot be missing.');
 
   const onApprove = useCallback(async () => {
     if (!address) throw new Error('Please connect your wallet.');
@@ -63,11 +69,9 @@ export default memo(function ApproveERC20() {
   }, [address, escrowDepositAsync, orderId, orderType]);
 
   const approveAmountSummary = useMemo(() => {
-    const transferInfo = getTransferInfo(transferDetails);
-
     const str = `${tokenSymbol} ${tokenAmount} (${transferInfo.currency} ${transferInfo.amount})`;
     return numericFormatter(str, { thousandSeparator: ',' });
-  }, [tokenAmount, tokenSymbol, transferDetails]);
+  }, [tokenAmount, tokenSymbol, transferInfo.amount, transferInfo.currency]);
 
   return (
     <div className="flex flex-col space-y-12">

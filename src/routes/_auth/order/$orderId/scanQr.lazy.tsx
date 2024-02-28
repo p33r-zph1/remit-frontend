@@ -12,6 +12,7 @@ import ScanQrCode from '@/src/containers/Order/QrCode/ScanQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getRecipientAgent } from '@/src/schema/order';
 
 import { Route as ScanQrRoute } from './scanQr';
 
@@ -39,13 +40,9 @@ function ScanQrComponent() {
 
   const { order } = useOrderDetails();
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') {
-    return <HeroAccessDenied className="bg-white" />;
-  }
+  const { transferTimelineStatus: timelineStatus } = order;
 
-  const { transferTimelineStatus, recipientAgentId } = order;
-
-  switch (transferTimelineStatus) {
+  switch (timelineStatus) {
     case 'CASH_DELIVERED':
     case 'ESCROW_RELEASED': {
       navigate({
@@ -57,6 +54,8 @@ function ScanQrComponent() {
     }
 
     case 'DELIVERY_MEETUP_SET': {
+      const recipientAgentId = getRecipientAgent(order);
+
       if (userId === recipientAgentId) {
         return <ScanQrCode />;
       }

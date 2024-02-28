@@ -6,15 +6,31 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId';
+import { type Contact } from '@/src/schema/contact';
+import type { LocationDetails } from '@/src/schema/location';
+import type { OrderType } from '@/src/schema/order';
 
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
-export default memo(function ReceiveCash() {
-  const navigate = useNavigate({ from: Route.fullPath });
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  asset: string;
+  agent: string | undefined;
+  agentContact: Contact | undefined;
+  locationDetails: LocationDetails | undefined;
+};
 
-  const { order } = useOrderDetails();
+export default memo(function ReceiveWithQr({
+  orderType,
+  orderId,
+  asset,
+  agent,
+  agentContact,
+  locationDetails,
+}: Props) {
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,27 +52,18 @@ export default memo(function ReceiveCash() {
     }
   }, [generatedQrData?.data.qrCode, isQrGenerated, navigate]);
 
-  if (order.orderType !== 'CROSS_BORDER_REMITTANCE') return; // TODO: handle other `orderType`
+  if (!agent || !agentContact) {
+    throw new Error('Agent/Agent details cannot be missing.');
+  }
 
-  const {
-    deliveryDetails,
-    orderType,
-    orderId,
-    recipientAgentId,
-    contactDetails: { recipientAgent },
-  } = order;
-
-  if (!deliveryDetails) throw new Error('Delivery details is not present.');
-
-  if (!recipientAgentId) throw new Error('Recipient agentId is not present.');
-
-  if (!recipientAgent)
-    throw new Error('Recipient agent contact details is not present.');
+  if (!locationDetails) {
+    throw new Error('Location details cannot be missing.');
+  }
 
   return (
     <div className="flex flex-col space-y-4">
       <HeaderTitle className="text-xl md:text-2xl">
-        Collect cash from Agent #{recipientAgentId}
+        Collect {asset} from Agent #{agent}
       </HeaderTitle>
 
       {error && <ErrorAlert message={error.message} />}
@@ -75,14 +82,14 @@ export default memo(function ReceiveCash() {
         <button
           type="button"
           disabled={isGeneratingQr}
-          onClick={() => window.open(recipientAgent.telegram.url, '_blank')}
+          onClick={() => window.open(agentContact.telegram.url, '_blank')}
           className="btn btn-outline btn-primary btn-block rounded-full text-base font-semibold shadow-sm md:text-lg"
         >
           Contact agent
         </button>
       </div>
 
-      <CustomerMeetup locationDetails={deliveryDetails} />
+      <CustomerMeetup locationDetails={locationDetails} />
 
       <Modal
         open={modalVisible}

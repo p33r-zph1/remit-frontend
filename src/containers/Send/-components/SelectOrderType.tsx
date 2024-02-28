@@ -29,16 +29,16 @@ const types: Record<OrderType, Order> = {
     icon: <GlobeAltIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
     disabled: true,
   },
-  LOCAL_SELL_STABLECOINS: {
-    title: 'Sell Stablecoins (Local)',
-    description:
-      'Cash out your stablecoins locally. An agent will deliver your cash once your stablecoins are in escrow.',
-    icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
-  },
   LOCAL_BUY_STABLECOINS: {
     title: 'Buy Stablecoins (Local)',
     description:
       'Buy stablecoins locally with cash. An agent will collect your cash and the stablecoins will be released from escrow to your wallet upon payment to the agent.',
+    icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
+  },
+  LOCAL_SELL_STABLECOINS: {
+    title: 'Sell Stablecoins (Local)',
+    description:
+      'Cash out your stablecoins locally. An agent will deliver your cash once your stablecoins are in escrow.',
     icon: <MapPinIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
   },
 };

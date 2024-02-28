@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import type { Order } from '../order';
 import transferInfoSchema from './transfer-info';
 
 export const crossBorderTransferDetailsSchema = z.object({
@@ -36,21 +37,24 @@ export type LocalSellTransferDetails = z.infer<
   typeof localSellTransferDetailsSchema
 >;
 
-export type TranferDetails =
+export type TransferDetails =
   | CrossBorderTransferDetails
   | CrossBorderSelfTransferDetails
   | LocalBuyTransferDetails
   | LocalSellTransferDetails;
 
-export function getTransferInfo(transferDetails: TranferDetails) {
-  if ('recipient' in transferDetails) {
-    return transferDetails.recipient;
-  }
-  if ('sender' in transferDetails) {
-    return transferDetails.sender;
-  }
+export function getTransferInfo(order: Order, isRecipientCustomer: boolean) {
+  switch (order.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return isRecipientCustomer
+        ? order.transferDetails.recipient
+        : order.transferDetails.sender;
 
-  throw new Error(
-    'Expected recipient/sender transfer info but none was found.'
-  );
+    case 'LOCAL_BUY_STABLECOINS':
+      return order.transferDetails.sender; // sender is recipient
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return order.transferDetails.recipient; // recipient is sender
+  }
 }

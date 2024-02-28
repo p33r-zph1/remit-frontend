@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-const contactInfoSchema = z.object({
+const contactLinksSchema = z.object({
   url: z.string().url(),
   deeplink: z.string().url(),
 });
 
 export const contactSchema = z.object({
-  telegram: contactInfoSchema,
+  telegram: contactLinksSchema,
 });
 
 export const crossBorderContactDetailsSchema = z.object({
@@ -32,6 +32,28 @@ export const localSellContactDetailsSchema = z.object({
   recipientAgent: contactSchema,
 });
 
-export type ContactInfo = z.infer<typeof contactInfoSchema>;
+export type ContactLinks = z.infer<typeof contactLinksSchema>;
 
 export type Contact = z.infer<typeof contactSchema>;
+
+export type CrossBorderContactDetails = z.infer<
+  typeof crossBorderContactDetailsSchema
+>;
+
+export type CrossBorderSelfContactDetails = z.infer<
+  typeof crossBorderSelfContactDetailsSchema
+>;
+
+export type LocalBuyContactDetails = z.infer<
+  typeof localBuyContactDetailsSchema
+>;
+
+export type LocalSellContactDetails = z.infer<
+  typeof localSellContactDetailsSchema
+>;
+
+export type ContactDetails =
+  | CrossBorderContactDetails
+  | CrossBorderSelfContactDetails
+  | LocalBuyContactDetails
+  | LocalSellContactDetails;

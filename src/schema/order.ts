@@ -44,17 +44,12 @@ export const crossBorderSelfLiteral = z.literal('CROSS_BORDER_SELF_REMITTANCE');
 export const localBuyLiteral = z.literal('LOCAL_BUY_STABLECOINS');
 export const localSellLiteral = z.literal('LOCAL_SELL_STABLECOINS');
 
-export const orderTypeSchema = z.union(
-  [
-    crossBorderLiteral,
-    crossBorderSelfLiteral,
-    localBuyLiteral,
-    localSellLiteral,
-  ],
-  {
-    required_error: 'Please select your order type',
-  }
-);
+export const orderTypeSchema = z.union([
+  crossBorderLiteral,
+  crossBorderSelfLiteral,
+  localBuyLiteral,
+  localSellLiteral,
+]);
 
 export const baseOrderSchema = z.object({
   orderId: z.string(),
@@ -102,7 +97,6 @@ export const localBuySchema = baseOrderSchema.extend({
   transferTimeline: z.array(localBuyTimelineSchema),
   transferDetails: localBuyTransferDetailsSchema,
   collectionDetails: locationDetailsSchema.optional(),
-  deliveryDetails: locationDetailsSchema.optional(),
   contactDetails: localBuyContactDetailsSchema,
 });
 
@@ -145,7 +139,7 @@ export type OrderStatus = z.infer<typeof orderStatusSchema>;
 
 export type OrderType = z.infer<typeof orderTypeSchema>;
 
-export function recipient(order: Order) {
+export function getRecipient(order: Order) {
   switch (order.orderType) {
     case 'CROSS_BORDER_REMITTANCE':
     case 'LOCAL_SELL_STABLECOINS':
@@ -153,12 +147,38 @@ export function recipient(order: Order) {
 
     case 'CROSS_BORDER_SELF_REMITTANCE':
     case 'LOCAL_BUY_STABLECOINS':
-      return order.senderId;
+      return order.senderId; // sender is recipient
   }
 }
 
-export function isRecipient(order: Order, userId: string | undefined) {
-  return recipient(order) === userId;
+export function isUserRecipient(order: Order, userId: string | undefined) {
+  return getRecipient(order) === userId;
+}
+
+export function getRecipientAgent(order: Order) {
+  switch (order.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+    case 'LOCAL_SELL_STABLECOINS':
+      return order.recipientAgentId;
+
+    case 'LOCAL_BUY_STABLECOINS':
+      return order.senderAgentId; // senderAgent is recipientAgent
+  }
+}
+
+export function getOrderDetails(order: Order, isRecipientCustomer: boolean) {
+  switch (order.orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return isRecipientCustomer
+        ? order.transferDetails.recipient
+        : order.transferDetails.sender;
+
+    case 'LOCAL_SELL_STABLECOINS':
+    case 'LOCAL_BUY_STABLECOINS':
+      return order.escrowDetails;
+  }
 }
 
 export default orderApiSchema;

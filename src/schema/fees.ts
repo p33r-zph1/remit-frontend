@@ -3,37 +3,51 @@ import { z } from 'zod';
 
 import type { Agent } from './agent';
 
-const commissionDetailsSchema = z.object({
+const commissionSchema = z.object({
   commission: z.number(),
   amount: z.number(),
   token: z.string(),
 });
 
 const baseFeesSchema = z.object({
-  platform: commissionDetailsSchema,
+  platform: commissionSchema,
 });
 
 export const crossBorderFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
-  recipientAgent: commissionDetailsSchema.nullish(), // FIXME: is it really nullish?
+  senderAgent: commissionSchema,
+  recipientAgent: commissionSchema.optional(), // FIXME: is it really optional?
 });
 
 export const crossBorderSelfFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
-  recipientAgent: commissionDetailsSchema,
+  senderAgent: commissionSchema,
+  recipientAgent: commissionSchema,
 });
 
 export const localBuyFeesSchema = baseFeesSchema.extend({
-  senderAgent: commissionDetailsSchema,
+  senderAgent: commissionSchema,
 });
 
 export const localSellFeesSchema = baseFeesSchema.extend({
-  recipientAgent: commissionDetailsSchema,
+  recipientAgent: commissionSchema,
 });
 
-export type TransferInfo = z.infer<typeof commissionDetailsSchema>;
+export type Commission = z.infer<typeof commissionSchema>;
 
-export function formatCommissionDetails({ amount, token }: TransferInfo) {
+export type CrossBorderFees = z.infer<typeof crossBorderFeesSchema>;
+
+export type CrossBorderSelfFees = z.infer<typeof crossBorderSelfFeesSchema>;
+
+export type LocalBuyFees = z.infer<typeof localBuyFeesSchema>;
+
+export type LocalSellFees = z.infer<typeof localSellFeesSchema>;
+
+export type Fees =
+  | CrossBorderFees
+  | CrossBorderSelfFees
+  | LocalBuyFees
+  | LocalSellFees;
+
+export function formatCommissionDetails({ amount, token }: Commission) {
   return numericFormatter(`${amount} ${token}`, {
     thousandSeparator: ',',
   });
