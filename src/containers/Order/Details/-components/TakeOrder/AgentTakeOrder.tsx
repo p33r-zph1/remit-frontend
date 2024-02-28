@@ -2,15 +2,21 @@ import { memo } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import Modal from '@/src/components/Modal';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import { formatCommissionDetails } from '@/src/schema/fees';
+import { type Commission, formatCommissionDetails } from '@/src/schema/fees';
+import type { OrderType } from '@/src/schema/order';
 
-export default memo(function RecipientAgentTakeOrder() {
-  const {
-    order: { fees, orderId },
-  } = useOrderDetails();
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  commission: Commission | undefined;
+};
 
+export default memo(function AgentTakeOrder({
+  orderType,
+  orderId,
+  commission,
+}: Props) {
   const {
     // callbacks
     executeFn,
@@ -26,20 +32,21 @@ export default memo(function RecipientAgentTakeOrder() {
     // errors
     acceptOrderError,
     rejectOrderError,
-  } = useTakeOrder({ orderId });
+  } = useTakeOrder({ orderType, orderId });
 
-  if (!fees.recipientAgent)
-    throw new Error('Recipient agent fees cannot be missing!');
-
-  const { commission } = fees.recipientAgent;
+  if (!commission) {
+    throw new Error('Agent commision cannot be missing.');
+  }
 
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-1">
-        <span className="text-gray-400">Your commission at {commission}%</span>
+        <span className="text-gray-400">
+          Your commission at {commission.commission}%
+        </span>
 
         <span className="text-xl font-bold md:text-2xl">
-          {formatCommissionDetails(fees.recipientAgent)}
+          {formatCommissionDetails(commission)}
         </span>
       </div>
 
@@ -72,6 +79,7 @@ export default memo(function RecipientAgentTakeOrder() {
         onClose={() =>
           setModalState(prevState => ({ ...prevState, visible: false }))
         }
+        type="action"
         actions={{
           confirm: {
             label: modalState.state || '?',
@@ -89,11 +97,8 @@ export default memo(function RecipientAgentTakeOrder() {
           You&apos;re about to {modalState.state} an order with commission
           <br />
           <span className="font-bold">
-            {formatCommissionDetails(fees.recipientAgent)} ({commission}%)
+            {formatCommissionDetails(commission)} ({commission.commission}%)
           </span>
-          <br />
-          <br />
-          Are you sure you want to continue?
         </p>
       </Modal>
     </div>

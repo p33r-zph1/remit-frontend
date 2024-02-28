@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ordersQueryOptions } from '@/src/hooks/api/useOrders';
+import { ordersQueryOptions } from '@/src/hooks/api/useGetOrders';
 
 export const Route = createFileRoute('/_auth/history')({
   loader: opts =>
-    opts.context.queryClient.ensureQueryData(
+    opts.context.queryClient.fetchInfiniteQuery(
       ordersQueryOptions({
-        pageNumber: 1,
         pageSize: 10,
       })
     ),
   pendingMs: 0,
+  pendingMinMs: 0,
 });

@@ -15,4 +15,6 @@ const agentApiSchema = makeApiSchema(agentSchema);
 
 export type Agent = z.infer<typeof agentSchema>;
 
+export type AgentApi = z.infer<typeof agentApiSchema>;
+
 export default agentApiSchema;

@@ -1,11 +1,15 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
+import { orderKeys } from './keys/order.key';
 
 const meetupSchema = z.object({
   startDate: z.coerce.date(),
@@ -24,22 +28,31 @@ const meetupSchema = z.object({
 export type MeetUpBody = z.infer<typeof meetupSchema>;
 
 export type MutationProps = {
+  orderType: OrderType;
   orderId: string;
   body: MeetUpBody;
   meetupType: 'collection' | 'delivery';
 };
 
 export default function useSetCollection() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['set-collection'],
-    mutationFn: ({ orderId, meetupType, body }: MutationProps) =>
-      genericFetch(
-        `${BASE_URL}/${orderId}/${meetupType}/details`,
-        orderApiSchema,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(meetupSchema.parse(body)),
-        }
-      ),
+    mutationFn: ({ orderType, orderId, meetupType, body }: MutationProps) => {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/${meetupType}/details`
+      );
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+        body: JSON.stringify(meetupSchema.parse(body)),
+      });
+    },
+    onSettled: (data, _, { orderId }) => {
+      const queryKey = orderKeys.listItem({ orderId });
+
+      queryClient.setQueryData<OrderApi>(queryKey, data);
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 }

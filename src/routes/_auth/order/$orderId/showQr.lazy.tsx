@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -10,7 +10,11 @@ import Page from '@/src/components/Page';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import ShowQrCode from '@/src/containers/Order/QrCode/ShowQrCode';
 import OrderDetailsProvider from '@/src/contexts/order-details';
+import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getRecipient, getRecipientAgent } from '@/src/schema/order';
+
+import { Route as ShowQrRoute } from './showQr';
 
 export const Route = createLazyFileRoute('/_auth/order/$orderId/showQr')({
   component: () => (
@@ -31,15 +35,30 @@ export const Route = createLazyFileRoute('/_auth/order/$orderId/showQr')({
 });
 
 function ShowQrComponent() {
-  const {
-    customer: { isRecipient: isRecipientCustomer },
-    order: { transferTimelineStatus: status },
-  } = useOrderDetails();
+  const { user: userId } = useAuth();
+  const navigate = useNavigate({ from: ShowQrRoute.fullPath });
 
-  switch (status) {
+  const { order } = useOrderDetails();
+
+  const { transferTimelineStatus: timelineStatus } = order;
+
+  switch (timelineStatus) {
+    case 'CASH_DELIVERED':
+    case 'ESCROW_RELEASED': {
+      navigate({
+        to: '/order/$orderId',
+        replace: true,
+        params: true,
+      });
+      return null;
+    }
+
     case 'DELIVERY_MEETUP_SET': {
-      if (isRecipientCustomer) {
-        return <ShowQrCode />;
+      const recipientId = getRecipient(order);
+      const recipientAgentId = getRecipientAgent(order);
+
+      if (userId === recipientId && recipientAgentId) {
+        return <ShowQrCode recipientAgentId={recipientAgentId} />;
       }
 
       return <HeroAccessDenied className="bg-white" />;

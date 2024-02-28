@@ -1,32 +1,68 @@
+import { useMemo } from 'react';
+
 import CountdownCard from '@/src/components/Card/CountdownCard';
 import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
+import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { getOrderDetails } from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import RecipientAgentOrder from './Recipient/RecipientAgentOrder';
-import SenderAgentOrder from './Sender/SenderAgentOrder';
+import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
+import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
+import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
 
 export default function AgentOrderDetails() {
-  const { agent, order } = useOrderDetails();
+  const { order } = useOrderDetails();
 
-  const { isSender, isRecipient } = agent;
-  const { transferTimeline, transferTimelineStatus, expiresAt } = order;
+  const { user: userId } = useAuth();
+
+  const {
+    orderType,
+    transferTimeline,
+    orderStatus,
+    transferTimelineStatus: timelineStatus,
+    expiresAt,
+  } = order;
+
+  const orderDetails = useMemo(() => getOrderDetails(order, false), [order]);
 
   return (
     <section className="flex flex-col space-y-12">
-      <OrderDetailsNav {...order} isRecipient={false} />
+      <OrderDetailsNav
+        orderStatus={orderStatus}
+        timelineStatus={timelineStatus}
+        orderDetails={orderDetails}
+        isRecipientCustomer={false}
+      />
 
       <div className="divider" />
 
-      {!isOrderSettled(transferTimelineStatus) && (
-        <CountdownCard endDate={expiresAt} />
-      )}
+      {!isOrderSettled(timelineStatus) && <CountdownCard endDate={expiresAt} />}
 
-      <main>
-        {isSender && <SenderAgentOrder status={transferTimelineStatus} />}
-        {isRecipient && <RecipientAgentOrder status={transferTimelineStatus} />}
-      </main>
+      {(() => {
+        switch (orderType) {
+          case 'CROSS_BORDER_REMITTANCE': {
+            const { senderAgentId, recipientAgentId } = order;
+
+            const agentRole = {
+              isSender: userId === senderAgentId,
+              isRecipient: userId === recipientAgentId,
+            };
+
+            return <CrossBorderAgent role={agentRole} {...order} />;
+          }
+
+          case 'LOCAL_BUY_STABLECOINS':
+            return <LocalBuyAgent {...order} />;
+
+          case 'LOCAL_SELL_STABLECOINS':
+            return <LocalSellAgent {...order} />;
+
+          default:
+            return null;
+        }
+      })()}
 
       <TransferTimeline timeline={transferTimeline} />
     </section>

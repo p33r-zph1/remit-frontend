@@ -1,11 +1,15 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
+import { orderKeys } from './keys/order.key';
 
 const customerOrderBodySchema = z.object({
   recipientAgentId: z.string(),
@@ -19,21 +23,23 @@ export type CustomerOrderBody = z.infer<typeof customerOrderBodySchema>;
 
 export type SenderAgentOrderBody = z.infer<typeof senderAgentOrderBodySchema>;
 
-type CustomerMutation = {
-  type: 'customer';
+type MutationBase = {
   orderId: string;
+  orderType: OrderType;
+};
+
+type CustomerMutation = MutationBase & {
+  type: 'customer';
   body: CustomerOrderBody;
 };
 
-type SenderAgentMutation = {
+type SenderAgentMutation = MutationBase & {
   type: 'senderagent';
-  orderId: string;
   body: SenderAgentOrderBody;
 };
 
-type RecipientAgentMutation = {
+type RecipientAgentMutation = MutationBase & {
   type: 'recipientagent';
-  orderId: string;
 };
 
 export type MutationProps =
@@ -55,15 +61,27 @@ function handleRequestBody(props: MutationProps) {
 }
 
 export default function useAcceptOrder() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['accept-order'],
     mutationFn: (props: MutationProps) => {
-      const { orderId } = props;
+      const { orderType, orderId } = props;
 
-      return genericFetch(`${BASE_URL}/${orderId}/accept`, orderApiSchema, {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/accept`
+      );
+
+      return genericFetch(apiUrl, orderApiSchema, {
         method: 'PATCH',
         body: handleRequestBody(props),
       });
+    },
+    onSettled: (data, _, { orderId }) => {
+      const queryKey = orderKeys.listItem({ orderId });
+
+      queryClient.setQueryData<OrderApi>(queryKey, data);
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 }

@@ -7,12 +7,15 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import SelectAgent from '@/src/components/Select/SelectAgent';
-import useAgents from '@/src/hooks/api/useAgents';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
+import useGetAgents from '@/src/hooks/api/useGetAgents';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
-import { formatTranferInfo } from '@/src/schema/order/transfer-info';
+import type { OrderType } from '@/src/schema/order';
+import {
+  formatTranferInfo,
+  type TransferInfo,
+} from '@/src/schema/order/transfer-info';
 
-const formSchema = z.object({
+const takeOrderFormSchema = z.object({
   agentId: z
     .string()
     .min(1)
@@ -21,26 +24,34 @@ const formSchema = z.object({
     }),
 });
 
-type Inputs = z.infer<typeof formSchema>;
+type TakeOrderForm = z.infer<typeof takeOrderFormSchema>;
 
-export default memo(function RecipientCustomerTakeOrder() {
-  const {
-    order: { orderId, transferDetails },
-  } = useOrderDetails();
+type Props = {
+  orderType: OrderType;
+  orderId: string;
+  transferInfo: TransferInfo;
+};
 
+export default memo(function RecipientCustomerTakeOrder({
+  orderType,
+  orderId,
+  transferInfo,
+}: Props) {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<Inputs>({
-    resolver: zodResolver(formSchema),
+  } = useForm<TakeOrderForm>({
+    resolver: zodResolver(takeOrderFormSchema),
     defaultValues: {
       agentId: 'default',
     },
   });
 
-  const { data: agents } = useAgents(transferDetails.recipient.countryIsoCode);
+  const { data: agents } = useGetAgents({
+    isoCode: transferInfo.countryIsoCode,
+  });
 
   const {
     // callbacks
@@ -57,9 +68,9 @@ export default memo(function RecipientCustomerTakeOrder() {
     // errors
     acceptOrderError,
     rejectOrderError,
-  } = useTakeOrder({ orderId });
+  } = useTakeOrder({ orderType, orderId });
 
-  const onSubmit: SubmitHandler<Inputs> = ({ agentId }) => {
+  const onSubmit: SubmitHandler<TakeOrderForm> = ({ agentId }) => {
     onAcceptOrder(agentId);
   };
 
@@ -112,6 +123,7 @@ export default memo(function RecipientCustomerTakeOrder() {
         onClose={() =>
           setModalState(prevState => ({ ...prevState, visible: false }))
         }
+        type="action"
         actions={{
           confirm: {
             label: modalState.state || '?',
@@ -126,24 +138,20 @@ export default memo(function RecipientCustomerTakeOrder() {
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          You&apos;re about to {modalState.state} an order amounting of
-          <br />
-          <span className="font-bold">
-            ~ {formatTranferInfo(transferDetails.recipient)}
-          </span>
+          You&apos;re about to {modalState.state} an order amounting of {` `}
+          <span className="font-bold">~ {formatTranferInfo(transferInfo)}</span>
           {modalState.state === 'accept' && (
             <>
               <br />
-              with agent <span className="font-medium">#{agentId}</span>{' '}
-              commision of{' '}
-              <span className="font-medium">
+              with agent <span className="font-bold">#{agentId}</span> commision
+              of{' '}
+              <span className="font-bold">
                 {selectedAgent?.commission || '?'}%
               </span>
             </>
           )}
           <br />
           <br />
-          Are you sure you want to continue?
         </p>
       </Modal>
     </form>

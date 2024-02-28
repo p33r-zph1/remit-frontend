@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { orderQueryOptions } from '@/src/hooks/api/useOrder';
+import { orderQueryOptions } from '@/src/hooks/api/useGetOrder';
 
 export const Route = createFileRoute('/_auth/order/$orderId/')({
   loader: opts =>
@@ -8,4 +8,5 @@ export const Route = createFileRoute('/_auth/order/$orderId/')({
       orderQueryOptions({ orderId: opts.params.orderId })
     ),
   pendingMs: 0,
+  pendingMinMs: 0,
 });

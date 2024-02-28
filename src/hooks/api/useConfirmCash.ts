@@ -1,25 +1,39 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { makeApiUrl } from '@/src/configs/env';
 import { genericFetch } from '@/src/schema/api/fetch';
-import orderApiSchema from '@/src/schema/order';
+import orderApiSchema, {
+  type OrderApi,
+  type OrderType,
+} from '@/src/schema/order';
+import { slugify } from '@/src/utils';
 
-const BASE_URL =
-  'https://35ipxeiky6.execute-api.ap-southeast-1.amazonaws.com/develop/orders';
+import { orderKeys } from './keys/order.key';
 
 export type MutationProps = {
+  orderType: OrderType;
   orderId: string;
 };
 
 export default function useConfirmCash() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['confirm-cash'],
-    mutationFn: ({ orderId }: MutationProps) =>
-      genericFetch(
-        `${BASE_URL}/${orderId}/collection/confirm`,
-        orderApiSchema,
-        {
-          method: 'PATCH',
-        }
-      ),
+    mutationFn: ({ orderType, orderId }: MutationProps) => {
+      const apiUrl = makeApiUrl(
+        `/orders/${slugify(orderType)}/${orderId}/collection/confirm`
+      );
+
+      return genericFetch(apiUrl, orderApiSchema, {
+        method: 'PATCH',
+      });
+    },
+    onSettled: (data, _, { orderId }) => {
+      const queryKey = orderKeys.listItem({ orderId });
+
+      queryClient.setQueryData<OrderApi>(queryKey, data);
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 }

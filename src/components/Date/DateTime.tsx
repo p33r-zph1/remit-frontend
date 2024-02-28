@@ -6,6 +6,7 @@ import {
 import { addHours, format, isBefore, setHours, startOfHour } from 'date-fns';
 import {
   type Dispatch,
+  memo,
   type SetStateAction,
   useCallback,
   useMemo,
@@ -29,6 +30,7 @@ function Container({
   return (
     <div className="flex flex-col items-center justify-center">
       <button
+        type="button"
         onClick={onUpClick}
         disabled={disableUp}
         className="text-gray-400 hover:text-gray-500 disabled:hover:cursor-not-allowed"
@@ -37,12 +39,13 @@ function Container({
       </button>
 
       <div className="rounded-box bg-neutral/80 px-3 py-1 text-neutral-content transition-colors duration-200 hover:text-white">
-        <span className="select-none font-mono text-sm sm:text-lg">
+        <span className="select-none font-mono text-sm sm:text-base">
           <span>{value}</span>
         </span>
       </div>
 
       <button
+        type="button"
         onClick={onDownClick}
         disabled={disableDown}
         className="text-gray-400 hover:text-gray-500 disabled:hover:cursor-not-allowed"
@@ -55,13 +58,13 @@ function Container({
 
 type Props = {
   title?: string;
-  value: Date | undefined;
-  onChange: Dispatch<SetStateAction<Date>>;
+  value: Date;
+  onChange: (date: Date) => void;
   durationInHr: number;
   setDurationInHr: Dispatch<SetStateAction<number>>;
 };
 
-export default function DateTime({
+export default memo(function DateTime({
   title,
   value,
   onChange,
@@ -74,16 +77,14 @@ export default function DateTime({
   const amPm = useMemo(() => format(today, 'aa'), [today]);
 
   const updateTime = useCallback(
-    (hours: number) => onChange(prevDate => addHours(prevDate, hours)),
-    [onChange]
+    (hours: number) => onChange(addHours(today, hours)),
+    [onChange, today]
   );
 
   const toggleAmPm = useCallback(() => {
-    onChange(prevDate => {
-      const hours = prevDate.getHours() >= 12 ? -12 : 12;
-      return addHours(prevDate, hours);
-    });
-  }, [onChange]);
+    const hours = today.getHours() >= 12 ? -12 : 12;
+    onChange(addHours(today, hours));
+  }, [onChange, today]);
 
   const updateDuration = useCallback(
     (change: number) =>
@@ -114,7 +115,7 @@ export default function DateTime({
     <div className="flex items-center justify-evenly space-x-3">
       <div className="flex space-x-1">
         <ClockIcon className="h-5 w-5 text-neutral/80" />
-        <span className="text-xs font-semibold text-neutral/80 sm:text-base">
+        <span className="text-balance text-xs font-semibold text-neutral/80 sm:text-sm">
           {title ? title : 'Select a time'}
         </span>
       </div>
@@ -146,4 +147,4 @@ export default function DateTime({
       </div>
     </div>
   );
-}
+});

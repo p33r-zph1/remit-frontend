@@ -9,13 +9,13 @@ export const baseSchema = z.object({
 });
 
 export async function genericFetch<T extends z.ZodSchema>(
-  url: string,
+  input: string | URL,
   schema: T,
   fetchOptions?: RequestInit
 ): Promise<z.infer<T>> {
   const session = await fetchAuthSession();
 
-  const response = await fetch(url, {
+  const response = await fetch(input, {
     ...fetchOptions,
     headers: {
       Authorization: `Bearer ${session?.tokens?.idToken}`,

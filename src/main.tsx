@@ -1,6 +1,7 @@
 import './index.css';
-import './configs/amplify-auth';
+import './configs/env';
 import './configs/buffer';
+import './configs/amplify-auth';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';

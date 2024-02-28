@@ -17,4 +17,6 @@ const orderListApiSchema = makeApiSchema(orderListSchema);
 
 export type OrderList = z.infer<typeof orderListSchema>;
 
+export type OrderListApi = z.infer<typeof orderListApiSchema>;
+
 export default orderListApiSchema;

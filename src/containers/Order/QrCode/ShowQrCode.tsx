@@ -1,27 +1,12 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
-
 import HeaderTitle from '@/src/components/HeaderTitle';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { Route } from '@/src/routes/_auth/order/$orderId/showQr';
 
-export default function ShowQrCode() {
-  const navigate = useNavigate({ from: Route.fullPath });
+type Props = {
+  recipientAgentId: string;
+};
+
+export default function ShowQrCode({ recipientAgentId }: Props) {
   const { qrCode } = Route.useSearch();
-
-  const {
-    order: { senderAgentId, transferTimelineStatus: status },
-  } = useOrderDetails();
-
-  useEffect(() => {
-    if (status === 'ESCROW_RELEASED') {
-      navigate({
-        to: '/order/$orderId',
-        params: true,
-        replace: true,
-      });
-    }
-  }, [navigate, status]);
 
   return (
     <div className="flex flex-1 flex-col space-y-10">
@@ -33,7 +18,7 @@ export default function ShowQrCode() {
         <p className="text-xs font-medium text-gray-400 md:text-base">
           Show this QR code to{' '}
           <span className="font-semibold text-gray-600">
-            Agent #{senderAgentId}
+            Agent #{recipientAgentId}
           </span>{' '}
           to confirm delivery.
         </p>

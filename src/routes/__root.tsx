@@ -11,7 +11,7 @@ export const Route = createRootRouteWithContext<{
   auth: AuthContext;
 }>()({
   component: () => (
-    <main className="flex min-h-svh flex-col pb-16">
+    <main className="flex min-h-svh flex-col pb-16 lg:pb-0">
       <Outlet />
 
       {import.meta.env.DEV && <TanStackRouterDevtools />}

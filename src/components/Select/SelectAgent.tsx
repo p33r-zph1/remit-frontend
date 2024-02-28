@@ -1,10 +1,10 @@
-import { type ComponentPropsWithRef, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import type { FieldError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import type { Agent } from '@/src/schema/agent';
 
-type Props = ComponentPropsWithRef<'select'> & {
+type Props = {
   list: Agent[];
   error: FieldError | undefined;
 };
@@ -15,8 +15,8 @@ const SelectAgent = forwardRef<HTMLSelectElement, Props>(
       <select
         ref={ref}
         className={twMerge(
-          error && 'text-error',
-          'select select-bordered w-full rounded-full shadow-sm duration-200 hover:shadow-md focus:outline-none disabled:border-slate-400'
+          'select select-bordered w-full rounded-full shadow-md focus:outline-none disabled:border-slate-400 disabled:text-gray-400',
+          error && 'text-error'
         )}
         {...selectProps}
       >

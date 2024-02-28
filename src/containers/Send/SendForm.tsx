@@ -1,23 +1,19 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import { numericFormatter } from 'react-number-format';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
-import useCreateOrder from '@/src/hooks/api/useCreateOrder';
-import useSendMoney, { type SendMoney } from '@/src/hooks/useSendMoney';
-import { Route } from '@/src/routes/_auth/';
+import SelectChain from '@/src/components/Select/SelectChain';
+import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
+import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
+import useOrderType from '@/src/hooks/useOrderType';
 
-import SendDetails from './SendDetails';
+import CurrencyForm from './-components/CurrencyForm';
+import SelectOrderType from './-components/SelectOrderType';
 
 // let renderCount = 0;
 
 export default function SendForm() {
-  const navigate = useNavigate({ from: Route.fullPath });
-
   const {
     // currency dropdown controlled state
     senderCurrency,
@@ -25,134 +21,159 @@ export default function SendForm() {
     recipientCurrency,
     setRecipientCurrency,
 
-    // callback function for calculating the conversion
+    // callback function for calculating the `recipientAmount`
     conversionHandler,
 
     // list of exchange currencies
     supportedCurrencies,
+    supportedTokens,
 
     // agents list
     agents,
 
     // hook form props
-    formProps: { control, handleSubmit, getValues, reset },
-  } = useSendMoney();
+    formProps: {
+      control,
+      handleSubmit,
+      getValues,
+      setError,
+      formState: { isSubmitting },
+    },
+  } = useOrder();
 
   const {
-    data: sendOrderData,
-    mutateAsync: sendOrderAsync,
-    isPending: isSendingOrder,
-    isSuccess: isSendOrderSuccess,
-    error,
-  } = useCreateOrder();
+    // callbacks
+    executeFn,
+    onCrossBorderCreateOrder,
+    orderAmountSummary,
+    onNavigateToOrder,
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [onConfirmSend, setOnConfirmSend] = useState<() => void>();
+    // state
+    modalVisible,
+    setModalVisible,
+    isSendingOrder,
 
-  const orderAmountSummary = useCallback(() => {
-    const recipientAmount = getValues('recipientAmount');
-    const sendAmount = getValues('sendAmount');
+    // error
+    createOrderError,
+  } = useOrderType();
 
-    const str = `${sendAmount} ${senderCurrency.currency} (${recipientAmount} ${recipientCurrency.currency})`;
-
-    return numericFormatter(str, { thousandSeparator: ',' });
-  }, [getValues, recipientCurrency.currency, senderCurrency.currency]);
-
-  const onSubmit: SubmitHandler<SendMoney> = ({
-    recipientId,
-    sendAmount,
-    agentId,
-  }) => {
-    async function confirmSend() {
-      try {
-        await sendOrderAsync({
-          body: {
-            recipientId,
-            senderCurrency: senderCurrency.currency,
-            recipientCurrency: recipientCurrency.currency,
-            senderAgentId: agentId,
-            transferAmount: Number(sendAmount),
-          },
-        });
-
-        reset();
-        setModalVisible(false);
-      } catch (e: unknown) {
-        setModalVisible(false);
-        console.error(e);
-      }
-    }
-
-    setOnConfirmSend(() => confirmSend);
-    setModalVisible(true);
-  };
-
-  const onNavigateToOrder = useCallback(() => {
-    if (isSendOrderSuccess) {
-      navigate({
-        to: '/order/$orderId',
-        params: { orderId: sendOrderData.data.orderId },
+  const onSubmit: SubmitHandler<OrderForm> = data => {
+    if (!senderCurrency?.currency) {
+      setError('senderAmount', {
+        message: 'Sender currency not found...',
       });
+
+      setModalVisible(false);
+      return;
     }
-  }, [isSendOrderSuccess, navigate, sendOrderData?.data.orderId]);
+
+    if (!recipientCurrency?.currency) {
+      setError('recipientAmount', {
+        message: 'Recipient currency not found...',
+      });
+
+      setModalVisible(false);
+      return;
+    }
+
+    onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
+  };
 
   // renderCount++;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-8 space-y-12 sm:mt-16"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-8 sm:mt-8">
       {/* <p>Render count: {renderCount / 2}</p> */}
 
-      <RecipientInput name="recipientId" control={control} />
+      {(() => {
+        switch (getValues('orderType')) {
+          case 'CROSS_BORDER_REMITTANCE':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
 
-      <div>
-        <CurrencyInput
-          label="You send"
-          name="sendAmount"
-          control={control}
-          selected={senderCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setSenderCurrency(prevCurrency => {
-              if (newCurrency.currency === recipientCurrency.currency) {
-                setRecipientCurrency(prevCurrency); // swaps currency
-              }
+                <RecipientInput name="recipientId" control={control} />
 
-              return newCurrency;
-            })
-          }
-          onValueChange={conversionHandler}
-        />
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedCurrencies}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedCurrencies}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
 
-        <SendDetails name="agentId" control={control} list={agents} />
+          case 'LOCAL_SELL_STABLECOINS':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
 
-        <CurrencyInput
-          label="Recipient will get (estimate)"
-          name="recipientAmount"
-          control={control}
-          selected={recipientCurrency}
-          list={supportedCurrencies}
-          onCurrencyChange={newCurrency =>
-            setRecipientCurrency(prevCurrency => {
-              if (newCurrency.currency === senderCurrency.currency) {
-                setSenderCurrency(prevCurrency); // swaps currency
-              }
+                <SelectChain
+                  name="chainId"
+                  control={control}
+                  list={wagmi.chains}
+                  label="Blockchain Network"
+                />
 
-              return newCurrency;
-            })
-          }
-          readOnly
-        />
-      </div>
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedTokens}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedCurrencies}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
 
-      {error && <ErrorAlert message={error.message} />}
+          case 'LOCAL_BUY_STABLECOINS':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
+
+                <SelectChain
+                  name="chainId"
+                  control={control}
+                  list={wagmi.chains}
+                  label="Blockchain Network"
+                />
+
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={senderCurrency}
+                  setFromCurrency={setSenderCurrency}
+                  fromCurrencies={supportedCurrencies}
+                  to={recipientCurrency}
+                  setToCurrency={setRecipientCurrency}
+                  toCurrencies={supportedTokens}
+                  agents={agents}
+                  disabled={isSubmitting}
+                />
+              </>
+            );
+
+          default:
+            return null;
+        }
+      })()}
+
+      {createOrderError && <ErrorAlert message={createOrderError.message} />}
 
       <button
         type="submit"
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-        disabled={isSendingOrder}
+        disabled={isSubmitting || isSendingOrder}
       >
         Send money
       </button>
@@ -162,10 +183,11 @@ export default function SendForm() {
         isLoading={isSendingOrder}
         onClose={() => setModalVisible(false)}
         onCloseComplete={onNavigateToOrder}
+        type="action"
         actions={{
           confirm: {
             label: 'Send',
-            action: () => onConfirmSend?.(),
+            action: () => executeFn?.(),
           },
           cancel: {
             label: 'Cancel',
@@ -177,12 +199,33 @@ export default function SendForm() {
       >
         <p className="text-balance text-slate-500">
           You&apos;re about to send{' '}
-          <span className="font-bold">{orderAmountSummary()}</span> to {` `}
-          <span className="font-bold">{getValues('recipientId')}</span> with
-          agent <span className="font-bold">#{getValues('agentId')}</span>.
-          <br />
-          <br />
-          Are you sure you want to continue?
+          <span className="font-bold">
+            {orderAmountSummary(
+              getValues('senderAmount'),
+              getValues('recipientAmount'),
+              senderCurrency,
+              recipientCurrency
+            )}
+          </span>
+          {getValues('recipientId') && (
+            <>
+              <br />
+              {` `}to{` `}
+              <span className="font-bold">{getValues('recipientId')}</span>
+            </>
+          )}
+          {getValues('chainId') && (
+            <>
+              <br />
+              via{` `}
+              <span className="font-bold">
+                {getSupportedChain(getValues('chainId'))?.name ||
+                  'Unsupported chain'}
+              </span>
+            </>
+          )}
+          {` `}
+          with agent <span className="font-bold">#{getValues('agentId')}</span>.
         </p>
       </Modal>
     </form>

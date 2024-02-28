@@ -9,7 +9,7 @@ const transferInfoSchema = z.object({
 
 export type TransferInfo = z.infer<typeof transferInfoSchema>;
 
-export function formatTranferInfo({ amount, currency }: TransferInfo) {
+export function formatTranferInfo({ amount, currency }: TransferInfo): string {
   return numericFormatter(`${amount} ${currency}`, {
     thousandSeparator: ',',
   });

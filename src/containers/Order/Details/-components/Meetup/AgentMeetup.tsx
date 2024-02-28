@@ -4,7 +4,7 @@ import {
   type Libraries,
   useLoadScript,
 } from '@react-google-maps/api';
-import { type ElementRef, useRef } from 'react';
+import { type ElementRef, memo, useRef, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -12,14 +12,17 @@ import { z } from 'zod';
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import PlacesAutocomplete from '@/src/components/Autocomplete/PlacesAutocomplete';
 import MapsAPI from '@/src/components/Location/MapsAPI';
+import Modal from '@/src/components/Modal';
 import CalendarPopover from '@/src/components/Popover/CalendarPopover';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
+import { parsedEnvs } from '@/src/configs/env';
 import useSetCollection, {
   type MutationProps,
 } from '@/src/hooks/api/useSetCollection';
-import useOrderDetails from '@/src/hooks/useOrderDetails';
+import type { OrderType } from '@/src/schema/order';
+import { safeFormatRelativeDistance } from '@/src/utils/date';
 
-const deliveryProps = z.object({
+const meetupFormSchema = z.object({
   startDate: z.date({
     required_error: 'Enter a valid date',
   }),
@@ -32,17 +35,21 @@ const deliveryProps = z.object({
   }),
 });
 
-type Delivery = z.infer<typeof deliveryProps>;
+type MeetupForm = z.infer<typeof meetupFormSchema>;
 
 const libraries: Libraries = ['places'];
 
-// let rerender = 0;
-
 type Props = {
+  orderType: OrderType;
+  orderId: string;
   meetupType: MutationProps['meetupType'];
 };
 
-export default function AgentMeetup({ meetupType }: Props) {
+export default memo(function AgentMeetup({
+  orderType,
+  orderId,
+  meetupType,
+}: Props) {
   const {
     control,
     register,
@@ -50,9 +57,10 @@ export default function AgentMeetup({ meetupType }: Props) {
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<Delivery>({
-    resolver: zodResolver(deliveryProps),
+  } = useForm<MeetupForm>({
+    resolver: zodResolver(meetupFormSchema),
     defaultValues: {
       radius: '200',
       areaName: '',
@@ -62,51 +70,61 @@ export default function AgentMeetup({ meetupType }: Props) {
   const mapRef = useRef<ElementRef<typeof GoogleMap>>();
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_MAPS_JS_API,
+    googleMapsApiKey: parsedEnvs.VITE_MAPS_JS_API,
     libraries,
   });
 
   const {
-    order: { orderId },
-  } = useOrderDetails();
+    mutateAsync: setCollectionAsync,
+    isPending: isConfirming,
+    error,
+  } = useSetCollection();
 
-  const { mutateAsync: setCollectionAsync, error } = useSetCollection();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [onConfirmMeetup, setOnConfirmMeetup] = useState<() => void>();
 
-  const onSubmit: SubmitHandler<Delivery> = async ({
+  const onSubmit: SubmitHandler<MeetupForm> = async ({
     areaName,
     coordinates,
     startDate,
     endDate,
     radius,
   }) => {
-    try {
-      await setCollectionAsync({
-        orderId,
-        meetupType,
-        body: {
-          areaName,
-          startDate,
-          endDate,
-          radius: {
-            value: Number(radius),
-            unit: 'm',
+    async function confirmMeetup() {
+      try {
+        await setCollectionAsync({
+          orderType,
+          orderId,
+          meetupType,
+          body: {
+            areaName,
+            startDate,
+            endDate,
+            radius: {
+              value: Number(radius),
+              unit: 'm',
+            },
+            coordinates,
           },
-          coordinates,
-        },
-      });
-    } catch (err) {
-      console.error(err);
+        });
+
+        reset();
+        setModalVisible(false);
+      } catch (err) {
+        console.error(err);
+      }
     }
+
+    setOnConfirmMeetup(() => confirmMeetup);
+    setModalVisible(true);
   };
 
-  // rerender++;
-
-  if (!isLoaded) return <LoadingRing className="h-32" />;
+  if (!isLoaded) {
+    return <LoadingRing className="h-32" />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-      {/* {rerender / 2} */}
-
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text text-sm font-semibold text-gray-400">
@@ -213,6 +231,37 @@ export default function AgentMeetup({ meetupType }: Props) {
         {isSubmitting && <span className="loading loading-spinner"></span>}
         Set collection
       </button>
+
+      <Modal
+        open={modalVisible}
+        isLoading={isConfirming}
+        onClose={() => setModalVisible(false)}
+        type="action"
+        actions={{
+          confirm: {
+            label: 'Confirm',
+            action: () => onConfirmMeetup?.(),
+          },
+          cancel: {
+            label: 'Cancel',
+          },
+        }}
+        slideFrom="top"
+        title="Confirm send money"
+        size="medium"
+      >
+        <p className="text-balance text-slate-500">
+          You will be meeting up in{' '}
+          <span className="font-semibold">
+            {getValues('areaName')}
+            {` `}
+            {safeFormatRelativeDistance(
+              getValues('startDate'),
+              getValues('endDate')
+            )}
+          </span>
+        </p>
+      </Modal>
     </form>
   );
-}
+});

@@ -3,7 +3,7 @@ import { createContext, useCallback, useState } from 'react';
 
 import type { CognitoGroup, Group } from '@/src/schema/cognito';
 
-export interface AuthContext {
+export type AuthContext = {
   setUser: (username: string | undefined) => void;
   setGroup: (role: CognitoGroup | undefined) => void;
   authenticate: (input: SignInInput) => Promise<void>;
@@ -13,7 +13,7 @@ export interface AuthContext {
   readonly user: string | undefined;
   readonly error: string | undefined;
   readonly group: CognitoGroup | undefined;
-}
+};
 
 export const AuthContext = createContext<AuthContext | null>(null);
 

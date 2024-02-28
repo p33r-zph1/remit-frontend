@@ -1,22 +1,24 @@
-import { createContext, type ReactNode, useMemo } from 'react';
+import { createContext, type ReactNode } from 'react';
 
-import useOrder from '@/src/hooks/api/useOrder';
-import useAuth from '@/src/hooks/useAuth';
+import useGetOrder from '@/src/hooks/api/useGetOrder';
+// import useAuth from '@/src/hooks/useAuth';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Order } from '@/src/schema/order';
 
-type Role = {
-  isSender: boolean;
-  isRecipient: boolean;
-};
+// type Role = {
+//   isSender: boolean;
+//   isRecipient: boolean;
+// };
 
-interface OrderDetails {
+interface OrderDetailsContext {
   readonly order: Order;
-  readonly customer: Role;
-  readonly agent: Role;
+  // readonly customer: Role;
+  // readonly agent: Role;
 }
 
-export const OrderDetailsContext = createContext<OrderDetails | null>(null);
+export const OrderDetailsContext = createContext<OrderDetailsContext | null>(
+  null
+);
 
 export default function OrderDetailsProvider({
   children,
@@ -25,33 +27,33 @@ export default function OrderDetailsProvider({
 }) {
   const { orderId } = Route.useParams();
 
-  const { user: userId } = useAuth();
-  const { data: order } = useOrder({ orderId });
+  // const { user: userId } = useAuth();
+  const { data: order } = useGetOrder({ orderId });
 
-  const { recipientId, senderId, recipientAgentId, senderAgentId } = order;
+  // const { recipientId, senderId, recipientAgentId, senderAgentId } = order;
 
-  const customer = useMemo(
-    (): Role => ({
-      isSender: userId === senderId,
-      isRecipient: userId === recipientId,
-    }),
-    [recipientId, senderId, userId]
-  );
+  // const customer = useMemo(
+  //   (): Role => ({
+  //     isSender: userId === senderId,
+  //     isRecipient: userId === recipientId,
+  //   }),
+  //   [recipientId, senderId, userId]
+  // );
 
-  const agent = useMemo(
-    (): Role => ({
-      isSender: userId === senderAgentId,
-      isRecipient: userId === recipientAgentId,
-    }),
-    [recipientAgentId, senderAgentId, userId]
-  );
+  // const agent = useMemo(
+  //   (): Role => ({
+  //     isSender: userId === senderAgentId,
+  //     isRecipient: userId === recipientAgentId,
+  //   }),
+  //   [recipientAgentId, senderAgentId, userId]
+  // );
 
   return (
     <OrderDetailsContext.Provider
       value={{
         order,
-        customer,
-        agent,
+        // customer,
+        // agent,
       }}
     >
       {children}

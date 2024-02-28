@@ -1,21 +1,15 @@
 import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import {
-  type FieldValues,
-  useController,
-  type UseControllerProps,
-} from 'react-hook-form';
+import { useController, type UseControllerProps } from 'react-hook-form';
 
 import SelectAgent from '@/src/components/Select/SelectAgent';
+import type { OrderForm } from '@/src/hooks/useOrder';
 import type { Agent } from '@/src/schema/agent';
 
-type Props<T extends FieldValues> = UseControllerProps<T> & {
+type Props = UseControllerProps<OrderForm> & {
   list: Agent[];
 };
 
-export default function SendDetails<T extends FieldValues>({
-  list,
-  ...controllerProps
-}: Props<T>) {
+export default function SendDetails({ list, ...controllerProps }: Props) {
   const {
     field,
     formState: { isSubmitting },
