@@ -11,6 +11,7 @@ import {
   getOrderDetails,
   getRecipient,
   isUserRecipient,
+  isUserRecipientAgent,
 } from '../schema/order';
 
 export default function HistoryList() {
@@ -45,7 +46,13 @@ export default function HistoryList() {
 
             const recipientId = getRecipient(order);
             const isRecipient = isUserRecipient(order, userId);
-            const orderDetails = getOrderDetails(order, isRecipient);
+            const isRecipientAgent = isUserRecipientAgent(order, userId);
+
+            const orderDetails = getOrderDetails(
+              order,
+              isRecipient,
+              isRecipientAgent
+            );
 
             return (
               <HistoryItem

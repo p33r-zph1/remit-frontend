@@ -11,6 +11,7 @@ import {
   getOrderDetails,
   getRecipient,
   isUserRecipient,
+  isUserRecipientAgent,
 } from '@/src/schema/order';
 
 type Props = OrdersQueryProps;
@@ -38,7 +39,13 @@ export default memo(function OrderList(props: Props) {
 
             const recipientId = getRecipient(order);
             const isRecipient = isUserRecipient(order, userId);
-            const orderDetails = getOrderDetails(order, isRecipient);
+            const isRecipientAgent = isUserRecipientAgent(order, userId);
+
+            const orderDetails = getOrderDetails(
+              order,
+              isRecipient,
+              isRecipientAgent
+            );
 
             return (
               <OrderItem

@@ -5,7 +5,11 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getOrderDetails, isUserRecipient } from '@/src/schema/order';
+import {
+  getOrderDetails,
+  isUserRecipient,
+  isUserRecipientAgent,
+} from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
@@ -30,9 +34,14 @@ export default function CustomerOrderDetails() {
     [order, userId]
   );
 
+  const isRecipientAgent = useMemo(
+    () => isUserRecipientAgent(order, userId),
+    [order, userId]
+  );
+
   const orderDetails = useMemo(
-    () => getOrderDetails(order, isRecipientCustomer),
-    [isRecipientCustomer, order]
+    () => getOrderDetails(order, isRecipientCustomer, isRecipientAgent),
+    [isRecipientAgent, isRecipientCustomer, order]
   );
 
   return (
