@@ -114,13 +114,16 @@ export default function TransferTimeline({ timeline }: Props) {
       <div className="text-lg font-semibold md:text-xl">Transfer timeline</div>
 
       <ul className="timeline timeline-vertical timeline-compact">
-        {timeline.map((item, index) => (
-          <Item
-            key={item.description}
-            {...item}
-            isLastItem={index === timeline.length - 1}
-          />
-        ))}
+        {timeline
+          .slice()
+          .sort((a, b) => b.dateTime.getTime() - a.dateTime.getTime())
+          .map((item, index) => (
+            <Item
+              key={item.description}
+              {...item}
+              isLastItem={index === timeline.length - 1}
+            />
+          ))}
       </ul>
     </div>
   );
