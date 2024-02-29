@@ -81,13 +81,13 @@ export default function NavBar() {
           </li>
           <li>
             <Link
-              to="/alerts"
+              to="/profile"
               className="btn btn-ghost"
               activeProps={{
                 className: 'text-primary',
               }}
             >
-              Alerts
+              My Profile
             </Link>
           </li>
           <li>

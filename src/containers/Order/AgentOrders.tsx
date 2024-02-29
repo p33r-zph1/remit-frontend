@@ -15,15 +15,15 @@ import useAuth from '@/src/hooks/useAuth';
 import OrderList from './OrderList';
 
 export default function AgentOrders() {
-  const { user } = useAuth();
+  const { user: userId } = useAuth();
 
-  if (!user) {
+  if (!userId) {
     throw redirect({
       to: '/login',
     });
   }
 
-  const { data: agent } = useGetAgent({ agentId: user });
+  const { data: agent } = useGetAgent({ agentId: userId });
 
   const {
     mutateAsync: setCommissionAsync,
@@ -81,7 +81,7 @@ export default function AgentOrders() {
             label: 'Update',
             action: async () => {
               await setCommissionAsync({
-                agentId: user,
+                agentId: userId,
                 body: { commission: Number(commissionAmount) },
               });
 
@@ -134,7 +134,7 @@ export default function AgentOrders() {
             label: checked ? 'enable' : 'disable',
             action: async () => {
               await setStatusAsync({
-                agentId: user,
+                agentId: userId,
                 body: { isActive: checked },
               });
 
