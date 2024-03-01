@@ -1,3 +1,4 @@
+import { numericFormatter } from 'react-number-format';
 import { z } from 'zod';
 
 import { makeApiSchema } from './api/fetch';
@@ -26,8 +27,6 @@ const currencySchema = z.discriminatedUnion('type', [
 export const currencyConfigSchema = z.object({
   supportedCurrencies: z.array(currencySchema),
   supportedTokens: z.array(tokenCurrencySchema).optional(),
-  // .extend({
-  //   })
   defaultSenderCurrency: currencySchema,
   defaultRecipientCurrency: currencySchema,
   priceOracle: oracleSchema,
@@ -60,6 +59,25 @@ export function getIsoCode(
   }
 
   throw new Error('Iso code not found.');
+}
+
+export function formatCurrencyAmount(
+  fromAmount: string,
+  toAmount: string,
+  from: Currency | undefined,
+  to: Currency | undefined
+) {
+  if (!from || !to) return '?';
+
+  const formattedFrom = numericFormatter(`${fromAmount} ${from.currency}`, {
+    thousandSeparator: ',',
+  });
+
+  const formattedTo = numericFormatter(`${toAmount} ${to.currency}`, {
+    thousandSeparator: ',',
+  });
+
+  return `${formattedFrom} (${formattedTo})`;
 }
 
 export default exchangeCurrencyApiSchema;

@@ -1,6 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useState } from 'react';
-import { numericFormatter } from 'react-number-format';
 
 import { Route } from '@/src/routes/_auth/';
 
@@ -93,28 +92,6 @@ export default function useOrder() {
     [sendOrderAsync]
   );
 
-  const orderAmountSummary = useCallback(
-    (
-      fromAmount: string,
-      toAmount: string,
-      from: Currency | undefined,
-      to: Currency | undefined
-    ) => {
-      if (!from || !to) return '?';
-
-      const formattedFrom = numericFormatter(`${fromAmount} ${from.currency}`, {
-        thousandSeparator: ',',
-      });
-
-      const formattedTo = numericFormatter(`${toAmount} ${to.currency}`, {
-        thousandSeparator: ',',
-      });
-
-      return `${formattedFrom} (~${formattedTo})`;
-    },
-    []
-  );
-
   const onNavigateToOrder = useCallback(() => {
     if (isSendOrderSuccess) {
       navigate({
@@ -128,7 +105,6 @@ export default function useOrder() {
     // callbacks
     executeFn,
     onCrossBorderCreateOrder,
-    orderAmountSummary,
     onNavigateToOrder,
 
     // state

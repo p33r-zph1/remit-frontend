@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
@@ -9,6 +8,8 @@ import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
 import useOrder from '@/src/hooks/useOrder';
 import useOrderForm, { type OrderForm } from '@/src/hooks/useOrderForm';
+import { type Currency, formatCurrencyAmount } from '@/src/schema/currency';
+import type { OrderType } from '@/src/schema/order';
 
 import CurrencyForm from './-components/CurrencyForm';
 
@@ -46,7 +47,6 @@ export default function CreateOrder() {
     // callbacks
     executeFn,
     onCrossBorderCreateOrder,
-    orderAmountSummary,
     onNavigateToOrder,
 
     // state
@@ -79,20 +79,6 @@ export default function CreateOrder() {
 
     onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
   };
-
-  const orderType = useCallback(() => {
-    switch (getValues('orderType')) {
-      case 'CROSS_BORDER_REMITTANCE':
-      case 'CROSS_BORDER_SELF_REMITTANCE':
-        return 'Send money';
-
-      case 'LOCAL_BUY_STABLECOINS':
-        return 'Buy stablecoins';
-
-      case 'LOCAL_SELL_STABLECOINS':
-        return 'Sell stablecoins';
-    }
-  }, [getValues]);
 
   // renderCount++;
 
@@ -190,7 +176,7 @@ export default function CreateOrder() {
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         disabled={isSubmitting || isSendingOrder}
       >
-        {orderType()}
+        {getOrderLabel(getValues('orderType'))}
       </button>
 
       <Modal
@@ -209,46 +195,20 @@ export default function CreateOrder() {
           },
         }}
         slideFrom="top"
-        title={`Confirm ${orderType().toLowerCase()}`}
+        title={`Confirm ${getOrderLabel(getValues('orderType'))}`}
         size="medium"
       >
         <p className="text-balance text-slate-500">
           You&apos;re about to {` `}
-          {(() => {
-            switch (getValues('orderType')) {
-              case 'CROSS_BORDER_REMITTANCE':
-              case 'CROSS_BORDER_SELF_REMITTANCE':
-                return 'send';
-
-              case 'LOCAL_BUY_STABLECOINS':
-                return 'buy';
-
-              case 'LOCAL_SELL_STABLECOINS':
-                return 'sell';
-            }
-          })()}{' '}
+          {getOrderMessage(getValues('orderType'))}{' '}
           <span className="font-bold">
-            {(() => {
-              switch (getValues('orderType')) {
-                case 'CROSS_BORDER_REMITTANCE':
-                case 'CROSS_BORDER_SELF_REMITTANCE':
-                  return orderAmountSummary(
-                    getValues('senderAmount'),
-                    getValues('recipientAmount'),
-                    senderCurrency,
-                    recipientCurrency
-                  );
-
-                case 'LOCAL_BUY_STABLECOINS':
-                case 'LOCAL_SELL_STABLECOINS':
-                  return orderAmountSummary(
-                    getValues('recipientAmount'),
-                    getValues('senderAmount'),
-                    recipientCurrency,
-                    senderCurrency
-                  );
-              }
-            })()}
+            {getOrderSummary(
+              getValues('orderType'),
+              getValues('senderAmount'),
+              getValues('recipientAmount'),
+              senderCurrency,
+              recipientCurrency
+            )}
           </span>
           {getValues('recipientId') && (
             <>
@@ -273,4 +233,62 @@ export default function CreateOrder() {
       </Modal>
     </form>
   );
+}
+
+function getOrderLabel(orderType: OrderType) {
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return 'Send money';
+
+    case 'LOCAL_BUY_STABLECOINS':
+      return 'Buy stablecoins';
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return 'Sell stablecoins';
+  }
+}
+
+function getOrderMessage(orderType: OrderType) {
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return 'send';
+
+    case 'LOCAL_BUY_STABLECOINS':
+      return 'buy';
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return 'sell';
+  }
+}
+
+function getOrderSummary(
+  orderType: OrderType,
+  senderAmount: string,
+  recipientAmount: string,
+  senderCurrency: Currency | undefined,
+  recipientCurrency: Currency | undefined
+) {
+  if (!senderCurrency || !recipientCurrency) return '?';
+
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return formatCurrencyAmount(
+        senderAmount,
+        recipientAmount,
+        senderCurrency,
+        recipientCurrency
+      );
+
+    case 'LOCAL_BUY_STABLECOINS':
+    case 'LOCAL_SELL_STABLECOINS':
+      return formatCurrencyAmount(
+        recipientAmount,
+        senderAmount,
+        recipientCurrency,
+        senderCurrency
+      );
+  }
 }
