@@ -1,11 +1,13 @@
 import type { SubmitHandler } from 'react-hook-form';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import EmptyProfile from '@/src/components/Empty/EmptyProfile';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
 import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
+import useGetCustomer from '@/src/hooks/api/useGetCustomer';
 import useOrder from '@/src/hooks/useOrder';
 import useOrderForm, { type OrderForm } from '@/src/hooks/useOrderForm';
 import { type Currency, formatCurrencyAmount } from '@/src/schema/currency';
@@ -15,7 +17,11 @@ import CurrencyForm from './-components/CurrencyForm';
 
 // let renderCount = 0;
 
-export default function CreateOrder() {
+type Props = {
+  customerId: string;
+};
+
+export default function CreateOrder({ customerId }: Props) {
   const {
     // currency dropdown controlled state
     fromCurrency,
@@ -57,6 +63,8 @@ export default function CreateOrder() {
     // error
     createOrderError,
   } = useOrder();
+
+  const { data: customer } = useGetCustomer({ customerId });
 
   const onSubmit: SubmitHandler<OrderForm> = data => {
     if (!fromCurrency?.currency) {
@@ -174,10 +182,12 @@ export default function CreateOrder() {
       <button
         type="submit"
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-        disabled={isSubmitting || isSendingOrder}
+        disabled={isSubmitting || isSendingOrder || !customer.walletAddress}
       >
         {getOrderLabel(getValues('orderType'))}
       </button>
+
+      {!customer.walletAddress && <EmptyProfile />}
 
       <Modal
         open={modalVisible}

@@ -1,5 +1,4 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
-import { redirect } from '@tanstack/react-router';
 import { useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 
@@ -10,20 +9,15 @@ import Modal from '@/src/components/Modal';
 import useAgentCommission from '@/src/hooks/api/useAgentCommission';
 import useAgentStatus from '@/src/hooks/api/useAgentStatus';
 import useGetAgent from '@/src/hooks/api/useGetAgent';
-import useAuth from '@/src/hooks/useAuth';
 
 import PaginatedOrderList from './PaginatedOrderList';
 
-export default function AgentViewOrders() {
-  const { user: userId } = useAuth();
+type Props = {
+  agentId: string;
+};
 
-  if (!userId) {
-    throw redirect({
-      to: '/login',
-    });
-  }
-
-  const { data: agent } = useGetAgent({ agentId: userId });
+export default function AgentViewOrders({ agentId }: Props) {
+  const { data: agent } = useGetAgent({ agentId });
 
   const {
     mutateAsync: setCommissionAsync,
@@ -81,7 +75,7 @@ export default function AgentViewOrders() {
             label: 'Update',
             action: async () => {
               await setCommissionAsync({
-                agentId: userId,
+                agentId,
                 body: { commission: Number(commissionAmount) },
               });
 
@@ -134,7 +128,7 @@ export default function AgentViewOrders() {
             label: checked ? 'enable' : 'disable',
             action: async () => {
               await setStatusAsync({
-                agentId: userId,
+                agentId,
                 body: { isActive: checked },
               });
 
