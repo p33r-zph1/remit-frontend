@@ -1,7 +1,7 @@
 import {
   ArrowUpCircleIcon,
-  BellAlertIcon,
   ChatBubbleLeftIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
 import { type ElementType } from 'react';
@@ -51,9 +51,13 @@ export default function BottomNavigation() {
           )}
         </Link>
 
-        <Link to="/alerts" activeProps={{ className: 'text-primary' }}>
+        <Link to="/profile" activeProps={{ className: 'text-primary' }}>
           {({ isActive }) => (
-            <BtmLink title="Alerts" isActive={isActive} icon={BellAlertIcon} />
+            <BtmLink
+              title="My Profile"
+              isActive={isActive}
+              icon={UserCircleIcon}
+            />
           )}
         </Link>
       </div>
