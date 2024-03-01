@@ -6,6 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import QueryFallback from '@/src/components/Fallback/QueryFallback';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Page from '@/src/components/Page';
+import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import AgentProfile from '@/src/containers/Profile/AgentProfile';
 import CustomerProfile from '@/src/containers/Profile/CustomerProfile';
 import useAuth from '@/src/hooks/useAuth';
@@ -30,7 +31,7 @@ function ProfileComponent() {
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
-            <Suspense fallback={<p>loading...</p>}>
+            <Suspense fallback={<LoadingRing className="flex-1" />}>
               {hasGroup('customer') && <CustomerProfile customerId={userId} />}
               {hasGroup('agent') && <AgentProfile agentId={userId} />}
             </Suspense>
