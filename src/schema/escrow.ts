@@ -6,6 +6,7 @@ import { isSupportedChain } from '../utils';
 
 const escrowDetailsSchema = z.object({
   amount: z.number(),
+  amountMinusFees: z.number(),
   token: z.string(),
   tokenAddress: z.string().refine(isAddress).optional(),
   tokenDecimals: z.number().optional(),
@@ -19,8 +20,8 @@ const escrowDetailsSchema = z.object({
 
 export type EscrowDetails = z.infer<typeof escrowDetailsSchema>;
 
-export function formatEscrowDetails({ amount, token }: EscrowDetails) {
-  return numericFormatter(`${amount} ${token}`, {
+export function formatEscrowDetails({ amountMinusFees, token }: EscrowDetails) {
+  return numericFormatter(`${amountMinusFees} ${token}`, {
     thousandSeparator: ',',
   });
 }

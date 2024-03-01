@@ -3,14 +3,18 @@ import { z } from 'zod';
 
 const transferInfoSchema = z.object({
   amount: z.number(),
+  amountMinusFees: z.number(),
   currency: z.string(),
   countryIsoCode: z.string(),
 });
 
 export type TransferInfo = z.infer<typeof transferInfoSchema>;
 
-export function formatTranferInfo({ amount, currency }: TransferInfo): string {
-  return numericFormatter(`${amount} ${currency}`, {
+export function formatTranferInfo({
+  amountMinusFees,
+  currency,
+}: TransferInfo): string {
+  return numericFormatter(`${amountMinusFees} ${currency}`, {
     thousandSeparator: ',',
   });
 }
