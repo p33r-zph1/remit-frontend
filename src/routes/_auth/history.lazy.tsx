@@ -7,7 +7,7 @@ import QueryFallback from '@/src/components/Fallback/QueryFallback';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Page from '@/src/components/Page';
 import HistorySkeleton from '@/src/components/Skeleton/HistorySkeleton';
-import HistoryList from '@/src/containers/HistoryList';
+import PaginatedOrderList from '@/src/containers/Order/PaginatedOrderList';
 
 export const Route = createLazyFileRoute('/_auth/history')({
   pendingComponent: () => (
@@ -21,7 +21,7 @@ export const Route = createLazyFileRoute('/_auth/history')({
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
             <Suspense fallback={<HistorySkeleton />}>
-              <HistoryList />
+              <PaginatedOrderList pageSize={10} />
             </Suspense>
           </ErrorBoundary>
         )}

@@ -7,7 +7,7 @@ import type { OrderForm } from '@/src/hooks/useOrder';
 import type { Agent } from '@/src/schema/agent';
 import type { Currency } from '@/src/schema/currency';
 
-import SendDetails from '../SendDetails';
+import CurrencySelectAgent from './CurrencySelectAgent';
 
 type Props = {
   control: Control<OrderForm>;
@@ -60,7 +60,7 @@ export default memo(function CurrencyForm({
         />
       </CurrencyInput>
 
-      <SendDetails name="agentId" control={control} list={agents} />
+      <CurrencySelectAgent name="agentId" control={control} list={agents} />
 
       <CurrencyInput
         label="Recipient will get (estimate)"

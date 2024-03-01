@@ -4,16 +4,16 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
+import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
 import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
 import useOrderType from '@/src/hooks/useOrderType';
 
 import CurrencyForm from './-components/CurrencyForm';
-import SelectOrderType from './-components/SelectOrderType';
 
 // let renderCount = 0;
 
-export default function SendForm() {
+export default function CreateOrder() {
   const {
     // currency dropdown controlled state
     senderCurrency,

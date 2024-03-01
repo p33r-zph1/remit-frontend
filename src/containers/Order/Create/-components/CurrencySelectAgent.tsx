@@ -9,7 +9,10 @@ type Props = UseControllerProps<OrderForm> & {
   list: Agent[];
 };
 
-export default function SendDetails({ list, ...controllerProps }: Props) {
+export default function CurrencySelectAgent({
+  list,
+  ...controllerProps
+}: Props) {
   const {
     field,
     formState: { isSubmitting },

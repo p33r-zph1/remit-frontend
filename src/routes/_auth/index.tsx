@@ -7,8 +7,8 @@ import QueryFallback from '@/src/components/Fallback/QueryFallback';
 import Page from '@/src/components/Page';
 import SendMoneySkeleton from '@/src/components/Skeleton/SendMoneySkeleton';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
-import AgentOrders from '@/src/containers/Order/AgentOrders';
-import SendForm from '@/src/containers/Send/SendForm';
+import AgentViewOrders from '@/src/containers/Order/AgentViewOrders';
+import CreateOrder from '@/src/containers/Order/Create/CreateOrder';
 import useAuth from '@/src/hooks/useAuth';
 
 export const Route = createFileRoute('/_auth/')({
@@ -34,8 +34,8 @@ function IndexComponent() {
                 )
               }
             >
-              {hasGroup('customer') && <SendForm />}
-              {hasGroup('agent') && <AgentOrders />}
+              {hasGroup('customer') && <CreateOrder />}
+              {hasGroup('agent') && <AgentViewOrders />}
             </Suspense>
           </ErrorBoundary>
         )}

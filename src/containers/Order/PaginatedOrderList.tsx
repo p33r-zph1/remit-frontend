@@ -1,6 +1,7 @@
-import { Fragment, memo } from 'react';
+import { Fragment } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import EmptyHistory from '@/src/components/Empty/EmptyHistory';
 import EmptyOrder from '@/src/components/Empty/EmptyOrder';
 import OrderItem from '@/src/components/Item/OrderItem';
 import useGetOrders, {
@@ -16,13 +17,20 @@ import {
 
 type Props = OrdersQueryProps;
 
-export default memo(function OrderList(props: Props) {
-  const { user: userId } = useAuth();
+export default function PaginatedOrderList(props: Props) {
+  const { user: userId, hasGroup } = useAuth();
 
-  const { data, error } = useGetOrders(props);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+    isError,
+  } = useGetOrders(props);
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
-    return <EmptyOrder />;
+    return <EmptyHistory isCustomer={hasGroup('customer')} />;
   }
 
   return (
@@ -64,6 +72,22 @@ export default memo(function OrderList(props: Props) {
       ))}
 
       {error && <ErrorAlert message={error.message} />}
+
+      {hasNextPage ? (
+        <button
+          onClick={() => fetchNextPage()}
+          className="btn btn-ghost btn-primary btn-sm btn-wide mx-auto my-4 rounded-lg text-sm font-bold shadow-sm md:btn-md disabled:bg-primary/70 disabled:text-primary-content md:text-base"
+          type="button"
+          disabled={isFetchingNextPage}
+        >
+          {isFetchingNextPage && (
+            <span className="loading loading-bars text-primary-content"></span>
+          )}
+          {isError ? 'Try again' : 'Load more'}
+        </button>
+      ) : (
+        <EmptyOrder title="You've reached the end" />
+      )}
     </>
   );
-});
+}

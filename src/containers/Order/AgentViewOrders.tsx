@@ -12,9 +12,9 @@ import useAgentStatus from '@/src/hooks/api/useAgentStatus';
 import useGetAgent from '@/src/hooks/api/useGetAgent';
 import useAuth from '@/src/hooks/useAuth';
 
-import OrderList from './OrderList';
+import PaginatedOrderList from './PaginatedOrderList';
 
-export default function AgentOrders() {
+export default function AgentViewOrders() {
   const { user: userId } = useAuth();
 
   if (!userId) {
@@ -55,18 +55,18 @@ export default function AgentOrders() {
         onEdit={() => setCommissionModalVisible(true)}
       />
 
-      <section>
+      <section className="flex flex-col">
         <HeaderTitle className="`text-xl md:text-2xl">
           My Active Orders
         </HeaderTitle>
 
-        <OrderList pageSize={5} status="active" />
+        <PaginatedOrderList pageSize={5} status="active" />
 
         <div className="divider"></div>
 
         <HeaderTitle className="`text-xl md:text-2xl">Open Orders</HeaderTitle>
 
-        <OrderList pageSize={5} status="open" />
+        <PaginatedOrderList pageSize={5} status="open" />
       </section>
 
       <Modal
