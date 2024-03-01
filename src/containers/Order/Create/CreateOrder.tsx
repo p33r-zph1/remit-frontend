@@ -18,17 +18,17 @@ import CurrencyForm from './-components/CurrencyForm';
 export default function CreateOrder() {
   const {
     // currency dropdown controlled state
-    senderCurrency,
-    setSenderCurrency,
-    recipientCurrency,
-    setRecipientCurrency,
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
 
     // callback function for calculating the `recipientAmount`
     conversionHandler,
 
-    // list of exchange currencies
-    supportedCurrencies,
-    supportedTokens,
+    // list of currencies
+    fiatCurrencies,
+    tokenCurrencies,
 
     // agents list
     agents,
@@ -59,25 +59,25 @@ export default function CreateOrder() {
   } = useOrder();
 
   const onSubmit: SubmitHandler<OrderForm> = data => {
-    if (!senderCurrency?.currency) {
-      setError('senderAmount', {
-        message: 'Sender currency not found...',
+    if (!fromCurrency?.currency) {
+      setError('fromAmount', {
+        message: 'Currency error',
       });
 
       setModalVisible(false);
       return;
     }
 
-    if (!recipientCurrency?.currency) {
-      setError('recipientAmount', {
-        message: 'Recipient currency not found...',
+    if (!toCurrency?.currency) {
+      setError('toAmount', {
+        message: 'Currency error',
       });
 
       setModalVisible(false);
       return;
     }
 
-    onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
+    onCrossBorderCreateOrder(data, fromCurrency, toCurrency);
   };
 
   // renderCount++;
@@ -98,12 +98,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedCurrencies}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedCurrencies}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={fiatCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={fiatCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -125,12 +125,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedTokens}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedCurrencies}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={tokenCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={fiatCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -152,12 +152,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedCurrencies}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedTokens}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={fiatCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={tokenCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -204,10 +204,10 @@ export default function CreateOrder() {
           <span className="font-bold">
             {getOrderSummary(
               getValues('orderType'),
-              getValues('senderAmount'),
-              getValues('recipientAmount'),
-              senderCurrency,
-              recipientCurrency
+              getValues('fromAmount'),
+              getValues('toAmount'),
+              fromCurrency,
+              toCurrency
             )}
           </span>
           {getValues('recipientId') && (
