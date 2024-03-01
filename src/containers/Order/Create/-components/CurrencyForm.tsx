@@ -3,7 +3,7 @@ import type { Control } from 'react-hook-form';
 
 import CurrencyInput from '@/src/components/Input/CurrencyInput';
 import SelectCurrency from '@/src/components/Select/SelectCurrency';
-import type { OrderForm } from '@/src/hooks/useOrder';
+import type { OrderForm } from '@/src/hooks/useOrderForm';
 import type { Agent } from '@/src/schema/agent';
 import type { Currency } from '@/src/schema/currency';
 

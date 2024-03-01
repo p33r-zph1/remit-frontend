@@ -12,9 +12,9 @@ import useCreateOrder, {
   type LocalBuyBody,
   type LocalSellBody,
 } from './api/useCreateOrder';
-import type { OrderForm } from './useOrder';
+import type { OrderForm } from './useOrderForm';
 
-export default function useOrderType() {
+export default function useOrder() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const {

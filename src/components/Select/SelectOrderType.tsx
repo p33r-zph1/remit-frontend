@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { useController, type UseControllerProps } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
-import type { OrderForm } from '@/src/hooks/useOrder';
+import type { OrderForm } from '@/src/hooks/useOrderForm';
 import { type OrderType, orderTypeSchema } from '@/src/schema/order';
 
 import Modal from '../Modal';

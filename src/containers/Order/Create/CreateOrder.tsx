@@ -7,8 +7,8 @@ import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
 import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
-import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
-import useOrderType from '@/src/hooks/useOrderType';
+import useOrder from '@/src/hooks/useOrder';
+import useOrderForm, { type OrderForm } from '@/src/hooks/useOrderForm';
 
 import CurrencyForm from './-components/CurrencyForm';
 
@@ -40,7 +40,7 @@ export default function CreateOrder() {
       setError,
       formState: { isSubmitting },
     },
-  } = useOrder();
+  } = useOrderForm();
 
   const {
     // callbacks
@@ -56,7 +56,7 @@ export default function CreateOrder() {
 
     // error
     createOrderError,
-  } = useOrderType();
+  } = useOrder();
 
   const onSubmit: SubmitHandler<OrderForm> = data => {
     if (!senderCurrency?.currency) {

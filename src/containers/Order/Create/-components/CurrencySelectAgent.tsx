@@ -2,7 +2,7 @@ import { MinusIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useController, type UseControllerProps } from 'react-hook-form';
 
 import SelectAgent from '@/src/components/Select/SelectAgent';
-import type { OrderForm } from '@/src/hooks/useOrder';
+import type { OrderForm } from '@/src/hooks/useOrderForm';
 import type { Agent } from '@/src/schema/agent';
 
 type Props = UseControllerProps<OrderForm> & {
