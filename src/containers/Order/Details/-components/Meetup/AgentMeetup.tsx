@@ -247,7 +247,7 @@ export default memo(function AgentMeetup({
           },
         }}
         slideFrom="top"
-        title="Confirm send money"
+        title="Confirm meetup"
         size="medium"
       >
         <p className="text-balance text-slate-500">
