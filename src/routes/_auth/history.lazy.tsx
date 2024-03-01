@@ -6,13 +6,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 import QueryFallback from '@/src/components/Fallback/QueryFallback';
 import HeaderTitle from '@/src/components/HeaderTitle';
 import Page from '@/src/components/Page';
-import HistorySkeleton from '@/src/components/Skeleton/HistorySkeleton';
+import OrderListSkeleton from '@/src/components/Skeleton/OrderListSkeleton';
 import PaginatedOrderList from '@/src/containers/Order/PaginatedOrderList';
 
 export const Route = createLazyFileRoute('/_auth/history')({
   pendingComponent: () => (
     <HistoryComponent>
-      <HistorySkeleton />
+      <OrderListSkeleton />
     </HistoryComponent>
   ),
   component: () => (
@@ -20,7 +20,7 @@ export const Route = createLazyFileRoute('/_auth/history')({
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
-            <Suspense fallback={<HistorySkeleton />}>
+            <Suspense fallback={<OrderListSkeleton />}>
               <PaginatedOrderList pageSize={10} />
             </Suspense>
           </ErrorBoundary>

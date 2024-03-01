@@ -63,7 +63,7 @@ function Form({
   );
 }
 
-export default function SendMoneySkeleton() {
+export default function CreateOrderSkeleton() {
   return (
     <Base>
       <TransactionType />
