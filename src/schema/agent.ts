@@ -1,3 +1,4 @@
+import { isAddress } from 'viem';
 import { z } from 'zod';
 
 import { makeApiSchema } from './api/fetch';
@@ -8,7 +9,8 @@ export const agentSchema = z.object({
   isActive: z.boolean(),
   countryIsoCode: z.string(),
   commission: z.number(),
-  contactDetails: contactSchema,
+  contactDetails: contactSchema.optional(),
+  walletAddress: z.string().refine(isAddress).optional(),
 });
 
 const agentApiSchema = makeApiSchema(agentSchema);

@@ -51,7 +51,7 @@ const orderFormSchema = z.discriminatedUnion('orderType', [
 
 export type OrderForm = z.infer<typeof orderFormSchema>;
 
-export default function useOrder() {
+export default function useOrderForm() {
   const formProps = useForm<OrderForm>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {

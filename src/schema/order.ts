@@ -167,13 +167,23 @@ export function getRecipientAgent(order: Order) {
   }
 }
 
-export function getOrderDetails(order: Order, isRecipientCustomer: boolean) {
+export function isUserRecipientAgent(order: Order, userId: string | undefined) {
+  return getRecipientAgent(order) === userId;
+}
+
+export function getOrderDetails(
+  order: Order,
+  isRecipientCustomer: boolean,
+  isRecipientAgent: boolean
+) {
   switch (order.orderType) {
     case 'CROSS_BORDER_REMITTANCE':
     case 'CROSS_BORDER_SELF_REMITTANCE':
       return isRecipientCustomer
         ? order.transferDetails.recipient
-        : order.transferDetails.sender;
+        : isRecipientAgent
+          ? order.escrowDetails
+          : order.transferDetails.sender;
 
     case 'LOCAL_BUY_STABLECOINS':
       return isRecipientCustomer

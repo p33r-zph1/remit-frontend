@@ -1,19 +1,20 @@
+import { useCallback } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
+import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
-import useOrder, { type OrderForm } from '@/src/hooks/useOrder';
-import useOrderType from '@/src/hooks/useOrderType';
+import useOrder from '@/src/hooks/useOrder';
+import useOrderForm, { type OrderForm } from '@/src/hooks/useOrderForm';
 
 import CurrencyForm from './-components/CurrencyForm';
-import SelectOrderType from './-components/SelectOrderType';
 
 // let renderCount = 0;
 
-export default function SendForm() {
+export default function CreateOrder() {
   const {
     // currency dropdown controlled state
     senderCurrency,
@@ -39,7 +40,7 @@ export default function SendForm() {
       setError,
       formState: { isSubmitting },
     },
-  } = useOrder();
+  } = useOrderForm();
 
   const {
     // callbacks
@@ -55,7 +56,7 @@ export default function SendForm() {
 
     // error
     createOrderError,
-  } = useOrderType();
+  } = useOrder();
 
   const onSubmit: SubmitHandler<OrderForm> = data => {
     if (!senderCurrency?.currency) {
@@ -78,6 +79,20 @@ export default function SendForm() {
 
     onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
   };
+
+  const orderType = useCallback(() => {
+    switch (getValues('orderType')) {
+      case 'CROSS_BORDER_REMITTANCE':
+      case 'CROSS_BORDER_SELF_REMITTANCE':
+        return 'Send money';
+
+      case 'LOCAL_BUY_STABLECOINS':
+        return 'Buy stablecoins';
+
+      case 'LOCAL_SELL_STABLECOINS':
+        return 'Sell stablecoins';
+    }
+  }, [getValues]);
 
   // renderCount++;
 
@@ -175,7 +190,7 @@ export default function SendForm() {
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         disabled={isSubmitting || isSendingOrder}
       >
-        Send money
+        {orderType()}
       </button>
 
       <Modal
@@ -186,7 +201,7 @@ export default function SendForm() {
         type="action"
         actions={{
           confirm: {
-            label: 'Send',
+            label: 'Continue',
             action: () => executeFn?.(),
           },
           cancel: {
@@ -194,18 +209,46 @@ export default function SendForm() {
           },
         }}
         slideFrom="top"
-        title="Confirm send money"
+        title={`Confirm ${orderType().toLowerCase()}`}
         size="medium"
       >
         <p className="text-balance text-slate-500">
-          You&apos;re about to send{' '}
+          You&apos;re about to {` `}
+          {(() => {
+            switch (getValues('orderType')) {
+              case 'CROSS_BORDER_REMITTANCE':
+              case 'CROSS_BORDER_SELF_REMITTANCE':
+                return 'send';
+
+              case 'LOCAL_BUY_STABLECOINS':
+                return 'buy';
+
+              case 'LOCAL_SELL_STABLECOINS':
+                return 'sell';
+            }
+          })()}{' '}
           <span className="font-bold">
-            {orderAmountSummary(
-              getValues('senderAmount'),
-              getValues('recipientAmount'),
-              senderCurrency,
-              recipientCurrency
-            )}
+            {(() => {
+              switch (getValues('orderType')) {
+                case 'CROSS_BORDER_REMITTANCE':
+                case 'CROSS_BORDER_SELF_REMITTANCE':
+                  return orderAmountSummary(
+                    getValues('senderAmount'),
+                    getValues('recipientAmount'),
+                    senderCurrency,
+                    recipientCurrency
+                  );
+
+                case 'LOCAL_BUY_STABLECOINS':
+                case 'LOCAL_SELL_STABLECOINS':
+                  return orderAmountSummary(
+                    getValues('recipientAmount'),
+                    getValues('senderAmount'),
+                    recipientCurrency,
+                    senderCurrency
+                  );
+              }
+            })()}
           </span>
           {getValues('recipientId') && (
             <>

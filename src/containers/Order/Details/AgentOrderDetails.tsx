@@ -5,7 +5,7 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
-import { getOrderDetails } from '@/src/schema/order';
+import { getOrderDetails, isUserRecipientAgent } from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
@@ -25,7 +25,15 @@ export default function AgentOrderDetails() {
     expiresAt,
   } = order;
 
-  const orderDetails = useMemo(() => getOrderDetails(order, false), [order]);
+  const isRecipientAgent = useMemo(
+    () => isUserRecipientAgent(order, userId),
+    [order, userId]
+  );
+
+  const orderDetails = useMemo(
+    () => getOrderDetails(order, false, isRecipientAgent),
+    [isRecipientAgent, order]
+  );
 
   return (
     <section className="flex flex-col space-y-12">

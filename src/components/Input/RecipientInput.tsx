@@ -3,7 +3,7 @@ import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
-import type { OrderForm } from '@/src/hooks/useOrder';
+import type { OrderForm } from '@/src/hooks/useOrderForm';
 
 export default function RecipientInput(props: UseControllerProps<OrderForm>) {
   const {

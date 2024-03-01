@@ -12,9 +12,9 @@ import useCreateOrder, {
   type LocalBuyBody,
   type LocalSellBody,
 } from './api/useCreateOrder';
-import type { OrderForm } from './useOrder';
+import type { OrderForm } from './useOrderForm';
 
-export default function useOrderType() {
+export default function useOrder() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const {
@@ -100,14 +100,17 @@ export default function useOrderType() {
       from: Currency | undefined,
       to: Currency | undefined
     ) => {
-      if (!from || !to) {
-        return '?';
-      }
+      if (!from || !to) return '?';
 
-      return numericFormatter(
-        `${fromAmount} ${from.currency} (~${toAmount} ${to.currency})`,
-        { thousandSeparator: ',' }
-      );
+      const formattedFrom = numericFormatter(`${fromAmount} ${from.currency}`, {
+        thousandSeparator: ',',
+      });
+
+      const formattedTo = numericFormatter(`${toAmount} ${to.currency}`, {
+        thousandSeparator: ',',
+      });
+
+      return `${formattedFrom} (~${formattedTo})`;
     },
     []
   );

@@ -4,7 +4,7 @@ import { NumericFormat } from 'react-number-format';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
-import type { OrderForm } from '@/src/hooks/useOrder';
+import type { OrderForm } from '@/src/hooks/useOrderForm';
 
 type Props = UseControllerProps<OrderForm> & {
   label: string;

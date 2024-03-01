@@ -3,6 +3,7 @@ import { z } from 'zod';
 const contactLinksSchema = z.object({
   url: z.string().url(),
   deeplink: z.string().url(),
+  handle: z.string().optional(),
 });
 
 export const contactSchema = z.object({

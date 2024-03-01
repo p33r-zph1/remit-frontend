@@ -18,7 +18,7 @@ function SkeletonItem() {
   );
 }
 
-export default function HistorySkeleton() {
+export default function OrderListSkeleton() {
   return (
     <>
       <SkeletonItem />
