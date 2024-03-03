@@ -1,7 +1,5 @@
-import { CheckIcon } from '@heroicons/react/20/solid';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { numericFormatter } from 'react-number-format';
-import { twMerge } from 'tailwind-merge';
 import { type Address, erc20Abi, parseUnits } from 'viem';
 import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 
@@ -9,6 +7,7 @@ import { trimErrorMessage } from '@/src/utils';
 
 import ErrorAlert from '../Alert/ErrorAlert';
 import LoadingAlert from '../Alert/LoadingAlert';
+import SuccessAlert from '../Alert/SuccessAlert';
 import Modal from '../Modal';
 
 type Props = {
@@ -35,7 +34,7 @@ export default memo(function ApproveAllowance({
   onApproved,
 }: Props) {
   const {
-    data: txnhash,
+    data: txnHash,
     writeContractAsync,
     error: writeContractError,
     isPending: isApproving,
@@ -47,7 +46,7 @@ export default memo(function ApproveAllowance({
     error: receiptError,
   } = useWaitForTransactionReceipt({
     confirmations: 5,
-    hash: txnhash,
+    hash: txnHash,
   });
 
   useEffect(() => {
@@ -76,42 +75,26 @@ export default memo(function ApproveAllowance({
 
   return (
     <div className="flex flex-col space-y-2">
-      {txnhash && isConfirmed && (
-        <div role="alert" className="alert bg-white shadow-md">
-          <CheckIcon
-            className={twMerge('h-6 w-6', isConfirmed && 'text-success')}
-          />
-
-          <div className="w-full overflow-hidden text-balance break-words">
-            <h3 className={twMerge('font-bold', isConfirmed && 'text-success')}>
-              {isConfirmed
-                ? 'Transaction confirmed!'
-                : 'Transaction sent to blockchain'}
-            </h3>
-
-            <div className={twMerge('text-xs', isConfirmed && 'text-success')}>
-              {txnhash}
-            </div>
-          </div>
-
-          {blockExplorerUrl && (
-            <button
-              onClick={() =>
-                window.open(`${blockExplorerUrl}/tx/${txnhash}`, '_blank')
-              }
-              className="btn btn-ghost btn-link btn-sm max-w-32 text-balance"
-            >
-              View on Block Explorer
-            </button>
-          )}
-        </div>
+      {txnHash && isConfirmed && (
+        <SuccessAlert
+          title="Transaction confirmed!"
+          message={txnHash}
+          action={
+            isConfirmed && {
+              fn: () =>
+                window.open(`${blockExplorerUrl}/tx/${txnHash}`, '_blank'),
+              label: 'View on Block Explorer',
+            }
+          }
+          isComplete
+        />
       )}
 
       {isConfirming && (
         <LoadingAlert message="Waiting for enough blockchain confirmations, please wait..." />
       )}
 
-      {!txnhash && (
+      {!txnHash && (
         <code className="flex w-full flex-col text-balance break-words rounded-lg border border-slate-200 p-2 text-center text-sm font-semibold shadow-md">
           <span className="text-sm md:text-base">{ownerAddress}</span>
           <span className="text-base font-medium md:text-lg">{chainName}</span>

@@ -111,6 +111,7 @@ export default memo(function AgentMeetup({
         reset();
         setModalVisible(false);
       } catch (err) {
+        setModalVisible(false);
         console.error(err);
       }
     }

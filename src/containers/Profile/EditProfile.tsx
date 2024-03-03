@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { type Address, isAddress } from 'viem';
 import { z } from 'zod';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import SuccessAlert from '@/src/components/Alert/SuccessAlert';
+import Modal from '@/src/components/Modal';
 import useUpdateProfile, {
   type MutationProps,
 } from '@/src/hooks/api/useUpdateProfile';
@@ -34,7 +36,8 @@ export default function EditProfile({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    getValues,
+    formState: { errors },
   } = useForm<EditProfile>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
@@ -43,21 +46,37 @@ export default function EditProfile({
     },
   });
 
-  const { mutateAsync: updateProfileAsync, error: updateProfileError } =
-    useUpdateProfile();
+  const {
+    mutateAsync: updateProfileAsync,
+    isPending: isUpdatingProfile,
+    isSuccess: updateProfileSuccess,
+    error: updateProfileError,
+  } = useUpdateProfile();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [onUpdateProfile, setOnUpdateProfile] = useState<() => void>();
 
   const onSubmit: SubmitHandler<EditProfile> = useCallback(
-    async ({ walletAddress, telegramHandle }) => {
-      try {
-        await updateProfileAsync({
-          userId,
-          type,
-          body: { walletAddress, telegram: telegramHandle },
-        });
-      } catch (err) {
-        console.error({ err });
+    ({ walletAddress, telegramHandle }) => {
+      async function updateProfile() {
+        try {
+          await updateProfileAsync({
+            userId,
+            type,
+            body: { walletAddress, telegram: telegramHandle },
+          });
+
+          setModalVisible(false);
+        } catch (err) {
+          setModalVisible(false);
+          console.error({ err });
+        }
       }
+
+      setOnUpdateProfile(() => updateProfile);
+      setModalVisible(true);
     },
+
     [type, updateProfileAsync, userId]
   );
 
@@ -85,7 +104,7 @@ export default function EditProfile({
           autoComplete="off"
           placeholder="0x0000000000000000000000000000000000000000"
           className="input input-bordered w-full text-sm"
-          disabled={isSubmitting}
+          disabled={isUpdatingProfile}
         />
       </label>
 
@@ -105,7 +124,7 @@ export default function EditProfile({
         <span
           className={twMerge(
             'input input-bordered flex w-full items-center gap-2  text-sm',
-            isSubmitting && 'bg-slate-100 text-gray-400'
+            isUpdatingProfile && 'bg-slate-100 text-gray-400'
           )}
         >
           @
@@ -115,7 +134,7 @@ export default function EditProfile({
             autoComplete="off"
             placeholder="username"
             className="grow disabled:cursor-not-allowed"
-            disabled={isSubmitting}
+            disabled={isUpdatingProfile}
           />
         </span>
       </label>
@@ -124,14 +143,58 @@ export default function EditProfile({
         <ErrorAlert message={updateProfileError.message} />
       )}
 
+      {updateProfileSuccess && (
+        <SuccessAlert message="Update profile success" isComplete />
+      )}
+
       <button
         className="btn btn-primary btn-block rounded-lg text-base font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
         type="submit"
-        disabled={isSubmitting}
+        disabled={isUpdatingProfile}
       >
-        {isSubmitting && <span className="loading loading-spinner"></span>}
         Update
       </button>
+
+      <Modal
+        open={modalVisible}
+        isLoading={isUpdatingProfile}
+        onClose={() => setModalVisible(false)}
+        type="action"
+        actions={{
+          confirm: {
+            label: 'Update',
+            action: () => onUpdateProfile?.(),
+          },
+          cancel: {
+            label: 'Cancel',
+          },
+        }}
+        slideFrom="top"
+        title="Confirm profile update"
+        size="medium"
+      >
+        <p className="text-balance text-slate-500">
+          My wallet address: {` `}
+          <div className="mx-6 sm:m-0">
+            <code className=" break-words font-semibold">
+              {getValues('walletAddress')}
+            </code>
+          </div>
+          <br />
+          My telegram: {` `}
+          <button
+            className="link link-secondary font-semibold"
+            onClick={() =>
+              window.open(
+                `https://telegram.me/${getValues('telegramHandle')}`,
+                '_blank'
+              )
+            }
+          >
+            @{getValues('telegramHandle')}
+          </button>
+        </p>
+      </Modal>
     </form>
   );
 }
