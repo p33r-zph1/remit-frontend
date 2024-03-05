@@ -12,6 +12,7 @@ import {
 } from '@/src/schema/order';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
+import OrderSummary from './-components/OrderSummary';
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
 import LocalBuyCustomer from './Type/LocalBuy/LocalBuyCustomer';
 import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
@@ -27,6 +28,8 @@ export default function CustomerOrderDetails() {
     orderStatus,
     transferTimelineStatus: timelineStatus,
     expiresAt,
+    priceOracleRates,
+    fees: { platform: platformFee },
   } = order;
 
   const isRecipientCustomer = useMemo(
@@ -54,6 +57,35 @@ export default function CustomerOrderDetails() {
       />
 
       <div className="divider" />
+
+      {(() => {
+        switch (orderType) {
+          case 'CROSS_BORDER_REMITTANCE':
+          case 'CROSS_BORDER_SELF_REMITTANCE':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+              />
+            );
+
+          case 'LOCAL_BUY_STABLECOINS':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+              />
+            );
+
+          case 'LOCAL_SELL_STABLECOINS':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+              />
+            );
+        }
+      })()}
 
       {!isOrderSettled(timelineStatus) && <CountdownCard endDate={expiresAt} />}
 

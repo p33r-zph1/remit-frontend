@@ -10,7 +10,7 @@ import { getOrderDetails, isUserRecipientAgent } from '@/src/schema/order';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import FxRate from './-components/FxRate';
+import OrderSummary from './-components/OrderSummary';
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
 import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
 import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
@@ -29,6 +29,7 @@ export default function AgentOrderDetails() {
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
+    fees: { platform: platformFee },
   } = order;
 
   const isRecipientAgent = useMemo(
@@ -53,43 +54,43 @@ export default function AgentOrderDetails() {
       <div className="divider" />
 
       {(() => {
-        if (
-          timelineStatus === 'DELIVERY_MEETUP_SET' ||
-          timelineStatus === 'COLLECTION_MEETUP_SET'
-        ) {
-          const fxRate = `${Object.keys(priceOracleRates)} at ${Object.values(
-            priceOracleRates
-          )}`;
+        switch (orderType) {
+          case 'CROSS_BORDER_REMITTANCE':
+          case 'CROSS_BORDER_SELF_REMITTANCE':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+                summary={{
+                  message: 'Exact cash to deliver',
+                  amount: formatTranferInfo(transferDetails.recipient),
+                }}
+              />
+            );
 
-          switch (orderType) {
-            case 'CROSS_BORDER_REMITTANCE':
-            case 'CROSS_BORDER_SELF_REMITTANCE':
-              return (
-                <FxRate
-                  fxRate={fxRate}
-                  assetToDeliver="cash"
-                  assetDetails={formatTranferInfo(transferDetails.recipient)}
-                />
-              );
+          case 'LOCAL_BUY_STABLECOINS':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+                summary={{
+                  message: 'exact token amount to release',
+                  amount: formatEscrowDetails(escrowDetails),
+                }}
+              />
+            );
 
-            case 'LOCAL_BUY_STABLECOINS':
-              return (
-                <FxRate
-                  fxRate={fxRate}
-                  assetToDeliver="token"
-                  assetDetails={formatEscrowDetails(escrowDetails)}
-                />
-              );
-
-            case 'LOCAL_SELL_STABLECOINS':
-              return (
-                <FxRate
-                  fxRate={fxRate}
-                  assetToDeliver="cash"
-                  assetDetails={formatTranferInfo(transferDetails.recipient)}
-                />
-              );
-          }
+          case 'LOCAL_SELL_STABLECOINS':
+            return (
+              <OrderSummary
+                priceOracleRates={priceOracleRates}
+                platformFee={platformFee}
+                summary={{
+                  message: 'Exact cash to deliver',
+                  amount: formatTranferInfo(transferDetails.recipient),
+                }}
+              />
+            );
         }
       })()}
 
