@@ -5,6 +5,8 @@ import './configs/amplify-auth';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
+import { setDefaultOptions } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WagmiProvider } from 'wagmi';
@@ -15,6 +17,8 @@ import wagmi from './configs/wagmi';
 import AuthProvider from './contexts/auth';
 import useAuth from './hooks/useAuth';
 import { preloadError } from './utils/error';
+
+setDefaultOptions({ locale: enUS });
 
 /**
  * @description Load Error Handling (Code splitting)

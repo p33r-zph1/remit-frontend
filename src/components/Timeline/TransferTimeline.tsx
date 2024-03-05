@@ -13,6 +13,7 @@ import type {
   Timeline,
   TimelineStatus,
 } from '@/src/schema/order/transfer-timeline';
+import { safeFormatRelative } from '@/src/utils/date';
 
 function getIconByStatus(timelineStatus: TimelineStatus) {
   switch (timelineStatus) {
@@ -75,7 +76,7 @@ function getLineDividerByStatus(timelineStatus: TimelineStatus) {
 }
 
 function Item({
-  title,
+  dateTime,
   description,
   status,
   isLastItem,
@@ -91,7 +92,9 @@ function Item({
           className="flex select-none flex-col items-baseline"
           // data-tip={getTooltipByStatus(status)}
         >
-          <span className="text-xs font-semibold md:text-sm">{title}</span>
+          <span className="text-xs font-semibold first-letter:capitalize md:text-sm">
+            {safeFormatRelative(dateTime)}
+          </span>
 
           <span className="text-xs duration-200 group-hover:text-sm md:text-sm md:group-hover:text-base">
             {description}
