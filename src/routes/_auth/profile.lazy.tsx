@@ -19,6 +19,7 @@ function ProfileComponent() {
   const { hasGroup, user: userId } = useAuth();
 
   if (!userId) {
+    // redirecting to login page...
     throw redirect({
       to: '/login',
     });

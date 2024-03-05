@@ -1,33 +1,40 @@
-import { useCallback } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
+import EmptyProfile from '@/src/components/Empty/EmptyProfile';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
 import SelectChain from '@/src/components/Select/SelectChain';
 import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
+import useGetCustomer from '@/src/hooks/api/useGetCustomer';
 import useOrder from '@/src/hooks/useOrder';
 import useOrderForm, { type OrderForm } from '@/src/hooks/useOrderForm';
+import { type Currency, formatCurrencyAmount } from '@/src/schema/currency';
+import type { OrderType } from '@/src/schema/order';
 
 import CurrencyForm from './-components/CurrencyForm';
 
 // let renderCount = 0;
 
-export default function CreateOrder() {
+type Props = {
+  customerId: string;
+};
+
+export default function CreateOrder({ customerId }: Props) {
   const {
     // currency dropdown controlled state
-    senderCurrency,
-    setSenderCurrency,
-    recipientCurrency,
-    setRecipientCurrency,
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
 
     // callback function for calculating the `recipientAmount`
     conversionHandler,
 
-    // list of exchange currencies
-    supportedCurrencies,
-    supportedTokens,
+    // list of currencies
+    fiatCurrencies,
+    tokenCurrencies,
 
     // agents list
     agents,
@@ -46,7 +53,6 @@ export default function CreateOrder() {
     // callbacks
     executeFn,
     onCrossBorderCreateOrder,
-    orderAmountSummary,
     onNavigateToOrder,
 
     // state
@@ -58,41 +64,29 @@ export default function CreateOrder() {
     createOrderError,
   } = useOrder();
 
+  const { data: customer } = useGetCustomer({ customerId });
+
   const onSubmit: SubmitHandler<OrderForm> = data => {
-    if (!senderCurrency?.currency) {
-      setError('senderAmount', {
-        message: 'Sender currency not found...',
+    if (!fromCurrency?.currency) {
+      setError('fromAmount', {
+        message: 'Currency error',
       });
 
       setModalVisible(false);
       return;
     }
 
-    if (!recipientCurrency?.currency) {
-      setError('recipientAmount', {
-        message: 'Recipient currency not found...',
+    if (!toCurrency?.currency) {
+      setError('toAmount', {
+        message: 'Currency error',
       });
 
       setModalVisible(false);
       return;
     }
 
-    onCrossBorderCreateOrder(data, senderCurrency, recipientCurrency);
+    onCrossBorderCreateOrder(data, fromCurrency, toCurrency);
   };
-
-  const orderType = useCallback(() => {
-    switch (getValues('orderType')) {
-      case 'CROSS_BORDER_REMITTANCE':
-      case 'CROSS_BORDER_SELF_REMITTANCE':
-        return 'Send money';
-
-      case 'LOCAL_BUY_STABLECOINS':
-        return 'Buy stablecoins';
-
-      case 'LOCAL_SELL_STABLECOINS':
-        return 'Sell stablecoins';
-    }
-  }, [getValues]);
 
   // renderCount++;
 
@@ -112,12 +106,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedCurrencies}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedCurrencies}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={fiatCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={fiatCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -139,12 +133,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedTokens}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedCurrencies}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={tokenCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={fiatCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -166,12 +160,12 @@ export default function CreateOrder() {
                 <CurrencyForm
                   control={control}
                   conversionHandler={conversionHandler}
-                  from={senderCurrency}
-                  setFromCurrency={setSenderCurrency}
-                  fromCurrencies={supportedCurrencies}
-                  to={recipientCurrency}
-                  setToCurrency={setRecipientCurrency}
-                  toCurrencies={supportedTokens}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={fiatCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={tokenCurrencies}
                   agents={agents}
                   disabled={isSubmitting}
                 />
@@ -188,10 +182,12 @@ export default function CreateOrder() {
       <button
         type="submit"
         className="btn btn-primary btn-block rounded-full text-xl font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
-        disabled={isSubmitting || isSendingOrder}
+        disabled={isSubmitting || isSendingOrder || !customer.walletAddress}
       >
-        {orderType()}
+        {getOrderLabel(getValues('orderType'))}
       </button>
+
+      {!customer.walletAddress && <EmptyProfile />}
 
       <Modal
         open={modalVisible}
@@ -209,46 +205,20 @@ export default function CreateOrder() {
           },
         }}
         slideFrom="top"
-        title={`Confirm ${orderType().toLowerCase()}`}
+        title={`Confirm ${getOrderLabel(getValues('orderType'))}`}
         size="medium"
       >
         <p className="text-balance text-slate-500">
           You&apos;re about to {` `}
-          {(() => {
-            switch (getValues('orderType')) {
-              case 'CROSS_BORDER_REMITTANCE':
-              case 'CROSS_BORDER_SELF_REMITTANCE':
-                return 'send';
-
-              case 'LOCAL_BUY_STABLECOINS':
-                return 'buy';
-
-              case 'LOCAL_SELL_STABLECOINS':
-                return 'sell';
-            }
-          })()}{' '}
+          {getOrderMessage(getValues('orderType'))}{' '}
           <span className="font-bold">
-            {(() => {
-              switch (getValues('orderType')) {
-                case 'CROSS_BORDER_REMITTANCE':
-                case 'CROSS_BORDER_SELF_REMITTANCE':
-                  return orderAmountSummary(
-                    getValues('senderAmount'),
-                    getValues('recipientAmount'),
-                    senderCurrency,
-                    recipientCurrency
-                  );
-
-                case 'LOCAL_BUY_STABLECOINS':
-                case 'LOCAL_SELL_STABLECOINS':
-                  return orderAmountSummary(
-                    getValues('recipientAmount'),
-                    getValues('senderAmount'),
-                    recipientCurrency,
-                    senderCurrency
-                  );
-              }
-            })()}
+            {getOrderSummary(
+              getValues('orderType'),
+              getValues('fromAmount'),
+              getValues('toAmount'),
+              fromCurrency,
+              toCurrency
+            )}
           </span>
           {getValues('recipientId') && (
             <>
@@ -273,4 +243,62 @@ export default function CreateOrder() {
       </Modal>
     </form>
   );
+}
+
+function getOrderLabel(orderType: OrderType) {
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return 'Send money';
+
+    case 'LOCAL_BUY_STABLECOINS':
+      return 'Buy stablecoins';
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return 'Sell stablecoins';
+  }
+}
+
+function getOrderMessage(orderType: OrderType) {
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return 'send';
+
+    case 'LOCAL_BUY_STABLECOINS':
+      return 'buy';
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return 'sell';
+  }
+}
+
+function getOrderSummary(
+  orderType: OrderType,
+  senderAmount: string,
+  recipientAmount: string,
+  senderCurrency: Currency | undefined,
+  recipientCurrency: Currency | undefined
+) {
+  if (!senderCurrency || !recipientCurrency) return '?';
+
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+      return formatCurrencyAmount(
+        senderAmount,
+        recipientAmount,
+        senderCurrency,
+        recipientCurrency
+      );
+
+    case 'LOCAL_BUY_STABLECOINS':
+    case 'LOCAL_SELL_STABLECOINS':
+      return formatCurrencyAmount(
+        recipientAmount,
+        senderAmount,
+        recipientCurrency,
+        senderCurrency
+      );
+  }
 }

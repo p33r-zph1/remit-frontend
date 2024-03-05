@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -18,7 +18,14 @@ export const Route = createFileRoute('/_auth/')({
 });
 
 function IndexComponent() {
-  const { hasGroup } = useAuth();
+  const { user: userId, hasGroup } = useAuth();
+
+  if (!userId) {
+    // redirecting to login page...
+    throw redirect({
+      to: '/login',
+    });
+  }
 
   return (
     <Page className="mx-auto md:max-w-lg">
@@ -34,8 +41,8 @@ function IndexComponent() {
                 )
               }
             >
-              {hasGroup('customer') && <CreateOrder />}
-              {hasGroup('agent') && <AgentViewOrders />}
+              {hasGroup('customer') && <CreateOrder customerId={userId} />}
+              {hasGroup('agent') && <AgentViewOrders agentId={userId} />}
             </Suspense>
           </ErrorBoundary>
         )}

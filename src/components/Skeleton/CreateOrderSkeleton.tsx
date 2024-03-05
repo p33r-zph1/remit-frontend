@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 
-function Base({ children }: { children: ReactNode }) {
+function Base({ children }: PropsWithChildren) {
   return <div className="mt-4 space-y-8 sm:mt-8">{children}</div>;
 }
 

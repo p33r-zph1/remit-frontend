@@ -17,8 +17,8 @@ import useGetCurrency from './api/useGetCurrency';
 import useGetOracle from './api/useGetOracle';
 
 const baseOrderFormSchema = z.object({
-  senderAmount: z.string().min(1, 'Please enter a valid amount'),
-  recipientAmount: z.string().min(1),
+  fromAmount: z.string().min(1, 'Please enter a valid amount'),
+  toAmount: z.string().min(1),
   agentId: z
     .string()
     .min(1)
@@ -56,8 +56,8 @@ export default function useOrderForm() {
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
       orderType: 'CROSS_BORDER_REMITTANCE',
-      senderAmount: '',
-      recipientAmount: '',
+      fromAmount: '',
+      toAmount: '',
       recipientId: '',
       agentId: 'default',
     },
@@ -105,7 +105,7 @@ export default function useOrderForm() {
 
       const agent = agents.find(a => a.agentId === agentId);
 
-      const recipientAmount = calculateFees({
+      const toAmount = calculateFees({
         amount: result.data,
         precision: 2,
         exchangeRate,
@@ -113,7 +113,7 @@ export default function useOrderForm() {
         agent,
       });
 
-      setValue('recipientAmount', recipientAmount);
+      setValue('toAmount', toAmount);
     },
     [agentId, agents, exchangeRate, setValue]
   );
@@ -132,24 +132,24 @@ export default function useOrderForm() {
   useEffect(() => {
     // re-calculates the conversion amount when the pair(exchange rate) updated
     if (pairUpdated) {
-      conversionHandler(getValues('senderAmount'));
+      conversionHandler(getValues('fromAmount'));
     }
   }, [conversionHandler, getValues, pairUpdated]);
 
   return {
     // currency dropdown controlled state
-    senderCurrency: fromCurrency,
-    setSenderCurrency: setFromCurrency,
-    recipientCurrency: toCurrency,
-    setRecipientCurrency: setToCurrency,
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    setToCurrency,
 
     // callback function for calculating the conversion
     conversionHandler,
 
-    // list of exchange currencies
-    supportedCurrencies: orderType[orderTypeKey]?.supportedCurrencies || [],
+    // list of currencies
+    fiatCurrencies: orderType[orderTypeKey]?.supportedCurrencies || [],
 
-    supportedTokens: orderType[orderTypeKey]?.supportedTokens || [],
+    tokenCurrencies: orderType[orderTypeKey]?.supportedTokens || [],
 
     // agents list
     agents,

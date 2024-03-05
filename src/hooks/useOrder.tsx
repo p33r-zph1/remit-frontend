@@ -1,6 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useState } from 'react';
-import { numericFormatter } from 'react-number-format';
 
 import { Route } from '@/src/routes/_auth/';
 
@@ -38,7 +37,7 @@ export default function useOrder() {
               recipientCurrency: to.currency,
               senderAgentId: props.agentId,
               recipientId: props.recipientId,
-              transferAmount: Number(props.senderAmount),
+              transferAmount: Number(props.fromAmount),
             } satisfies CrossBorderBody;
           }
 
@@ -47,7 +46,7 @@ export default function useOrder() {
               senderCurrency: from.currency,
               recipientCurrency: to.currency,
               senderAgentId: props.agentId,
-              transferAmount: Number(props.senderAmount),
+              transferAmount: Number(props.fromAmount),
             } satisfies CrossBorderSelfBody;
           }
 
@@ -57,7 +56,7 @@ export default function useOrder() {
               token: to.currency,
               senderAgentId: props.agentId,
               chain: getCustomChainId(props.chainId),
-              transferAmount: Number(props.senderAmount),
+              transferAmount: Number(props.fromAmount),
             } satisfies LocalBuyBody;
           }
 
@@ -67,7 +66,7 @@ export default function useOrder() {
               recipientCurrency: to.currency,
               recipientAgentId: props.agentId,
               chain: getCustomChainId(props.chainId),
-              transferAmount: Number(props.senderAmount),
+              transferAmount: Number(props.fromAmount),
             } satisfies LocalSellBody;
           }
         }
@@ -93,28 +92,6 @@ export default function useOrder() {
     [sendOrderAsync]
   );
 
-  const orderAmountSummary = useCallback(
-    (
-      fromAmount: string,
-      toAmount: string,
-      from: Currency | undefined,
-      to: Currency | undefined
-    ) => {
-      if (!from || !to) return '?';
-
-      const formattedFrom = numericFormatter(`${fromAmount} ${from.currency}`, {
-        thousandSeparator: ',',
-      });
-
-      const formattedTo = numericFormatter(`${toAmount} ${to.currency}`, {
-        thousandSeparator: ',',
-      });
-
-      return `${formattedFrom} (~${formattedTo})`;
-    },
-    []
-  );
-
   const onNavigateToOrder = useCallback(() => {
     if (isSendOrderSuccess) {
       navigate({
@@ -128,7 +105,6 @@ export default function useOrder() {
     // callbacks
     executeFn,
     onCrossBorderCreateOrder,
-    orderAmountSummary,
     onNavigateToOrder,
 
     // state

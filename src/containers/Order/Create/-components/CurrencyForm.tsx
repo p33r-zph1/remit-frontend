@@ -40,7 +40,7 @@ export default memo(function CurrencyForm({
 
       <CurrencyInput
         label="You send"
-        name="senderAmount"
+        name="fromAmount"
         control={control}
         onValueChange={conversionHandler}
       >
@@ -64,7 +64,7 @@ export default memo(function CurrencyForm({
 
       <CurrencyInput
         label="Recipient will get (estimate)"
-        name="recipientAmount"
+        name="toAmount"
         control={control}
         readOnly
       >

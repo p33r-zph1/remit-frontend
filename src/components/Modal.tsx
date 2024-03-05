@@ -130,7 +130,7 @@ export default function Modal(props: Props) {
               >
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
-                    <Dialog.Title className="mb-4 text-xl font-semibold leading-6 text-slate-900">
+                    <Dialog.Title className="mb-4 text-xl font-semibold lowercase leading-6 text-slate-900 first-letter:capitalize">
                       {title}
                     </Dialog.Title>
 
