@@ -35,7 +35,7 @@ export default function useOrder() {
             return {
               senderCurrency: from.currency,
               recipientCurrency: to.currency,
-              senderAgentId: props.agentId,
+              senderAgentId: props.fromAgentId,
               recipientId: props.recipientId,
               transferAmount: Number(props.fromAmount),
             } satisfies CrossBorderBody;
@@ -45,7 +45,9 @@ export default function useOrder() {
             return {
               senderCurrency: from.currency,
               recipientCurrency: to.currency,
-              senderAgentId: props.agentId,
+              senderAgentId: props.fromAgentId,
+              recipientAgentId: props.toAgentId,
+              arrivesAt: props.estimatedArrival,
               transferAmount: Number(props.fromAmount),
             } satisfies CrossBorderSelfBody;
           }
@@ -54,7 +56,7 @@ export default function useOrder() {
             return {
               senderCurrency: from.currency,
               token: to.currency,
-              senderAgentId: props.agentId,
+              senderAgentId: props.fromAgentId,
               chain: getCustomChainId(props.chainId),
               transferAmount: Number(props.fromAmount),
             } satisfies LocalBuyBody;
@@ -64,7 +66,7 @@ export default function useOrder() {
             return {
               token: from.currency,
               recipientCurrency: to.currency,
-              recipientAgentId: props.agentId,
+              recipientAgentId: props.fromAgentId,
               chain: getCustomChainId(props.chainId),
               transferAmount: Number(props.fromAmount),
             } satisfies LocalSellBody;

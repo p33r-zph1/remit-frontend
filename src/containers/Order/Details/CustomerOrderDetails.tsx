@@ -14,6 +14,7 @@ import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import OrderSummary from './-components/OrderSummary';
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
+import CrossBorderSelfCustomer from './Type/CrossBorderSelf/CrossBorderSelfCustomer';
 import LocalBuyCustomer from './Type/LocalBuy/LocalBuyCustomer';
 import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
 
@@ -87,7 +88,13 @@ export default function CustomerOrderDetails() {
         }
       })()}
 
-      {!isOrderSettled(timelineStatus) && <CountdownCard endDate={expiresAt} />}
+      {!isOrderSettled(timelineStatus) && (
+        <CountdownCard
+          pendingLabel="Time Remaining"
+          completionLabel="Transaction expired"
+          endDate={expiresAt}
+        />
+      )}
 
       {(() => {
         switch (orderType) {
@@ -101,6 +108,9 @@ export default function CustomerOrderDetails() {
 
             return <CrossBorderCustomer role={customerRole} {...order} />;
           }
+
+          case 'CROSS_BORDER_SELF_REMITTANCE':
+            return <CrossBorderSelfCustomer {...order} />;
 
           case 'LOCAL_BUY_STABLECOINS':
             return <LocalBuyCustomer {...order} />;

@@ -58,21 +58,22 @@ export function calculateFees({
   precision,
   exchangeRate,
   platformFee,
-  agent,
+  fromAgent,
+  toAgent,
 }: {
   amount: number;
   precision: number;
   exchangeRate: number;
   platformFee: number;
-  agent: Agent | undefined;
+  fromAgent: Agent | undefined;
+  toAgent: Agent | undefined;
 }) {
   // Calculate the initial fiat value
   let fiatAmount = amount * exchangeRate;
 
   // If an agent is involved, apply their commission fee
-  if (agent) {
-    fiatAmount -= fiatAmount * (agent.commission / 100);
-  }
+  if (fromAgent) fiatAmount -= fiatAmount * (fromAgent.commission / 100);
+  if (toAgent) fiatAmount -= fiatAmount * (toAgent.commission / 100);
 
   // Apply platform fee
   fiatAmount -= fiatAmount * (platformFee / 100);

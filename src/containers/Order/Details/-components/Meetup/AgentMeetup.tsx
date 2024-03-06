@@ -13,7 +13,7 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import PlacesAutocomplete from '@/src/components/Autocomplete/PlacesAutocomplete';
 import MapsAPI from '@/src/components/Location/MapsAPI';
 import Modal from '@/src/components/Modal';
-import CalendarPopover from '@/src/components/Popover/CalendarPopover';
+import DurationPopover from '@/src/components/Popover/DurationPopover';
 import LoadingRing from '@/src/components/Spinner/LoadingRing';
 import { parsedEnvs } from '@/src/configs/env';
 import useSetCollection, {
@@ -139,7 +139,7 @@ export default memo(function AgentMeetup({
           )}
         </div>
 
-        <CalendarPopover
+        <DurationPopover
           control={control}
           name="startDate"
           setEndDate={date => setValue('endDate', date)}

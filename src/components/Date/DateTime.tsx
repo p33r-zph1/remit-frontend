@@ -60,8 +60,8 @@ type Props = {
   title?: string;
   value: Date;
   onChange: (date: Date) => void;
-  durationInHr: number;
-  setDurationInHr: Dispatch<SetStateAction<number>>;
+  durationInHr?: number;
+  setDurationInHr?: Dispatch<SetStateAction<number>>;
 };
 
 export default memo(function DateTime({
@@ -88,7 +88,7 @@ export default memo(function DateTime({
 
   const updateDuration = useCallback(
     (change: number) =>
-      setDurationInHr(prevDuration => Math.max(1, prevDuration + change)),
+      setDurationInHr?.(prevDuration => Math.max(1, prevDuration + change)),
     [setDurationInHr]
   );
 
@@ -137,13 +137,15 @@ export default memo(function DateTime({
           disableDown={disableToggleAmPm}
         />
 
-        <Container
-          value={`${durationInHr}hr`}
-          onUpClick={() => updateDuration(1)}
-          onDownClick={() => updateDuration(-1)}
-          disableUp={false}
-          disableDown={disableDurationDecrement}
-        />
+        {durationInHr && (
+          <Container
+            value={`${durationInHr}hr`}
+            onUpClick={() => updateDuration(1)}
+            onDownClick={() => updateDuration(-1)}
+            disableUp={false}
+            disableDown={disableDurationDecrement}
+          />
+        )}
       </div>
     </div>
   );

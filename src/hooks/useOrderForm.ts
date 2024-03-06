@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { coerce, z } from 'zod';
 
 import { platformFee } from '../constants';
-import { getIsoCode } from '../schema/currency';
+import { getIsoCodeFromCurrency } from '../schema/currency';
 import { calculateFees } from '../schema/fees';
 import {
   crossBorderLiteral,
@@ -16,15 +16,17 @@ import useGetAgents from './api/useGetAgents';
 import useGetCurrency from './api/useGetCurrency';
 import useGetOracle from './api/useGetOracle';
 
+const agentSchema = z
+  .string()
+  .min(1)
+  .refine(value => value !== 'default', {
+    message: 'Please select an agent',
+  });
+
 const baseOrderFormSchema = z.object({
   fromAmount: z.string().min(1, 'Please enter a valid amount'),
   toAmount: z.string().min(1),
-  agentId: z
-    .string()
-    .min(1)
-    .refine(value => value !== 'default', {
-      message: 'Please select an agent',
-    }),
+  fromAgentId: agentSchema,
 });
 
 const orderFormSchema = z.discriminatedUnion('orderType', [
@@ -36,6 +38,7 @@ const orderFormSchema = z.discriminatedUnion('orderType', [
   baseOrderFormSchema.extend({
     orderType: crossBorderSelfLiteral,
     estimatedArrival: z.date({ required_error: 'Enter a valid date' }),
+    toAgentId: agentSchema,
   }),
 
   baseOrderFormSchema.extend({
@@ -59,14 +62,15 @@ export default function useOrderForm() {
       fromAmount: '',
       toAmount: '',
       recipientId: '',
-      agentId: 'default',
+      fromAgentId: 'default',
     },
     shouldUnregister: true,
   });
 
   const { setValue, getValues, watch } = formProps;
 
-  const agentId = watch('agentId');
+  const fromAgentId = watch('fromAgentId');
+  const toAgentId = watch('toAgentId');
   const orderTypeKey = watch('orderType');
 
   const {
@@ -89,13 +93,36 @@ export default function useOrderForm() {
     to: toCurrency?.currency,
   });
 
-  const countryIsoCode = useMemo(
-    () => getIsoCode(fromCurrency, toCurrency),
-    [fromCurrency, toCurrency]
-  );
+  const fromCountryIsoCode = useMemo(() => {
+    switch (getValues('orderType')) {
+      case 'CROSS_BORDER_REMITTANCE':
+      case 'CROSS_BORDER_SELF_REMITTANCE':
+      case 'LOCAL_BUY_STABLECOINS':
+        return getIsoCodeFromCurrency(fromCurrency);
 
-  const { data: agents } = useGetAgents({
-    isoCode: countryIsoCode,
+      case 'LOCAL_SELL_STABLECOINS':
+        return undefined;
+    }
+  }, [fromCurrency, getValues]);
+
+  const toCountryIsoCode = useMemo(() => {
+    switch (getValues('orderType')) {
+      case 'CROSS_BORDER_SELF_REMITTANCE':
+      case 'LOCAL_SELL_STABLECOINS':
+        return getIsoCodeFromCurrency(toCurrency);
+
+      case 'CROSS_BORDER_REMITTANCE':
+      case 'LOCAL_BUY_STABLECOINS':
+        return undefined;
+    }
+  }, [getValues, toCurrency]);
+
+  const { data: fromAgents } = useGetAgents({
+    isoCode: fromCountryIsoCode,
+  });
+
+  const { data: toAgents } = useGetAgents({
+    isoCode: toCountryIsoCode,
   });
 
   const conversionHandler = useCallback(
@@ -103,19 +130,21 @@ export default function useOrderForm() {
       const result = coerce.number().safeParse(value);
       if (!result.success) return '';
 
-      const agent = agents.find(a => a.agentId === agentId);
+      const fromAgent = fromAgents?.find(a => a.agentId === fromAgentId);
+      const toAgent = toAgents?.find(a => a.agentId === toAgentId);
 
       const toAmount = calculateFees({
         amount: result.data,
         precision: 2,
         exchangeRate,
         platformFee,
-        agent,
+        fromAgent,
+        toAgent,
       });
 
       setValue('toAmount', toAmount);
     },
-    [agentId, agents, exchangeRate, setValue]
+    [exchangeRate, fromAgentId, fromAgents, setValue, toAgentId, toAgents]
   );
 
   useEffect(() => {
@@ -125,9 +154,10 @@ export default function useOrderForm() {
   }, [orderTypeKey, orderType]);
 
   useEffect(() => {
-    // reset the selected agent to default when sender select's a new currency
-    setValue('agentId', 'default');
-  }, [countryIsoCode, setValue]);
+    // reset the selected agent to default when user select's a new currency
+    setValue('fromAgentId', 'default');
+    setValue('toAgentId', 'default');
+  }, [fromCountryIsoCode, toCountryIsoCode, setValue]);
 
   useEffect(() => {
     // re-calculates the conversion amount when the pair(exchange rate) updated
@@ -143,18 +173,18 @@ export default function useOrderForm() {
     toCurrency,
     setToCurrency,
 
-    // callback function for calculating the conversion
-    conversionHandler,
-
     // list of currencies
     fiatCurrencies: orderType[orderTypeKey]?.supportedCurrencies || [],
-
     tokenCurrencies: orderType[orderTypeKey]?.supportedTokens || [],
 
-    // agents list
-    agents,
+    // list of agents
+    fromAgents: fromAgents || [],
+    toAgents: toAgents || [],
 
     // hook form props
     formProps,
+
+    // callback function for calculating the conversion
+    conversionHandler,
   };
 }

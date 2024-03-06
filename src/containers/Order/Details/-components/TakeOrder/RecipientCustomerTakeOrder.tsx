@@ -77,7 +77,7 @@ export default memo(function RecipientCustomerTakeOrder({
   const agentId = watch('agentId');
 
   const selectedAgent = useMemo(
-    () => agents.find(a => a.agentId === agentId),
+    () => agents?.find(a => a.agentId === agentId),
     [agentId, agents]
   );
 
@@ -87,7 +87,7 @@ export default memo(function RecipientCustomerTakeOrder({
 
       <div className="flex-flex-col items-center justify-center space-y-4">
         <SelectAgent
-          list={agents}
+          list={agents || []}
           error={errors.agentId}
           disabled={isSubmitting || isRejecting}
           {...register('agentId')}

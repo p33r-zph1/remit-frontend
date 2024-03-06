@@ -4,6 +4,7 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import EmptyProfile from '@/src/components/Empty/EmptyProfile';
 import RecipientInput from '@/src/components/Input/RecipientInput';
 import Modal from '@/src/components/Modal';
+import CalendarPopover from '@/src/components/Popover/CalendarPopover';
 import SelectChain from '@/src/components/Select/SelectChain';
 import SelectOrderType from '@/src/components/Select/SelectOrderType';
 import wagmi, { getSupportedChain } from '@/src/configs/wagmi';
@@ -14,6 +15,7 @@ import { type Currency, formatCurrencyAmount } from '@/src/schema/currency';
 import type { OrderType } from '@/src/schema/order';
 
 import CurrencyForm from './-components/CurrencyForm';
+import CurrencySelectAgent from './-components/CurrencySelectAgent';
 
 // let renderCount = 0;
 
@@ -29,15 +31,13 @@ export default function CreateOrder({ customerId }: Props) {
     toCurrency,
     setToCurrency,
 
-    // callback function for calculating the `recipientAmount`
-    conversionHandler,
-
     // list of currencies
     fiatCurrencies,
     tokenCurrencies,
 
-    // agents list
-    agents,
+    // list of agents
+    fromAgents,
+    toAgents,
 
     // hook form props
     formProps: {
@@ -47,6 +47,9 @@ export default function CreateOrder({ customerId }: Props) {
       setError,
       formState: { isSubmitting },
     },
+
+    // callback function for calculating the `recipientAmount`
+    conversionHandler,
   } = useOrderForm();
 
   const {
@@ -112,9 +115,51 @@ export default function CreateOrder({ customerId }: Props) {
                   to={toCurrency}
                   setToCurrency={setToCurrency}
                   toCurrencies={fiatCurrencies}
-                  agents={agents}
                   disabled={isSubmitting}
+                >
+                  <CurrencySelectAgent
+                    name="fromAgentId"
+                    control={control}
+                    list={fromAgents}
+                  />
+                </CurrencyForm>
+              </>
+            );
+
+          case 'CROSS_BORDER_SELF_REMITTANCE':
+            return (
+              <>
+                <SelectOrderType name="orderType" control={control} />
+
+                <CalendarPopover
+                  control={control}
+                  name="estimatedArrival"
+                  label="Estimated arrival"
                 />
+
+                <CurrencyForm
+                  control={control}
+                  conversionHandler={conversionHandler}
+                  from={fromCurrency}
+                  setFromCurrency={setFromCurrency}
+                  fromCurrencies={fiatCurrencies}
+                  to={toCurrency}
+                  setToCurrency={setToCurrency}
+                  toCurrencies={fiatCurrencies}
+                  disabled={isSubmitting}
+                >
+                  <CurrencySelectAgent
+                    name="fromAgentId"
+                    control={control}
+                    list={fromAgents}
+                  />
+
+                  <CurrencySelectAgent
+                    name="toAgentId"
+                    control={control}
+                    list={toAgents}
+                  />
+                </CurrencyForm>
               </>
             );
 
@@ -139,9 +184,14 @@ export default function CreateOrder({ customerId }: Props) {
                   to={toCurrency}
                   setToCurrency={setToCurrency}
                   toCurrencies={fiatCurrencies}
-                  agents={agents}
                   disabled={isSubmitting}
-                />
+                >
+                  <CurrencySelectAgent
+                    name="toAgentId"
+                    control={control}
+                    list={toAgents}
+                  />
+                </CurrencyForm>
               </>
             );
 
@@ -166,9 +216,14 @@ export default function CreateOrder({ customerId }: Props) {
                   to={toCurrency}
                   setToCurrency={setToCurrency}
                   toCurrencies={tokenCurrencies}
-                  agents={agents}
                   disabled={isSubmitting}
-                />
+                >
+                  <CurrencySelectAgent
+                    name="fromAgentId"
+                    control={control}
+                    list={fromAgents}
+                  />
+                </CurrencyForm>
               </>
             );
 
@@ -238,7 +293,8 @@ export default function CreateOrder({ customerId }: Props) {
             </>
           )}
           {` `}
-          with agent <span className="font-bold">#{getValues('agentId')}</span>.
+          with agent{' '}
+          <span className="font-bold">#{getValues('fromAgentId')}</span>.
         </p>
       </Modal>
     </form>
