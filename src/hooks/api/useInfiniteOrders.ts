@@ -9,14 +9,17 @@ import orderListApiSchema, { type OrderListApi } from '@/src/schema/order-list';
 
 import { orderKeys } from './keys/order.key';
 
-export type OrdersQueryProps = {
+export type InfiniteOrdersQueryProps = {
   pageSize: number;
   status?: 'active' | 'open';
 };
 
-export const ordersQueryOptions = ({ pageSize, status }: OrdersQueryProps) =>
+export const ordersInfiniteQueryOptions = ({
+  pageSize,
+  status,
+}: InfiniteOrdersQueryProps) =>
   infiniteQueryOptions<OrderListApi>({
-    queryKey: orderKeys.paginatedList({ pageSize, status }),
+    queryKey: orderKeys.infiniteList({ pageSize, status }),
     initialPageParam: 1,
     getNextPageParam: ({ data: { hasNextPage, pageNumber } }) => {
       if (hasNextPage) return pageNumber + 1;
@@ -35,8 +38,8 @@ export const ordersQueryOptions = ({ pageSize, status }: OrdersQueryProps) =>
     },
   });
 
-export default function useGetOrders(
-  props: Parameters<typeof ordersQueryOptions>[0]
+export default function useInfiniteOrders(
+  props: Parameters<typeof ordersInfiniteQueryOptions>[0]
 ) {
-  return useSuspenseInfiniteQuery(ordersQueryOptions(props));
+  return useSuspenseInfiniteQuery(ordersInfiniteQueryOptions(props));
 }

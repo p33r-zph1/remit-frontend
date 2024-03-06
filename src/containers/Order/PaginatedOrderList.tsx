@@ -4,9 +4,9 @@ import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import EmptyHistory from '@/src/components/Empty/EmptyHistory';
 import EmptyOrder from '@/src/components/Empty/EmptyOrder';
 import OrderItem from '@/src/components/Item/OrderItem';
-import useGetOrders, {
-  type OrdersQueryProps,
-} from '@/src/hooks/api/useGetOrders';
+import useInfiniteOrders, {
+  type InfiniteOrdersQueryProps,
+} from '@/src/hooks/api/useInfiniteOrders';
 import useAuth from '@/src/hooks/useAuth';
 import {
   getOrderDetails,
@@ -15,7 +15,7 @@ import {
   isUserRecipientAgent,
 } from '@/src/schema/order';
 
-type Props = OrdersQueryProps;
+type Props = InfiniteOrdersQueryProps;
 
 export default function PaginatedOrderList(props: Props) {
   const { user: userId, hasGroup } = useAuth();
@@ -27,7 +27,7 @@ export default function PaginatedOrderList(props: Props) {
     isFetchingNextPage,
     error,
     isError,
-  } = useGetOrders(props);
+  } = useInfiniteOrders(props);
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
     return <EmptyHistory isCustomer={hasGroup('customer')} />;
