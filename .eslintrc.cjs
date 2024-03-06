@@ -48,6 +48,18 @@ module.exports = {
       { allowConstantExport: true },
     ],
 
+    /**
+     * @description Warn for unused vars
+     * @see https://typescript-eslint.io/rules/no-unused-vars/#how-to-use
+     */
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        varsIgnorePattern: '^_',
+      },
+    ],
+
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
 
