@@ -26,29 +26,32 @@ const agentSchema = z
 const baseOrderFormSchema = z.object({
   fromAmount: z.string().min(1, 'Please enter a valid amount'),
   toAmount: z.string().min(1),
-  fromAgentId: agentSchema,
 });
 
 const orderFormSchema = z.discriminatedUnion('orderType', [
   baseOrderFormSchema.extend({
     orderType: crossBorderLiteral,
     recipientId: z.string().min(1, 'Please enter a valid recipient'),
+    fromAgentId: agentSchema,
   }),
 
   baseOrderFormSchema.extend({
     orderType: crossBorderSelfLiteral,
     estimatedArrival: z.date({ required_error: 'Enter a valid date' }),
+    fromAgentId: agentSchema,
     toAgentId: agentSchema,
   }),
 
   baseOrderFormSchema.extend({
     orderType: localBuyLiteral,
     chainId: z.number().min(1, { message: 'Please select a chain' }),
+    fromAgentId: agentSchema,
   }),
 
   baseOrderFormSchema.extend({
     orderType: localSellLiteral,
     chainId: z.number().min(1, { message: 'Please select a chain' }),
+    toAgentId: agentSchema,
   }),
 ]);
 

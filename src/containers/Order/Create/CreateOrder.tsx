@@ -294,7 +294,15 @@ export default function CreateOrder({ customerId }: Props) {
           )}
           {` `}
           with agent{' '}
-          <span className="font-bold">#{getValues('fromAgentId')}</span>.
+          <span className="font-bold">
+            #
+            {getOrderAgentId(
+              getValues('orderType'),
+              getValues('fromAgentId'),
+              getValues('toAgentId')
+            )}
+          </span>
+          .
         </p>
       </Modal>
     </form>
@@ -356,5 +364,21 @@ function getOrderSummary(
         recipientCurrency,
         senderCurrency
       );
+  }
+}
+
+function getOrderAgentId(
+  orderType: OrderType,
+  fromAgentId: string,
+  toAgentId: string
+) {
+  switch (orderType) {
+    case 'CROSS_BORDER_REMITTANCE':
+    case 'CROSS_BORDER_SELF_REMITTANCE':
+    case 'LOCAL_BUY_STABLECOINS':
+      return fromAgentId;
+
+    case 'LOCAL_SELL_STABLECOINS':
+      return toAgentId;
   }
 }

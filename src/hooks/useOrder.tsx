@@ -66,7 +66,7 @@ export default function useOrder() {
             return {
               token: from.currency,
               recipientCurrency: to.currency,
-              recipientAgentId: props.fromAgentId,
+              recipientAgentId: props.toAgentId,
               chain: getCustomChainId(props.chainId),
               transferAmount: Number(props.fromAmount),
             } satisfies LocalSellBody;
