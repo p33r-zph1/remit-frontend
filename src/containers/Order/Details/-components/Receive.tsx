@@ -14,6 +14,8 @@ import {
   type TransferInfo,
 } from '@/src/schema/order/transfer-info';
 
+import CustomerMeetup from './Meetup/CustomerMeetup';
+
 type Props = {
   orderType: OrderType;
   orderId: string;
@@ -81,6 +83,8 @@ export default memo(function Receive({
           Contact sender
         </button>
       </div>
+
+      <CustomerMeetup locationDetails={locationDetails} />
 
       <Modal
         open={modalVisible}
