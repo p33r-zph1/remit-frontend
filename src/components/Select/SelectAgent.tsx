@@ -31,7 +31,7 @@ const SelectAgent = forwardRef<HTMLSelectElement, Props>(
             disabled={!item.isActive}
             className="text-gray-500"
           >
-            {item.commission}% - {item.agentId}
+            {item.commission}% - {item.agentId} ({item.countryIsoCode})
           </option>
         ))}
       </select>

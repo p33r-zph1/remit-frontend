@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { ordersQueryOptions } from '@/src/hooks/api/useGetOrders';
+import { ordersInfiniteQueryOptions } from '@/src/hooks/api/useInfiniteOrders';
 
 export const Route = createFileRoute('/_auth/history')({
   loader: opts =>
     opts.context.queryClient.fetchInfiniteQuery(
-      ordersQueryOptions({
+      ordersInfiniteQueryOptions({
         pageSize: 10,
       })
     ),

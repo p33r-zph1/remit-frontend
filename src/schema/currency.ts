@@ -47,15 +47,9 @@ export type TokenCurrency = z.infer<typeof tokenCurrencySchema>;
 
 export type ExchangeCurrency = z.infer<typeof exchangeCurrencySchema>;
 
-export function getIsoCode(
-  from: Currency | undefined,
-  to: Currency | undefined
-) {
-  if (from?.type === 'fiat') {
-    return from.countryIsoCode;
-  }
-  if (to?.type === 'fiat') {
-    return to.countryIsoCode;
+export function getIsoCodeFromCurrency(currency: Currency | undefined) {
+  if (currency?.type === 'fiat') {
+    return currency.countryIsoCode;
   }
 
   throw new Error('Iso code not found.');

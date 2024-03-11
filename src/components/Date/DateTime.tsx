@@ -3,7 +3,15 @@ import {
   ChevronUpIcon,
   ClockIcon,
 } from '@heroicons/react/20/solid';
-import { addHours, format, isBefore, setHours, startOfHour } from 'date-fns';
+import {
+  addHours,
+  addMinutes,
+  format,
+  isBefore,
+  setHours,
+  startOfHour,
+  startOfMinute,
+} from 'date-fns';
 import {
   type Dispatch,
   memo,
@@ -60,8 +68,8 @@ type Props = {
   title?: string;
   value: Date;
   onChange: (date: Date) => void;
-  durationInHr: number;
-  setDurationInHr: Dispatch<SetStateAction<number>>;
+  durationInHr?: number;
+  setDurationInHr?: Dispatch<SetStateAction<number>>;
 };
 
 export default memo(function DateTime({
@@ -71,37 +79,38 @@ export default memo(function DateTime({
   durationInHr,
   setDurationInHr,
 }: Props) {
-  const today = value || startOfHour(new Date());
+  const today = value || startOfMinute(new Date());
 
-  const time = useMemo(() => format(today, 'hh'), [today]);
+  const hour = useMemo(() => format(today, 'hh'), [today]);
+  const minute = useMemo(() => format(today, 'mm'), [today]);
   const amPm = useMemo(() => format(today, 'aa'), [today]);
 
-  const updateTime = useCallback(
+  const updateHours = useCallback(
     (hours: number) => onChange(addHours(today, hours)),
     [onChange, today]
   );
+
+  const disableHourDecrement = useMemo(() => {
+    const decrementedHour = addHours(today, -1);
+    const currentHour = startOfHour(new Date());
+    return isBefore(decrementedHour, currentHour);
+  }, [today]);
+
+  const updateMinutes = useCallback(
+    (minutes: number) => onChange(addMinutes(today, minutes)),
+    [onChange, today]
+  );
+
+  const disableMinuteDecrement = useMemo(() => {
+    const decrementedMinute = addMinutes(today, -1);
+    const currentMinute = startOfMinute(new Date());
+    return isBefore(decrementedMinute, currentMinute);
+  }, [today]);
 
   const toggleAmPm = useCallback(() => {
     const hours = today.getHours() >= 12 ? -12 : 12;
     onChange(addHours(today, hours));
   }, [onChange, today]);
-
-  const updateDuration = useCallback(
-    (change: number) =>
-      setDurationInHr(prevDuration => Math.max(1, prevDuration + change)),
-    [setDurationInHr]
-  );
-
-  const disableTimeDecrement = useMemo(() => {
-    const decrementedTime = addHours(today, -1);
-    const currentHour = startOfHour(new Date());
-    return isBefore(decrementedTime, currentHour);
-  }, [today]);
-
-  const disableDurationDecrement = useMemo(
-    () => durationInHr === 1,
-    [durationInHr]
-  );
 
   const disableToggleAmPm = useMemo(() => {
     const currentHours = today.getHours();
@@ -110,6 +119,17 @@ export default memo(function DateTime({
     const toggledDate = setHours(today, toggledHours);
     return isBefore(toggledDate, startOfHour(new Date()));
   }, [today]);
+
+  const updateDuration = useCallback(
+    (change: number) =>
+      setDurationInHr?.(prevDuration => Math.max(1, prevDuration + change)),
+    [setDurationInHr]
+  );
+
+  const disableDurationDecrement = useMemo(
+    () => durationInHr === 1,
+    [durationInHr]
+  );
 
   return (
     <div className="flex items-center justify-evenly space-x-3">
@@ -122,11 +142,19 @@ export default memo(function DateTime({
 
       <div className="flex flex-row items-center justify-center space-x-2">
         <Container
-          value={time}
-          onUpClick={() => updateTime(1)}
-          onDownClick={() => updateTime(-1)}
+          value={hour}
+          onUpClick={() => updateHours(1)}
+          onDownClick={() => updateHours(-1)}
           disableUp={false}
-          disableDown={disableTimeDecrement}
+          disableDown={disableHourDecrement}
+        />
+
+        <Container
+          value={minute}
+          onUpClick={() => updateMinutes(1)}
+          onDownClick={() => updateMinutes(-1)}
+          disableUp={false}
+          disableDown={disableMinuteDecrement}
         />
 
         <Container
@@ -137,13 +165,15 @@ export default memo(function DateTime({
           disableDown={disableToggleAmPm}
         />
 
-        <Container
-          value={`${durationInHr}hr`}
-          onUpClick={() => updateDuration(1)}
-          onDownClick={() => updateDuration(-1)}
-          disableUp={false}
-          disableDown={disableDurationDecrement}
-        />
+        {durationInHr && (
+          <Container
+            value={`${durationInHr}hr`}
+            onUpClick={() => updateDuration(1)}
+            onDownClick={() => updateDuration(-1)}
+            disableUp={false}
+            disableDown={disableDurationDecrement}
+          />
+        )}
       </div>
     </div>
   );

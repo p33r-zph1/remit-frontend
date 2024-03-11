@@ -28,7 +28,6 @@ const types: Record<OrderType, Order> = {
     description:
       'Convert currencies and remit to yourself. A local agent will collect your cash and another agent will deliver cash to you in your selected currency abroad.',
     icon: <GlobeAltIcon className="mr-1 inline-block h-6 w-6 flex-shrink-0" />,
-    disabled: true,
   },
   LOCAL_BUY_STABLECOINS: {
     title: 'Buy Stablecoins (Local)',

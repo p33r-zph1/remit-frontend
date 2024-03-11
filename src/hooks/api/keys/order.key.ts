@@ -1,5 +1,5 @@
 import type { OrderQueryProps } from '../useGetOrder';
-import type { OrdersQueryProps } from '../useGetOrders';
+import type { InfiniteOrdersQueryProps } from '../useInfiniteOrders';
 
 export const orderKeys = {
   /**
@@ -15,7 +15,7 @@ export const orderKeys = {
    * @example
    * queryOptions({ queryKey: orderKeys.paginatedList(props) })
    */
-  paginatedList: (props: OrdersQueryProps) =>
+  infiniteList: (props: InfiniteOrdersQueryProps) =>
     [...orderKeys.all, 'list', { ...props }] as const,
 
   /**

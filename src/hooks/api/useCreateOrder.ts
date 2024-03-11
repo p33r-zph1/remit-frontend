@@ -21,9 +21,11 @@ const crossBorderBodySchema = z.object({
 
 const crossBorderSelfBodySchema = z.object({
   senderAgentId: z.string(),
+  recipientAgentId: z.string(),
   transferAmount: z.number(),
   senderCurrency: z.string(),
   recipientCurrency: z.string(),
+  arrivesAt: z.date(),
 });
 
 const localSellBodySchema = z.object({

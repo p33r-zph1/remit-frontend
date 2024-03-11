@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import {
+  addHours,
   addMonths,
   eachDayOfInterval,
   endOfMonth,
@@ -66,7 +67,7 @@ const getDayStatus = (
 };
 
 export default memo(function DateCalendar({ value, onChange }: Props) {
-  const today = startOfHour(new Date());
+  const today = addHours(startOfHour(new Date()), 1);
   const day = value || today;
 
   const [selectedDay, setSelectedDay] = useState(day);
