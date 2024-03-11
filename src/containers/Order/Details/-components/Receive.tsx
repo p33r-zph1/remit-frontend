@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { memo, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import { type Contact } from '@/src/schema/contact';

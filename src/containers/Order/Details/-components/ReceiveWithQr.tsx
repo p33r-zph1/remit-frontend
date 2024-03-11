@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { memo, useCallback, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useGenerateQr from '@/src/hooks/api/useGenerateQr';
 import { Route } from '@/src/routes/_auth/order/$orderId';

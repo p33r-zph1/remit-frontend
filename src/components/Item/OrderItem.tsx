@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { memo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { type EscrowDetails } from '@/src/schema/escrow';
 import type { OrderStatus } from '@/src/schema/order';
@@ -18,6 +19,7 @@ type Item = {
   createdAt: Date;
   recipientId: string;
   isRecipient: boolean;
+  disabled: boolean;
 };
 
 export default memo(function OrderItem({
@@ -28,12 +30,17 @@ export default memo(function OrderItem({
   createdAt,
   recipientId,
   isRecipient,
+  disabled,
 }: Item) {
   return (
     <Link
       to="/order/$orderId"
       params={{ orderId }}
-      className="group mb-2 flex cursor-pointer flex-row items-center justify-between text-balance rounded-lg py-4 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4"
+      className={twMerge(
+        'group mb-2 flex cursor-pointer flex-row items-center justify-between text-balance rounded-lg py-4 hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4',
+        disabled && 'cursor-wait opacity-50'
+      )}
+      disabled={disabled}
     >
       {/* Recipient & Status */}
       <div className="flex items-center justify-center space-x-3">

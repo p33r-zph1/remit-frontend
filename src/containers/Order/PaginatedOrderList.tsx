@@ -1,8 +1,9 @@
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import EmptyHistory from '@/src/components/Empty/EmptyHistory';
 import EmptyOrder from '@/src/components/Empty/EmptyOrder';
+import HeaderRefresh from '@/src/components/Header/HeaderRefresh';
 import OrderItem from '@/src/components/Item/OrderItem';
 import useInfiniteOrders, {
   type InfiniteOrdersQueryProps,
@@ -15,9 +16,14 @@ import {
   isUserRecipientAgent,
 } from '@/src/schema/order';
 
-type Props = InfiniteOrdersQueryProps;
+type Props = InfiniteOrdersQueryProps & {
+  renderTitle: ReactNode;
+};
 
-export default function PaginatedOrderList(props: Props) {
+export default function PaginatedOrderList({
+  renderTitle,
+  ...queryProps
+}: Props) {
   const { user: userId, hasGroup } = useAuth();
 
   const {
@@ -27,14 +33,32 @@ export default function PaginatedOrderList(props: Props) {
     isFetchingNextPage,
     error,
     isError,
-  } = useInfiniteOrders(props);
+    refetch,
+    isFetching,
+  } = useInfiniteOrders(queryProps);
 
   if (data.pages.every(page => page.data.orders.length === 0)) {
-    return <EmptyHistory isCustomer={hasGroup('customer')} />;
+    return (
+      <>
+        <HeaderRefresh
+          renderTitle={renderTitle}
+          isFetching={isFetching}
+          refetch={refetch}
+        />
+
+        <EmptyHistory isCustomer={hasGroup('customer')} />
+      </>
+    );
   }
 
   return (
     <>
+      <HeaderRefresh
+        renderTitle={renderTitle}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
+
       {data.pages.map(({ data: { orders, pageNumber } }) => (
         <Fragment key={pageNumber}>
           {orders.map(order => {
@@ -65,6 +89,7 @@ export default function PaginatedOrderList(props: Props) {
                 createdAt={createdAt}
                 recipientId={recipientId}
                 isRecipient={isRecipient}
+                disabled={isFetching}
               />
             );
           })}

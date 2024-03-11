@@ -19,7 +19,7 @@ import LocalBuyCustomer from './Type/LocalBuy/LocalBuyCustomer';
 import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
 
 export default function CustomerOrderDetails() {
-  const { order } = useOrderDetails();
+  const { data: order, isFetching, refetch } = useOrderDetails();
 
   const { user: userId } = useAuth();
 
@@ -138,7 +138,11 @@ export default function CustomerOrderDetails() {
         }
       })()}
 
-      <TransferTimeline timeline={transferTimeline} />
+      <TransferTimeline
+        timeline={transferTimeline}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     </section>
   );
 }

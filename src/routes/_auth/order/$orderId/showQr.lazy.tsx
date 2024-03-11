@@ -38,7 +38,7 @@ function ShowQrComponent() {
   const { user: userId } = useAuth();
   const navigate = useNavigate({ from: ShowQrRoute.fullPath });
 
-  const { order } = useOrderDetails();
+  const { data: order } = useOrderDetails();
 
   const { transferTimelineStatus: timelineStatus } = order;
 

@@ -15,6 +15,9 @@ import type {
 } from '@/src/schema/order/transfer-timeline';
 import { safeFormatRelative } from '@/src/utils/date';
 
+import HeaderRefresh from '../Header/HeaderRefresh';
+import HeaderTitle from '../Header/HeaderTitle';
+
 function getIconByStatus(timelineStatus: TimelineStatus) {
   switch (timelineStatus) {
     case 'PENDING':
@@ -80,9 +83,10 @@ function Item({
   description,
   status,
   isLastItem,
-}: Timeline & { isLastItem: boolean }) {
+  isFetching,
+}: Timeline & { isLastItem: boolean; isFetching: boolean }) {
   return (
-    <li>
+    <li className={isFetching ? 'cursor-wait opacity-50' : ''}>
       {getLineDividerByStatus(status)}
 
       <div className="timeline-middle">{getIconByStatus(status)}</div>
@@ -109,12 +113,26 @@ function Item({
 
 type Props = {
   timeline: Timeline[];
+  isFetching: boolean;
+  refetch: () => void;
 };
 
-export default function TransferTimeline({ timeline }: Props) {
+export default function TransferTimeline({
+  timeline,
+  isFetching,
+  refetch,
+}: Props) {
   return (
     <div>
-      <div className="text-lg font-semibold md:text-xl">Transfer timeline</div>
+      <HeaderRefresh
+        renderTitle={
+          <HeaderTitle className="text-xl md:text-2xl">
+            Transfer timeline
+          </HeaderTitle>
+        }
+        isFetching={isFetching}
+        refetch={refetch}
+      />
 
       <ul className="timeline timeline-vertical timeline-compact">
         {timeline
@@ -125,6 +143,7 @@ export default function TransferTimeline({ timeline }: Props) {
               key={item.description}
               {...item}
               isLastItem={index === timeline.length - 1}
+              isFetching={isFetching}
             />
           ))}
       </ul>

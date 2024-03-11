@@ -4,7 +4,7 @@ import { type ReactNode, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import QueryFallback from '@/src/components/Fallback/QueryFallback';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Page from '@/src/components/Page';
 import OrderListSkeleton from '@/src/components/Skeleton/OrderListSkeleton';
 import PaginatedOrderList from '@/src/containers/Order/PaginatedOrderList';
@@ -21,7 +21,14 @@ export const Route = createLazyFileRoute('/_auth/history')({
         {({ reset }) => (
           <ErrorBoundary FallbackComponent={QueryFallback} onReset={reset}>
             <Suspense fallback={<OrderListSkeleton />}>
-              <PaginatedOrderList pageSize={10} />
+              <PaginatedOrderList
+                renderTitle={
+                  <HeaderTitle className="md:text-center">
+                    Transaction History
+                  </HeaderTitle>
+                }
+                pageSize={10}
+              />
             </Suspense>
           </ErrorBoundary>
         )}
@@ -31,11 +38,5 @@ export const Route = createLazyFileRoute('/_auth/history')({
 });
 
 function HistoryComponent({ children }: { children: ReactNode }) {
-  return (
-    <Page className="mx-auto max-w-3xl">
-      <HeaderTitle className="md:text-center">Transaction History</HeaderTitle>
-
-      {children}
-    </Page>
-  );
+  return <Page className="mx-auto max-w-3xl">{children}</Page>;
 }

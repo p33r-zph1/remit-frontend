@@ -2,11 +2,8 @@ import { createContext, type PropsWithChildren } from 'react';
 
 import useGetOrder from '@/src/hooks/api/useGetOrder';
 import { Route } from '@/src/routes/_auth/order/$orderId';
-import type { Order } from '@/src/schema/order';
 
-interface OrderDetailsContext {
-  readonly order: Order;
-}
+type OrderDetailsContext = ReturnType<typeof useGetOrder>;
 
 export const OrderDetailsContext = createContext<OrderDetailsContext | null>(
   null
@@ -15,14 +12,10 @@ export const OrderDetailsContext = createContext<OrderDetailsContext | null>(
 export default function OrderDetailsProvider({ children }: PropsWithChildren) {
   const { orderId } = Route.useParams();
 
-  const { data: order } = useGetOrder({ orderId });
+  const props = useGetOrder({ orderId });
 
   return (
-    <OrderDetailsContext.Provider
-      value={{
-        order,
-      }}
-    >
+    <OrderDetailsContext.Provider value={props}>
       {children}
     </OrderDetailsContext.Provider>
   );

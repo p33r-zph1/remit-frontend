@@ -4,7 +4,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import SelectAgent from '@/src/components/Select/SelectAgent';
 import useGetAgents from '@/src/hooks/api/useGetAgents';

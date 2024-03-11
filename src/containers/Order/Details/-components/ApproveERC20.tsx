@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import LoadingAlert from '@/src/components/Alert/LoadingAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import ApproveAllowance from '@/src/components/Web3/ApproveAllowance';
 import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';

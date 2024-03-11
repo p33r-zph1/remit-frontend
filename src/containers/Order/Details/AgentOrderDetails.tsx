@@ -17,7 +17,7 @@ import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
 import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
 
 export default function AgentOrderDetails() {
-  const { order } = useOrderDetails();
+  const { data: order, isFetching, refetch } = useOrderDetails();
 
   const { user: userId } = useAuth();
 
@@ -153,7 +153,11 @@ export default function AgentOrderDetails() {
         }
       })()}
 
-      <TransferTimeline timeline={transferTimeline} />
+      <TransferTimeline
+        timeline={transferTimeline}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     </section>
   );
 }

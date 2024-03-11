@@ -38,7 +38,7 @@ function ScanQrComponent() {
   const { user: userId } = useAuth();
   const navigate = useNavigate({ from: ScanQrRoute.fullPath });
 
-  const { order } = useOrderDetails();
+  const { data: order } = useOrderDetails();
 
   const { transferTimelineStatus: timelineStatus } = order;
 

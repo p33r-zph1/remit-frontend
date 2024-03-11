@@ -4,7 +4,7 @@ import { NumericFormat } from 'react-number-format';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import CommissionCard from '@/src/components/Card/CommissionCard';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useAgentCommission from '@/src/hooks/api/useAgentCommission';
 import useAgentStatus from '@/src/hooks/api/useAgentStatus';
@@ -50,17 +50,27 @@ export default function AgentViewOrders({ agentId }: Props) {
       />
 
       <section className="flex flex-col">
-        <HeaderTitle className="`text-xl md:text-2xl">
-          My Active Orders
-        </HeaderTitle>
-
-        <PaginatedOrderList pageSize={5} status="active" />
+        <PaginatedOrderList
+          renderTitle={
+            <HeaderTitle className="text-xl md:text-2xl">
+              My Active Orders
+            </HeaderTitle>
+          }
+          pageSize={5}
+          status="active"
+        />
 
         <div className="divider"></div>
 
-        <HeaderTitle className="`text-xl md:text-2xl">Open Orders</HeaderTitle>
-
-        <PaginatedOrderList pageSize={5} status="open" />
+        <PaginatedOrderList
+          renderTitle={
+            <HeaderTitle className="text-xl md:text-2xl">
+              Open Orders
+            </HeaderTitle>
+          }
+          pageSize={5}
+          status="open"
+        />
       </section>
 
       <Modal

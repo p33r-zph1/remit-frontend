@@ -3,13 +3,13 @@ import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 export default function ScanQrCode() {
   const {
-    order: { orderType, orderId },
+    data: { orderType, orderId },
   } = useOrderDetails();
 
   const {
