@@ -69,8 +69,18 @@ export default memo(function ApproveERC20({
   }, [address, escrowDepositAsync, orderId, orderType]);
 
   const approveAmountSummary = useMemo(() => {
-    const str = `${tokenSymbol} ${tokenAmount} (${transferInfo.currency} ${transferInfo.amount})`;
-    return numericFormatter(str, { thousandSeparator: ',' });
+    const formattedToken = numericFormatter(`${tokenSymbol} ${tokenAmount}`, {
+      thousandSeparator: ',',
+    });
+
+    const formattedTransferInfo = numericFormatter(
+      `${transferInfo.currency} ${transferInfo.amount}`,
+      {
+        thousandSeparator: ',',
+      }
+    );
+
+    return `${formattedToken} (${formattedTransferInfo})`;
   }, [tokenAmount, tokenSymbol, transferInfo.amount, transferInfo.currency]);
 
   return (
