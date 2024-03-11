@@ -97,7 +97,7 @@ export default function ScanQrCode() {
           <img
             src="/qr-frame.svg"
             alt="Qr Frame"
-            className="absolute inset-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 transform fill-none"
+            className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 transform fill-none"
           />
         </div>
 
