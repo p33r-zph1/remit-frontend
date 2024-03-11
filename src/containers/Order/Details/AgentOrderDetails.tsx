@@ -75,7 +75,7 @@ export default function AgentOrderDetails() {
                 priceOracleRates={priceOracleRates}
                 platformFee={platformFee}
                 summary={{
-                  message: 'exact token amount to release',
+                  message: 'Exact token amount to release',
                   amount: formatEscrowDetails(escrowDetails),
                 }}
               />

@@ -99,7 +99,7 @@ export default function CrossBorderSelfAgent({ role, ...orderProps }: Props) {
           return (
             <CountdownCard
               endDate={orderProps.arrivesAt}
-              pendingLabel="Recipient will arrive on"
+              pendingLabel="Recipient will arrive in"
               completionLabel="Recipient has arrived"
             />
           );

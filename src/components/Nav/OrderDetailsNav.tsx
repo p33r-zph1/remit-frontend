@@ -16,7 +16,7 @@ function getTitleByOrderStatus(status: OrderStatus) {
     case 'IN_PROGRESS':
       return (
         <div className="text-base text-gray-400 md:text-lg">
-          Transaction is in-progress
+          Transaction is in progress
         </div>
       );
     case 'COMPLETED':
