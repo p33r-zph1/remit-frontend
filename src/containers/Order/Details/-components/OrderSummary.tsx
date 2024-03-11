@@ -3,6 +3,7 @@ import { type Commission, formatCommissionDetails } from '@/src/schema/fees';
 type Props = {
   priceOracleRates: Record<string, number>;
   platformFee: Commission;
+  agentFee?: Commission;
   summary?: {
     message: string;
     amount: string;
@@ -11,6 +12,7 @@ type Props = {
 
 export default function OrderSummary({
   priceOracleRates,
+  agentFee,
   platformFee,
   summary,
 }: Props) {
@@ -24,12 +26,23 @@ export default function OrderSummary({
           </div>
         ))}
       </p>
+
       <p>
         Platform Fee:{' '}
         <strong className="font-bold">
           {formatCommissionDetails(platformFee)}
         </strong>
       </p>
+
+      {agentFee && (
+        <p>
+          Agent Fee:{' '}
+          <strong className="font-bold">
+            {formatCommissionDetails(agentFee)}
+          </strong>
+        </p>
+      )}
+
       {summary && (
         <p>
           {summary.message}:{' '}

@@ -30,7 +30,7 @@ export default function AgentOrderDetails() {
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
-    fees: { platform: platformFee },
+    fees,
   } = order;
 
   const isRecipientAgent = useMemo(
@@ -57,23 +57,37 @@ export default function AgentOrderDetails() {
       {(() => {
         switch (orderType) {
           case 'CROSS_BORDER_REMITTANCE':
-          case 'CROSS_BORDER_SELF_REMITTANCE':
+          case 'CROSS_BORDER_SELF_REMITTANCE': {
+            const { senderAgentId, recipientAgentId } = order;
+
+            const isSender = userId === senderAgentId;
+            const isRecipient = userId === recipientAgentId;
+
+            const agentFee = isSender
+              ? fees.senderAgent
+              : isRecipient
+                ? fees.recipientAgent
+                : undefined;
+
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={agentFee}
                 summary={{
                   message: 'Exact cash to deliver',
                   amount: formatTranferInfo(transferDetails.recipient),
                 }}
               />
             );
+          }
 
           case 'LOCAL_BUY_STABLECOINS':
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={fees.senderAgent}
                 summary={{
                   message: 'Exact token amount to release',
                   amount: formatEscrowDetails(escrowDetails),
@@ -85,7 +99,8 @@ export default function AgentOrderDetails() {
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={fees.recipientAgent}
                 summary={{
                   message: 'Exact cash to deliver',
                   amount: formatTranferInfo(transferDetails.recipient),

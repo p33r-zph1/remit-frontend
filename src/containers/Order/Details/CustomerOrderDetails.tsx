@@ -30,7 +30,7 @@ export default function CustomerOrderDetails() {
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
-    fees: { platform: platformFee },
+    fees,
   } = order;
 
   const isRecipientCustomer = useMemo(
@@ -62,19 +62,33 @@ export default function CustomerOrderDetails() {
       {(() => {
         switch (orderType) {
           case 'CROSS_BORDER_REMITTANCE':
-          case 'CROSS_BORDER_SELF_REMITTANCE':
+          case 'CROSS_BORDER_SELF_REMITTANCE': {
+            const { senderAgentId, recipientAgentId } = order;
+
+            const isSender = userId === senderAgentId;
+            const isRecipient = userId === recipientAgentId;
+
+            const agentFee = isSender
+              ? fees.senderAgent
+              : isRecipient
+                ? fees.recipientAgent
+                : undefined;
+
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={agentFee}
               />
             );
+          }
 
           case 'LOCAL_BUY_STABLECOINS':
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={fees.senderAgent}
               />
             );
 
@@ -82,7 +96,8 @@ export default function CustomerOrderDetails() {
             return (
               <OrderSummary
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={fees.recipientAgent}
               />
             );
         }
