@@ -10,7 +10,7 @@ import { getOrderDetails, isUserRecipientAgent } from '@/src/schema/order';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import OrderSummary from './-components/OrderSummary';
+import OrderDetails from './-components/OrderDetails';
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
 import CrossBorderSelfAgent from './Type/CrossBorderSelf/CrossBorderSelfAgent';
 import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
@@ -70,7 +70,7 @@ export default function AgentOrderDetails() {
                 : undefined;
 
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={agentFee}
@@ -84,7 +84,7 @@ export default function AgentOrderDetails() {
 
           case 'LOCAL_BUY_STABLECOINS':
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={fees.senderAgent}
@@ -97,7 +97,7 @@ export default function AgentOrderDetails() {
 
           case 'LOCAL_SELL_STABLECOINS':
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={fees.recipientAgent}
