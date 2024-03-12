@@ -11,12 +11,12 @@ import SwitchChain from '@/src/components/Web3/SwitchChain';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
 import type { EscrowDetails } from '@/src/schema/escrow';
 import type { OrderType } from '@/src/schema/order';
-import type { TransferInfo } from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 type Props = {
   orderType: OrderType;
   orderId: string;
-  transferInfo: TransferInfo;
+  transferInfo: Parameters<typeof formatTranferInfo>[0];
   escrowDetails: EscrowDetails;
 };
 
@@ -73,15 +73,10 @@ export default memo(function ApproveERC20({
       thousandSeparator: ',',
     });
 
-    const formattedTransferInfo = numericFormatter(
-      `${transferInfo.currency} ${transferInfo.amount}`,
-      {
-        thousandSeparator: ',',
-      }
-    );
+    const formattedTransferInfo = formatTranferInfo(transferInfo);
 
     return `${formattedToken} (${formattedTransferInfo})`;
-  }, [tokenAmount, tokenSymbol, transferInfo.amount, transferInfo.currency]);
+  }, [tokenAmount, tokenSymbol, transferInfo]);
 
   return (
     <div className="flex flex-col space-y-12">

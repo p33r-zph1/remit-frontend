@@ -10,10 +10,7 @@ import SelectAgent from '@/src/components/Select/SelectAgent';
 import useGetAgents from '@/src/hooks/api/useGetAgents';
 import useTakeOrder from '@/src/hooks/useTakeOrder';
 import type { OrderType } from '@/src/schema/order';
-import {
-  formatTranferInfo,
-  type TransferInfo,
-} from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 const takeOrderFormSchema = z.object({
   agentId: z
@@ -29,7 +26,7 @@ type TakeOrderForm = z.infer<typeof takeOrderFormSchema>;
 type Props = {
   orderType: OrderType;
   orderId: string;
-  transferInfo: TransferInfo;
+  transferInfo: Parameters<typeof formatTranferInfo>[0];
 };
 
 export default memo(function RecipientCustomerTakeOrder({

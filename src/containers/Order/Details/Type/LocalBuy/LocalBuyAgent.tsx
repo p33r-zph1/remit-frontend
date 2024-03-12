@@ -34,7 +34,7 @@ export default function LocalBuyAgent(props: Props) {
         <ApproveERC20
           orderId={orderId}
           orderType="LOCAL_BUY_STABLECOINS"
-          transferInfo={transferDetails.sender}
+          transferInfo={{ ...transferDetails.sender, isComputed: true }}
           escrowDetails={escrowDetails}
         />
       );
@@ -57,7 +57,7 @@ export default function LocalBuyAgent(props: Props) {
           sender={senderId}
           senderContact={contactDetails.sender}
           locationDetails={collectionDetails}
-          transferInfo={transferDetails.sender}
+          transferInfo={{ ...transferDetails.sender, isComputed: false }}
         />
       );
 

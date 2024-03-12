@@ -9,10 +9,7 @@ import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import { type Contact } from '@/src/schema/contact';
 import type { LocationDetails } from '@/src/schema/location';
 import { type OrderType } from '@/src/schema/order';
-import {
-  formatTranferInfo,
-  type TransferInfo,
-} from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 import CustomerMeetup from './Meetup/CustomerMeetup';
 
@@ -23,7 +20,7 @@ type Props = {
   sender: string | undefined;
   senderContact: Contact | undefined;
   locationDetails: LocationDetails | undefined;
-  transferInfo: TransferInfo | undefined;
+  transferInfo: Parameters<typeof formatTranferInfo>[0] | undefined;
 };
 
 export default memo(function Receive({

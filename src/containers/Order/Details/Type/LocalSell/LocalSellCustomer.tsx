@@ -22,7 +22,7 @@ export default function LocalSellCustomer(props: Props) {
         <ApproveERC20
           orderId={orderId}
           orderType="LOCAL_SELL_STABLECOINS"
-          transferInfo={transferDetails.recipient}
+          transferInfo={{ ...transferDetails.recipient, isComputed: true }}
           escrowDetails={escrowDetails}
         />
       );

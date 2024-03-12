@@ -163,7 +163,11 @@ export function getRecipientAgent(order: Order) {
       return order.recipientAgentId;
 
     case 'LOCAL_BUY_STABLECOINS':
-      return order.senderAgentId; // senderAgent is recipientAgent
+      return false; // only senderAgentId
+
+    // FIXME: is this safe to remove
+    // case 'LOCAL_BUY_STABLECOINS':
+    //   return order.senderAgentId; // senderAgent is recipientAgent
   }
 }
 

@@ -48,7 +48,7 @@ export default function AgentOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        orderDetails={orderDetails}
+        orderDetails={{ ...orderDetails, isComputed: isRecipientAgent }}
         isRecipientCustomer={false}
       />
 
@@ -69,6 +69,11 @@ export default function AgentOrderDetails() {
                 ? fees.recipientAgent
                 : undefined;
 
+            const transferInfo = {
+              ...transferDetails.recipient,
+              isComputed: isRecipient,
+            } satisfies Parameters<typeof formatTranferInfo>[0];
+
             return (
               <OrderDetails
                 priceOracleRates={priceOracleRates}
@@ -76,7 +81,7 @@ export default function AgentOrderDetails() {
                 agentFee={agentFee}
                 summary={{
                   message: 'Exact cash to deliver',
-                  amount: formatTranferInfo(transferDetails.recipient),
+                  amount: formatTranferInfo(transferInfo),
                 }}
               />
             );
@@ -95,7 +100,16 @@ export default function AgentOrderDetails() {
               />
             );
 
-          case 'LOCAL_SELL_STABLECOINS':
+          case 'LOCAL_SELL_STABLECOINS': {
+            const { recipientAgentId } = order;
+
+            const isRecipient = userId === recipientAgentId;
+
+            const transferInfo = {
+              ...transferDetails.recipient,
+              isComputed: isRecipient,
+            } satisfies Parameters<typeof formatTranferInfo>[0];
+
             return (
               <OrderDetails
                 priceOracleRates={priceOracleRates}
@@ -103,10 +117,11 @@ export default function AgentOrderDetails() {
                 agentFee={fees.recipientAgent}
                 summary={{
                   message: 'Exact cash to deliver',
-                  amount: formatTranferInfo(transferDetails.recipient),
+                  amount: formatTranferInfo(transferInfo),
                 }}
               />
             );
+          }
         }
       })()}
 

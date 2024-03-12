@@ -43,14 +43,14 @@ export default function OrderDetails({
             >
               <Disclosure.Panel className="p-4 text-sm text-gray-500 shadow-md">
                 <code className="space-y-2">
-                  <p>
+                  <div>
                     FX Rate:
                     {Object.entries(priceOracleRates).map(([key, value]) => (
-                      <div className="font-bold" key={key}>
+                      <p className="font-bold" key={key}>
                         <strong>&gt;{key} </strong> ({value})
-                      </div>
+                      </p>
                     ))}
-                  </p>
+                  </div>
 
                   <p>
                     Platform Fee:{' '}
@@ -74,6 +74,10 @@ export default function OrderDetails({
                       <strong className="font-bold">{summary.amount}</strong>
                     </p>
                   )}
+
+                  {/* TODO: add Exact cash to give
+                    - only for sender in self remittance
+                  */}
                 </code>
               </Disclosure.Panel>
             </Transition>
