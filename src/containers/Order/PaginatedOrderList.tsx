@@ -79,13 +79,17 @@ export default function PaginatedOrderList({
               isRecipientAgent
             );
 
+            const isComputed = hasGroup('customer')
+              ? isRecipient
+              : isRecipientAgent;
+
             return (
               <OrderItem
                 key={orderId}
                 orderId={orderId}
                 orderStatus={orderStatus}
                 timelineStatus={timelineStatus}
-                orderDetails={orderDetails}
+                orderDetails={{ ...orderDetails, isComputed }}
                 createdAt={createdAt}
                 recipientId={recipientId}
                 isRecipient={isRecipient}

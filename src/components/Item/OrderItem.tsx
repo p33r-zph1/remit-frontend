@@ -15,7 +15,7 @@ type Item = {
   orderId: string;
   orderStatus: OrderStatus;
   timelineStatus: TimelineStatus;
-  orderDetails: TransferInfo | EscrowDetails;
+  orderDetails: (TransferInfo & { isComputed: boolean }) | EscrowDetails;
   createdAt: Date;
   recipientId: string;
   isRecipient: boolean;
@@ -59,8 +59,12 @@ export default memo(function OrderItem({
         <div className="flex text-sm font-bold transition duration-200 group-hover:scale-105 md:text-lg">
           <div className="mr-1 inline-block max-w-20 truncate sm:max-w-full">
             {'token' in orderDetails
-              ? formatNumber(orderDetails.amount)
-              : formatNumber(orderDetails.amount)}
+              ? formatNumber(orderDetails.amountMinusFees)
+              : formatNumber(
+                  orderDetails.isComputed
+                    ? orderDetails.amountMinusFees
+                    : orderDetails.amount
+                )}
           </div>
 
           {'token' in orderDetails ? orderDetails.token : orderDetails.currency}
