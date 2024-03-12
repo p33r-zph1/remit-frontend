@@ -5,11 +5,13 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { formatEscrowDetails } from '@/src/schema/escrow';
 import {
   getOrderDetails,
   isUserRecipient,
   isUserRecipientAgent,
 } from '@/src/schema/order';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
 import OrderDetails from './-components/OrderDetails';
@@ -25,8 +27,10 @@ export default function CustomerOrderDetails() {
 
   const {
     orderType,
-    transferTimeline,
     orderStatus,
+    transferTimeline,
+    transferDetails,
+    escrowDetails,
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
@@ -74,11 +78,38 @@ export default function CustomerOrderDetails() {
                 ? fees.recipientAgent
                 : undefined;
 
+            const message =
+              timelineStatus === 'CASH_COLLECTED' ||
+              timelineStatus === 'ESCROW_DEPOSITED' ||
+              timelineStatus === 'SENDER_ARRIVED' ||
+              timelineStatus === 'DELIVERY_MEETUP_SET' ||
+              timelineStatus === 'CASH_DELIVERED' ||
+              timelineStatus === 'ESCROW_RELEASED'
+                ? 'Exact cash given'
+                : 'Exact cash to give';
+
+            const amount = isSender
+              ? formatTranferInfo({
+                  ...transferDetails.sender,
+                  isComputed: false,
+                })
+              : isRecipient
+                ? formatTranferInfo({
+                    ...transferDetails.recipient,
+                    isComputed: true,
+                  })
+                : undefined;
+
             return (
               <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={agentFee}
+                summary={
+                  orderType === 'CROSS_BORDER_SELF_REMITTANCE' && amount
+                    ? { message, amount }
+                    : undefined
+                }
               />
             );
           }
@@ -89,6 +120,17 @@ export default function CustomerOrderDetails() {
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={fees.senderAgent}
+                summary={{
+                  message:
+                    timelineStatus === 'CASH_COLLECTED' ||
+                    timelineStatus === 'ESCROW_RELEASED'
+                      ? 'Exact cash given'
+                      : 'Exact cash to give',
+                  amount: formatTranferInfo({
+                    ...transferDetails.sender,
+                    isComputed: false,
+                  }),
+                }}
               />
             );
 
@@ -98,6 +140,12 @@ export default function CustomerOrderDetails() {
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={fees.recipientAgent}
+                summary={{
+                  message: escrowDetails.depositTransaction
+                    ? 'Exact token amount released'
+                    : 'Exact token amount to release',
+                  amount: formatEscrowDetails(escrowDetails),
+                }}
               />
             );
         }
