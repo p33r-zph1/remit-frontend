@@ -53,7 +53,7 @@ export default function CustomerOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        orderDetails={{ ...orderDetails, isComputed: isRecipientAgent }}
+        orderDetails={{ ...orderDetails, isComputed: isRecipientCustomer }}
         isRecipientCustomer={isRecipientCustomer}
       />
 
