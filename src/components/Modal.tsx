@@ -146,8 +146,8 @@ export default function Modal(props: Props) {
                     return (
                       <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
                         <button
-                          onClick={confirm.action || confirm.disabled}
-                          disabled={isLoading}
+                          onClick={confirm.action}
+                          disabled={isLoading || confirm.disabled}
                           className="btn btn-primary rounded-lg px-6 font-semibold shadow-sm disabled:bg-primary/70 disabled:text-primary-content"
                         >
                           <span className="flex items-center gap-3">
