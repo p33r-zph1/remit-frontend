@@ -129,8 +129,8 @@ export default function CustomerOrderDetails() {
                 : 'Exact cash to give';
 
             const amount = formatTranferInfo({
-              ...transferDetails.recipient,
-              isComputed: true,
+              ...transferDetails.sender,
+              isComputed: false,
             });
 
             return (
