@@ -5,8 +5,8 @@ import { type Commission, formatCommissionDetails } from '@/src/schema/fees';
 
 type Props = {
   priceOracleRates: Record<string, number>;
+  agentFee: (Commission & { label: string })[];
   platformFee: Commission;
-  agentFee?: Commission;
   summary?: {
     message: string;
     amount: string;
@@ -52,21 +52,21 @@ export default function OrderDetails({
                     ))}
                   </div>
 
+                  {agentFee.map(fee => (
+                    <p key={fee.label}>
+                      {fee.label}:{' '}
+                      <strong className="font-bold">
+                        {formatCommissionDetails(fee)}
+                      </strong>
+                    </p>
+                  ))}
+
                   <p>
                     Platform Fee:{' '}
                     <strong className="font-bold">
                       {formatCommissionDetails(platformFee)}
                     </strong>
                   </p>
-
-                  {agentFee && (
-                    <p>
-                      Agent Fee:{' '}
-                      <strong className="font-bold">
-                        {formatCommissionDetails(agentFee)}
-                      </strong>
-                    </p>
-                  )}
 
                   {summary && (
                     <p>

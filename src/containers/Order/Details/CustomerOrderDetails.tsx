@@ -6,6 +6,7 @@ import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { formatEscrowDetails } from '@/src/schema/escrow';
+import type { Commission } from '@/src/schema/fees';
 import {
   getOrderDetails,
   isUserRecipient,
@@ -65,23 +66,15 @@ export default function CustomerOrderDetails() {
 
       {(() => {
         switch (orderType) {
-          case 'CROSS_BORDER_REMITTANCE':
-          case 'CROSS_BORDER_SELF_REMITTANCE': {
-            const { senderAgentId, recipientAgentId } = order;
+          case 'CROSS_BORDER_REMITTANCE': {
+            const { senderId, recipientId } = order;
 
-            const isSender = userId === senderAgentId;
-            const isRecipient = userId === recipientAgentId;
-
-            const agentFee = isSender
-              ? fees.senderAgent
-              : isRecipient
-                ? fees.recipientAgent
-                : undefined;
+            const isSender = userId === senderId;
+            const isRecipient = userId === recipientId;
 
             const message =
               timelineStatus === 'CASH_COLLECTED' ||
               timelineStatus === 'ESCROW_DEPOSITED' ||
-              timelineStatus === 'SENDER_ARRIVED' ||
               timelineStatus === 'DELIVERY_MEETUP_SET' ||
               timelineStatus === 'CASH_DELIVERED' ||
               timelineStatus === 'ESCROW_RELEASED'
@@ -100,16 +93,55 @@ export default function CustomerOrderDetails() {
                   })
                 : undefined;
 
+            const agentFeeArr: (Commission & { label: string })[] = [];
+
+            agentFeeArr.push({
+              ...fees.senderAgent,
+              label: 'Sender agent fee',
+            });
+
+            if (fees.recipientAgent) {
+              agentFeeArr.push({
+                ...fees.recipientAgent,
+                label: 'Recipient agent fee',
+              });
+            }
+
             return (
               <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
-                agentFee={agentFee}
-                summary={
-                  orderType === 'CROSS_BORDER_SELF_REMITTANCE' && amount
-                    ? { message, amount }
-                    : undefined
-                }
+                agentFee={agentFeeArr}
+                summary={amount ? { message, amount } : undefined}
+              />
+            );
+          }
+
+          case 'CROSS_BORDER_SELF_REMITTANCE': {
+            const message =
+              timelineStatus === 'CASH_COLLECTED' ||
+              timelineStatus === 'ESCROW_DEPOSITED' ||
+              timelineStatus === 'SENDER_ARRIVED' ||
+              timelineStatus === 'DELIVERY_MEETUP_SET' ||
+              timelineStatus === 'CASH_DELIVERED' ||
+              timelineStatus === 'ESCROW_RELEASED'
+                ? 'Exact cash given'
+                : 'Exact cash to give';
+
+            const amount = formatTranferInfo({
+              ...transferDetails.recipient,
+              isComputed: true,
+            });
+
+            return (
+              <OrderDetails
+                priceOracleRates={priceOracleRates}
+                platformFee={fees.platform}
+                agentFee={[
+                  { ...fees.senderAgent, label: 'Sender agent fee' },
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
+                summary={{ message, amount }}
               />
             );
           }
@@ -119,7 +151,7 @@ export default function CustomerOrderDetails() {
               <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
-                agentFee={fees.senderAgent}
+                agentFee={[{ ...fees.senderAgent, label: 'Sender agent fee' }]}
                 summary={{
                   message:
                     timelineStatus === 'CASH_COLLECTED' ||
@@ -139,7 +171,9 @@ export default function CustomerOrderDetails() {
               <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
-                agentFee={fees.recipientAgent}
+                agentFee={[
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
                 summary={{
                   message: escrowDetails.depositTransaction
                     ? 'Exact token amount released'
