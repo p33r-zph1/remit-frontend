@@ -69,20 +69,22 @@ export default function AgentOrderDetails() {
                 ? fees.recipientAgent
                 : undefined;
 
-            const transferInfo = {
-              ...transferDetails.recipient,
-              isComputed: isRecipient,
-            } satisfies Parameters<typeof formatTranferInfo>[0];
-
             return (
               <OrderDetails
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={agentFee}
-                summary={{
-                  message: 'Exact cash to deliver',
-                  amount: formatTranferInfo(transferInfo),
-                }}
+                summary={
+                  isRecipient
+                    ? {
+                        message: 'Exact cash to deliver',
+                        amount: formatTranferInfo({
+                          ...transferDetails.recipient,
+                          isComputed: true,
+                        }),
+                      }
+                    : undefined
+                }
               />
             );
           }
