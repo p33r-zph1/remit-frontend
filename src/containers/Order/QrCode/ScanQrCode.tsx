@@ -3,13 +3,13 @@ import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import useConfirmDelivery from '@/src/hooks/api/useConfirmDelivery';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 
 export default function ScanQrCode() {
   const {
-    order: { orderType, orderId },
+    data: { orderType, orderId },
   } = useOrderDetails();
 
   const {
@@ -97,7 +97,7 @@ export default function ScanQrCode() {
           <img
             src="/qr-frame.svg"
             alt="Qr Frame"
-            className="absolute inset-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 transform fill-none"
+            className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 transform fill-none"
           />
         </div>
 

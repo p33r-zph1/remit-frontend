@@ -55,7 +55,7 @@ export default memo(function CrossBorderCustomer({
           <RecipientCustomerTakeOrder
             orderId={orderId}
             orderType="CROSS_BORDER_REMITTANCE"
-            transferInfo={transferDetails.recipient}
+            transferInfo={{ ...transferDetails.recipient, isComputed: true }}
           />
         );
 

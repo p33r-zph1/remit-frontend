@@ -4,19 +4,19 @@ import { useAccount } from 'wagmi';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
 import LoadingAlert from '@/src/components/Alert/LoadingAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import ApproveAllowance from '@/src/components/Web3/ApproveAllowance';
 import ConnectWallet from '@/src/components/Web3/ConnectWallet';
 import SwitchChain from '@/src/components/Web3/SwitchChain';
 import useEscrowDeposit from '@/src/hooks/api/useEscrowDeposit';
 import type { EscrowDetails } from '@/src/schema/escrow';
 import type { OrderType } from '@/src/schema/order';
-import type { TransferInfo } from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 
 type Props = {
   orderType: OrderType;
   orderId: string;
-  transferInfo: TransferInfo;
+  transferInfo: Parameters<typeof formatTranferInfo>[0];
   escrowDetails: EscrowDetails;
 };
 
@@ -69,9 +69,14 @@ export default memo(function ApproveERC20({
   }, [address, escrowDepositAsync, orderId, orderType]);
 
   const approveAmountSummary = useMemo(() => {
-    const str = `${tokenSymbol} ${tokenAmount} (${transferInfo.currency} ${transferInfo.amount})`;
-    return numericFormatter(str, { thousandSeparator: ',' });
-  }, [tokenAmount, tokenSymbol, transferInfo.amount, transferInfo.currency]);
+    const formattedToken = numericFormatter(`${tokenSymbol} ${tokenAmount}`, {
+      thousandSeparator: ',',
+    });
+
+    const formattedTransferInfo = formatTranferInfo(transferInfo);
+
+    return `${formattedToken} (${formattedTransferInfo})`;
+  }, [tokenAmount, tokenSymbol, transferInfo]);
 
   return (
     <div className="flex flex-col space-y-12">

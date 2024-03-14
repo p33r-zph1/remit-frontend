@@ -5,32 +5,38 @@ import OrderDetailsNav from '@/src/components/Nav/OrderDetailsNav';
 import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
+import { formatEscrowDetails } from '@/src/schema/escrow';
+import type { Commission } from '@/src/schema/fees';
 import {
   getOrderDetails,
   isUserRecipient,
   isUserRecipientAgent,
 } from '@/src/schema/order';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import OrderSummary from './-components/OrderSummary';
+import OrderDetails from './-components/OrderDetails';
 import CrossBorderCustomer from './Type/CrossBorder/CrossBorderCustomer';
 import CrossBorderSelfCustomer from './Type/CrossBorderSelf/CrossBorderSelfCustomer';
 import LocalBuyCustomer from './Type/LocalBuy/LocalBuyCustomer';
 import LocalSellCustomer from './Type/LocalSell/LocalSellCustomer';
 
 export default function CustomerOrderDetails() {
-  const { order } = useOrderDetails();
+  const { data: order, isFetching, refetch } = useOrderDetails();
 
   const { user: userId } = useAuth();
 
   const {
     orderType,
-    transferTimeline,
     orderStatus,
+    transferLabel,
+    transferTimeline,
+    transferDetails,
+    escrowDetails,
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
-    fees: { platform: platformFee },
+    fees,
   } = order;
 
   const isRecipientCustomer = useMemo(
@@ -53,7 +59,8 @@ export default function CustomerOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        orderDetails={orderDetails}
+        orderDetails={{ ...orderDetails, isComputed: isRecipientCustomer }}
+        label={transferLabel}
         isRecipientCustomer={isRecipientCustomer}
       />
 
@@ -61,28 +68,93 @@ export default function CustomerOrderDetails() {
 
       {(() => {
         switch (orderType) {
-          case 'CROSS_BORDER_REMITTANCE':
-          case 'CROSS_BORDER_SELF_REMITTANCE':
+          case 'CROSS_BORDER_REMITTANCE': {
+            const agentFeeArr: (Commission & { label: string })[] = [];
+
+            agentFeeArr.push({
+              ...fees.senderAgent,
+              label: 'Sender agent fee',
+            });
+
+            if (fees.recipientAgent) {
+              agentFeeArr.push({
+                ...fees.recipientAgent,
+                label: 'Recipient agent fee',
+              });
+            }
+
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={agentFeeArr}
               />
             );
+          }
+
+          case 'CROSS_BORDER_SELF_REMITTANCE': {
+            const message =
+              timelineStatus === 'CASH_COLLECTED' ||
+              timelineStatus === 'ESCROW_DEPOSITED' ||
+              timelineStatus === 'SENDER_ARRIVED' ||
+              timelineStatus === 'DELIVERY_MEETUP_SET' ||
+              timelineStatus === 'CASH_DELIVERED' ||
+              timelineStatus === 'ESCROW_RELEASED'
+                ? 'Exact cash given'
+                : 'Exact cash to give';
+
+            const amount = formatTranferInfo({
+              ...transferDetails.sender,
+              isComputed: false,
+            });
+
+            return (
+              <OrderDetails
+                priceOracleRates={priceOracleRates}
+                platformFee={fees.platform}
+                agentFee={[
+                  { ...fees.senderAgent, label: 'Sender agent fee' },
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
+                summary={{ message, amount }}
+              />
+            );
+          }
 
           case 'LOCAL_BUY_STABLECOINS':
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={[{ ...fees.senderAgent, label: 'Sender agent fee' }]}
+                summary={{
+                  message:
+                    timelineStatus === 'CASH_COLLECTED' ||
+                    timelineStatus === 'ESCROW_RELEASED'
+                      ? 'Exact cash given'
+                      : 'Exact cash to give',
+                  amount: formatTranferInfo({
+                    ...transferDetails.sender,
+                    isComputed: false,
+                  }),
+                }}
               />
             );
 
           case 'LOCAL_SELL_STABLECOINS':
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={[
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
+                summary={{
+                  message: escrowDetails.depositTransaction
+                    ? 'Exact token amount released'
+                    : 'Exact token amount to release',
+                  amount: formatEscrowDetails(escrowDetails),
+                }}
               />
             );
         }
@@ -123,7 +195,11 @@ export default function CustomerOrderDetails() {
         }
       })()}
 
-      <TransferTimeline timeline={transferTimeline} />
+      <TransferTimeline
+        timeline={transferTimeline}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     </section>
   );
 }

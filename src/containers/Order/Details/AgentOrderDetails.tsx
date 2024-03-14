@@ -6,31 +6,33 @@ import TransferTimeline from '@/src/components/Timeline/TransferTimeline';
 import useAuth from '@/src/hooks/useAuth';
 import useOrderDetails from '@/src/hooks/useOrderDetails';
 import { formatEscrowDetails } from '@/src/schema/escrow';
+import type { Commission } from '@/src/schema/fees';
 import { getOrderDetails, isUserRecipientAgent } from '@/src/schema/order';
 import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import { isOrderSettled } from '@/src/schema/order/transfer-timeline';
 
-import OrderSummary from './-components/OrderSummary';
+import OrderDetails from './-components/OrderDetails';
 import CrossBorderAgent from './Type/CrossBorder/CrossBorderAgent';
 import CrossBorderSelfAgent from './Type/CrossBorderSelf/CrossBorderSelfAgent';
 import LocalBuyAgent from './Type/LocalBuy/LocalBuyAgent';
 import LocalSellAgent from './Type/LocalSell/LocalSellAgent';
 
 export default function AgentOrderDetails() {
-  const { order } = useOrderDetails();
+  const { data: order, isFetching, refetch } = useOrderDetails();
 
   const { user: userId } = useAuth();
 
   const {
     orderType,
     orderStatus,
+    transferLabel,
     transferTimeline,
     transferDetails,
     escrowDetails,
     transferTimelineStatus: timelineStatus,
     expiresAt,
     priceOracleRates,
-    fees: { platform: platformFee },
+    fees,
   } = order;
 
   const isRecipientAgent = useMemo(
@@ -48,7 +50,8 @@ export default function AgentOrderDetails() {
       <OrderDetailsNav
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
-        orderDetails={orderDetails}
+        orderDetails={{ ...orderDetails, isComputed: isRecipientAgent }}
+        label={transferLabel}
         isRecipientCustomer={false}
       />
 
@@ -56,42 +59,110 @@ export default function AgentOrderDetails() {
 
       {(() => {
         switch (orderType) {
-          case 'CROSS_BORDER_REMITTANCE':
-          case 'CROSS_BORDER_SELF_REMITTANCE':
+          case 'CROSS_BORDER_REMITTANCE': {
+            const { recipientAgentId } = order;
+
+            const isRecipient = userId === recipientAgentId;
+
+            const agentFeeArr: (Commission & { label: string })[] = [];
+
+            agentFeeArr.push({
+              ...fees.senderAgent,
+              label: 'Sender agent fee',
+            });
+
+            if (fees.recipientAgent) {
+              agentFeeArr.push({
+                ...fees.recipientAgent,
+                label: 'Recipient agent fee',
+              });
+            }
+
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
-                summary={{
-                  message: 'Exact cash to deliver',
-                  amount: formatTranferInfo(transferDetails.recipient),
-                }}
+                platformFee={fees.platform}
+                agentFee={agentFeeArr}
+                summary={
+                  isRecipient
+                    ? {
+                        message: 'Exact cash to deliver',
+                        amount: formatTranferInfo({
+                          ...transferDetails.recipient,
+                          isComputed: true,
+                        }),
+                      }
+                    : undefined
+                }
               />
             );
+          }
+
+          case 'CROSS_BORDER_SELF_REMITTANCE': {
+            const { recipientAgentId } = order;
+
+            const isRecipient = userId === recipientAgentId;
+
+            return (
+              <OrderDetails
+                priceOracleRates={priceOracleRates}
+                platformFee={fees.platform}
+                agentFee={[
+                  { ...fees.senderAgent, label: 'Sender agent fee' },
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
+                summary={
+                  isRecipient
+                    ? {
+                        message: 'Exact cash to deliver',
+                        amount: formatTranferInfo({
+                          ...transferDetails.recipient,
+                          isComputed: true,
+                        }),
+                      }
+                    : undefined
+                }
+              />
+            );
+          }
 
           case 'LOCAL_BUY_STABLECOINS':
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={[{ ...fees.senderAgent, label: 'Sender agent fee' }]}
                 summary={{
-                  message: 'exact token amount to release',
+                  message: 'Exact token amount to release',
                   amount: formatEscrowDetails(escrowDetails),
                 }}
               />
             );
 
-          case 'LOCAL_SELL_STABLECOINS':
+          case 'LOCAL_SELL_STABLECOINS': {
+            const { recipientAgentId } = order;
+
+            const isRecipient = userId === recipientAgentId;
+
+            const transferInfo = {
+              ...transferDetails.recipient,
+              isComputed: isRecipient,
+            } satisfies Parameters<typeof formatTranferInfo>[0];
+
             return (
-              <OrderSummary
+              <OrderDetails
                 priceOracleRates={priceOracleRates}
-                platformFee={platformFee}
+                platformFee={fees.platform}
+                agentFee={[
+                  { ...fees.recipientAgent, label: 'Recipient agent fee' },
+                ]}
                 summary={{
                   message: 'Exact cash to deliver',
-                  amount: formatTranferInfo(transferDetails.recipient),
+                  amount: formatTranferInfo(transferInfo),
                 }}
               />
             );
+          }
         }
       })()}
 
@@ -138,7 +209,11 @@ export default function AgentOrderDetails() {
         }
       })()}
 
-      <TransferTimeline timeline={transferTimeline} />
+      <TransferTimeline
+        timeline={transferTimeline}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     </section>
   );
 }

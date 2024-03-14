@@ -3,16 +3,15 @@ import { format } from 'date-fns';
 import { memo, useState } from 'react';
 
 import ErrorAlert from '@/src/components/Alert/ErrorAlert';
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import useConfirmCash from '@/src/hooks/api/useConfirmCash';
 import { type Contact } from '@/src/schema/contact';
 import type { LocationDetails } from '@/src/schema/location';
 import { type OrderType } from '@/src/schema/order';
-import {
-  formatTranferInfo,
-  type TransferInfo,
-} from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
+
+import CustomerMeetup from './Meetup/CustomerMeetup';
 
 type Props = {
   orderType: OrderType;
@@ -21,7 +20,7 @@ type Props = {
   sender: string | undefined;
   senderContact: Contact | undefined;
   locationDetails: LocationDetails | undefined;
-  transferInfo: TransferInfo | undefined;
+  transferInfo: Parameters<typeof formatTranferInfo>[0] | undefined;
 };
 
 export default memo(function Receive({
@@ -81,6 +80,8 @@ export default memo(function Receive({
           Contact sender
         </button>
       </div>
+
+      <CustomerMeetup locationDetails={locationDetails} />
 
       <Modal
         open={modalVisible}

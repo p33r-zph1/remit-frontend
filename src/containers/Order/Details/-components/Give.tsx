@@ -2,7 +2,7 @@ import { PhoneIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 import { memo } from 'react';
 
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import type { Contact } from '@/src/schema/contact';
 import type { LocationDetails } from '@/src/schema/location';
 

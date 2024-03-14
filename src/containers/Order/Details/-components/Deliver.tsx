@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { format } from 'date-fns';
 import { memo, useCallback, useState } from 'react';
 
-import HeaderTitle from '@/src/components/HeaderTitle';
+import HeaderTitle from '@/src/components/Header/HeaderTitle';
 import Modal from '@/src/components/Modal';
 import { Route } from '@/src/routes/_auth/order/$orderId';
 import type { Contact } from '@/src/schema/contact';

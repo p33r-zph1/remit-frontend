@@ -3,10 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 
 import { type EscrowDetails, formatEscrowDetails } from '@/src/schema/escrow';
 import type { OrderStatus } from '@/src/schema/order';
-import {
-  formatTranferInfo,
-  type TransferInfo,
-} from '@/src/schema/order/transfer-info';
+import { formatTranferInfo } from '@/src/schema/order/transfer-info';
 import type { TimelineStatus } from '@/src/schema/order/transfer-timeline';
 
 import StatusIcon from '../Icon/StatusIcon';
@@ -16,7 +13,7 @@ function getTitleByOrderStatus(status: OrderStatus) {
     case 'IN_PROGRESS':
       return (
         <div className="text-base text-gray-400 md:text-lg">
-          Transaction is in-progress
+          Transaction is in progress
         </div>
       );
     case 'COMPLETED':
@@ -40,30 +37,21 @@ function getTitleByOrderStatus(status: OrderStatus) {
   }
 }
 
-function getRecipientDescription(timelineStatus: TimelineStatus) {
+function getDescription(timelineStatus: TimelineStatus, label: string) {
   switch (timelineStatus) {
-    case 'PENDING':
-      return <p>Is the estimated amount to receive</p>;
-
     case 'RECIPIENT_REJECTED':
     case 'RECIPIENT_AGENT_REJECTED':
     case 'SENDER_AGENT_REJECTED':
-      return <p className="text-accent">This order has been rejected</p>;
+      return <p className="text-accent">{label}</p>;
 
     case 'ORDER_EXPIRED':
-      return <p className="text-error">This order has expired</p>;
-
-    case 'CASH_COLLECTED':
-      return <p>Cash has been collected</p>;
-
-    case 'CASH_DELIVERED':
-      return <p>Cash has been delivered</p>;
+      return <p className="text-error">{label}</p>;
 
     case 'ESCROW_RELEASED':
-      return <p className="text-success">Order is completed</p>;
+      return <p className="text-success">{label}</p>;
 
     default:
-      return <p>Is the exact amount to receive</p>;
+      return <p>{label}</p>;
   }
 }
 
@@ -81,17 +69,19 @@ function BackButton() {
 }
 
 type Props = {
-  isRecipientCustomer: boolean;
   orderStatus: OrderStatus;
   timelineStatus: TimelineStatus;
-  orderDetails: TransferInfo | EscrowDetails;
+  orderDetails: Parameters<typeof formatTranferInfo>[0] | EscrowDetails;
+  label: string;
+  isRecipientCustomer: boolean;
 };
 
 export default function OrderDetailsNav({
+  label,
   orderStatus,
-  isRecipientCustomer,
   orderDetails,
   timelineStatus,
+  isRecipientCustomer,
 }: Props) {
   return (
     <div>
@@ -111,7 +101,7 @@ export default function OrderDetailsNav({
         </div>
 
         <div className="text-base text-gray-400 md:text-lg">
-          {getRecipientDescription(timelineStatus)}
+          {getDescription(timelineStatus, label)}
         </div>
       </div>
     </div>

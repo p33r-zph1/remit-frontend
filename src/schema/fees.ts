@@ -15,7 +15,7 @@ const baseFeesSchema = z.object({
 
 export const crossBorderFeesSchema = baseFeesSchema.extend({
   senderAgent: commissionSchema,
-  recipientAgent: commissionSchema.optional(), // FIXME: is it really optional?
+  recipientAgent: commissionSchema.optional(),
 });
 
 export const crossBorderSelfFeesSchema = baseFeesSchema.extend({

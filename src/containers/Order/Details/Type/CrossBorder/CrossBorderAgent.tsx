@@ -61,7 +61,7 @@ export default function CrossBorderAgent({ role, ...orderProps }: Props) {
             sender={senderId}
             senderContact={contactDetails.sender}
             locationDetails={collectionDetails}
-            transferInfo={transferDetails.sender}
+            transferInfo={{ ...transferDetails.sender, isComputed: false }}
           />
         );
 
@@ -71,7 +71,7 @@ export default function CrossBorderAgent({ role, ...orderProps }: Props) {
             orderId={orderId}
             orderType="CROSS_BORDER_REMITTANCE"
             escrowDetails={escrowDetails}
-            transferInfo={transferDetails.sender}
+            transferInfo={{ ...transferDetails.sender, isComputed: true }}
           />
         );
 

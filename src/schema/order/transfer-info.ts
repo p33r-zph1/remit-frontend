@@ -12,11 +12,18 @@ export type TransferInfo = z.infer<typeof transferInfoSchema>;
 
 export function formatTranferInfo({
   amountMinusFees,
+  amount,
   currency,
-}: TransferInfo): string {
-  return numericFormatter(`${amountMinusFees} ${currency}`, {
-    thousandSeparator: ',',
-  });
+  isComputed,
+}: TransferInfo & {
+  isComputed: boolean;
+}): string {
+  return numericFormatter(
+    `${isComputed ? amountMinusFees : amount} ${currency}`,
+    {
+      thousandSeparator: ',',
+    }
+  );
 }
 
 export default transferInfoSchema;

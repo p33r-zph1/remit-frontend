@@ -63,7 +63,7 @@ export default function CrossBorderSelfAgent({ role, ...orderProps }: Props) {
             sender={senderId}
             senderContact={contactDetails.sender}
             locationDetails={collectionDetails}
-            transferInfo={transferDetails.sender}
+            transferInfo={{ ...transferDetails.sender, isComputed: false }}
           />
         );
 
@@ -73,7 +73,7 @@ export default function CrossBorderSelfAgent({ role, ...orderProps }: Props) {
             orderId={orderId}
             orderType="CROSS_BORDER_SELF_REMITTANCE"
             escrowDetails={escrowDetails}
-            transferInfo={transferDetails.sender}
+            transferInfo={{ ...transferDetails.sender, isComputed: true }}
           />
         );
 
@@ -99,7 +99,7 @@ export default function CrossBorderSelfAgent({ role, ...orderProps }: Props) {
           return (
             <CountdownCard
               endDate={orderProps.arrivesAt}
-              pendingLabel="Recipient will arrive on"
+              pendingLabel="Recipient will arrive in"
               completionLabel="Recipient has arrived"
             />
           );

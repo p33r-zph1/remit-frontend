@@ -57,6 +57,7 @@ export const baseOrderSchema = z.object({
   updatedAt: z.coerce.date(),
   expiresAt: z.coerce.date(),
   orderStatus: orderStatusSchema,
+  transferLabel: z.string(),
   priceOracleRates: z.record(z.string(), z.number()),
   escrowDetails: escrowDetailsSchema,
 });
@@ -163,7 +164,11 @@ export function getRecipientAgent(order: Order) {
       return order.recipientAgentId;
 
     case 'LOCAL_BUY_STABLECOINS':
-      return order.senderAgentId; // senderAgent is recipientAgent
+      return false; // only senderAgentId
+
+    // FIXME: is this safe to remove
+    // case 'LOCAL_BUY_STABLECOINS':
+    //   return order.senderAgentId; // senderAgent is recipientAgent
   }
 }
 
