@@ -69,32 +69,6 @@ export default function CustomerOrderDetails() {
       {(() => {
         switch (orderType) {
           case 'CROSS_BORDER_REMITTANCE': {
-            const { senderId, recipientId } = order;
-
-            const isSender = userId === senderId;
-            const isRecipient = userId === recipientId;
-
-            const message =
-              timelineStatus === 'CASH_COLLECTED' ||
-              timelineStatus === 'ESCROW_DEPOSITED' ||
-              timelineStatus === 'DELIVERY_MEETUP_SET' ||
-              timelineStatus === 'CASH_DELIVERED' ||
-              timelineStatus === 'ESCROW_RELEASED'
-                ? 'Exact cash given'
-                : 'Exact cash to give';
-
-            const amount = isSender
-              ? formatTranferInfo({
-                  ...transferDetails.sender,
-                  isComputed: false,
-                })
-              : isRecipient
-                ? formatTranferInfo({
-                    ...transferDetails.recipient,
-                    isComputed: true,
-                  })
-                : undefined;
-
             const agentFeeArr: (Commission & { label: string })[] = [];
 
             agentFeeArr.push({
@@ -114,7 +88,6 @@ export default function CustomerOrderDetails() {
                 priceOracleRates={priceOracleRates}
                 platformFee={fees.platform}
                 agentFee={agentFeeArr}
-                summary={amount ? { message, amount } : undefined}
               />
             );
           }
