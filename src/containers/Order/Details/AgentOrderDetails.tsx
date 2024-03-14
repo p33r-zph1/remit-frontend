@@ -86,7 +86,11 @@ export default function AgentOrderDetails() {
                 summary={
                   isRecipient
                     ? {
-                        message: 'Exact cash to deliver',
+                        message:
+                          timelineStatus === 'CASH_DELIVERED' ||
+                          timelineStatus === 'ESCROW_RELEASED'
+                            ? 'Exact cash delivered'
+                            : 'Exact cash to deliver',
                         amount: formatTranferInfo({
                           ...transferDetails.recipient,
                           isComputed: true,
@@ -114,7 +118,11 @@ export default function AgentOrderDetails() {
                 summary={
                   isRecipient
                     ? {
-                        message: 'Exact cash to deliver',
+                        message:
+                          timelineStatus === 'CASH_DELIVERED' ||
+                          timelineStatus === 'ESCROW_RELEASED'
+                            ? 'Exact cash delivered'
+                            : 'Exact cash to deliver',
                         amount: formatTranferInfo({
                           ...transferDetails.recipient,
                           isComputed: true,
@@ -133,7 +141,10 @@ export default function AgentOrderDetails() {
                 platformFee={fees.platform}
                 agentFee={[{ ...fees.senderAgent, label: 'Sender agent fee' }]}
                 summary={{
-                  message: 'Exact token amount to release',
+                  message:
+                    timelineStatus === 'ESCROW_RELEASED'
+                      ? 'Exact token amount released'
+                      : 'Exact token amount to release',
                   amount: formatEscrowDetails(escrowDetails),
                 }}
               />
@@ -157,7 +168,11 @@ export default function AgentOrderDetails() {
                   { ...fees.recipientAgent, label: 'Recipient agent fee' },
                 ]}
                 summary={{
-                  message: 'Exact cash to deliver',
+                  message:
+                    timelineStatus === 'CASH_DELIVERED' ||
+                    timelineStatus === 'ESCROW_RELEASED'
+                      ? 'Exact cash delivered'
+                      : 'Exact cash to deliver',
                   amount: formatTranferInfo(transferInfo),
                 }}
               />
