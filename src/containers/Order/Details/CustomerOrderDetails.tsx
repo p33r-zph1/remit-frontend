@@ -150,9 +150,10 @@ export default function CustomerOrderDetails() {
                   { ...fees.recipientAgent, label: 'Recipient agent fee' },
                 ]}
                 summary={{
-                  message: escrowDetails.depositTransaction
-                    ? 'Exact token amount released'
-                    : 'Exact token amount to release',
+                  message:
+                    timelineStatus === 'ESCROW_RELEASED'
+                      ? 'Exact token amount released'
+                      : 'Exact token amount to release',
                   amount: formatEscrowDetails(escrowDetails),
                 }}
               />
