@@ -29,6 +29,7 @@ export default function CustomerOrderDetails() {
   const {
     orderType,
     orderStatus,
+    transferLabel,
     transferTimeline,
     transferDetails,
     escrowDetails,
@@ -59,6 +60,7 @@ export default function CustomerOrderDetails() {
         orderStatus={orderStatus}
         timelineStatus={timelineStatus}
         orderDetails={{ ...orderDetails, isComputed: isRecipientCustomer }}
+        label={transferLabel}
         isRecipientCustomer={isRecipientCustomer}
       />
 

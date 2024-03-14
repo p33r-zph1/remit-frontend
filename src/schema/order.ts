@@ -57,6 +57,7 @@ export const baseOrderSchema = z.object({
   updatedAt: z.coerce.date(),
   expiresAt: z.coerce.date(),
   orderStatus: orderStatusSchema,
+  transferLabel: z.string(),
   priceOracleRates: z.record(z.string(), z.number()),
   escrowDetails: escrowDetailsSchema,
 });
