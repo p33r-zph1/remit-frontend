@@ -4,6 +4,7 @@ import {
   CheckCircleIcon,
   CurrencyDollarIcon,
   MapPinIcon,
+  ReceiptRefundIcon,
   UserCircleIcon,
   WalletIcon,
   XCircleIcon,
@@ -51,6 +52,9 @@ function getIconByStatus(timelineStatus: TimelineStatus) {
     case 'RECIPIENT_AGENT_REJECTED':
     case 'ORDER_EXPIRED':
       return <XCircleIcon className="h-6 w-6 text-error/80" />;
+
+    case 'ESCROW_REFUNDED':
+      return <ReceiptRefundIcon className="h-6 w-6 text-error/80" />;
   }
 }
 
@@ -74,6 +78,7 @@ function getLineDividerByStatus(timelineStatus: TimelineStatus) {
     case 'SENDER_AGENT_REJECTED':
     case 'RECIPIENT_AGENT_REJECTED':
     case 'ORDER_EXPIRED':
+    case 'ESCROW_REFUNDED':
       return <hr className="bg-error/80" />;
   }
 }
@@ -82,12 +87,17 @@ function Item({
   dateTime,
   description,
   status,
+  isFirstItem,
   isLastItem,
   isFetching,
-}: Timeline & { isLastItem: boolean; isFetching: boolean }) {
+}: Timeline & {
+  isLastItem: boolean;
+  isFirstItem: boolean;
+  isFetching: boolean;
+}) {
   return (
     <li className={isFetching ? 'cursor-wait opacity-50' : ''}>
-      {getLineDividerByStatus(status)}
+      {!isFirstItem && getLineDividerByStatus(status)}
 
       <div className="timeline-middle">{getIconByStatus(status)}</div>
 
@@ -142,6 +152,7 @@ export default function TransferTimeline({
             <Item
               key={item.description}
               {...item}
+              isFirstItem={index === 0}
               isLastItem={index === timeline.length - 1}
               isFetching={isFetching}
             />

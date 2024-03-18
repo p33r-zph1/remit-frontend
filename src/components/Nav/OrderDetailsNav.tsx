@@ -45,6 +45,7 @@ function getDescription(timelineStatus: TimelineStatus, label: string) {
       return <p className="text-accent">{label}</p>;
 
     case 'ORDER_EXPIRED':
+    case 'ESCROW_REFUNDED':
       return <p className="text-error">{label}</p>;
 
     case 'ESCROW_RELEASED':

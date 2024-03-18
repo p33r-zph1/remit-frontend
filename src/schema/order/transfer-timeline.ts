@@ -7,6 +7,7 @@ export const baseTimelineStatusSchema = z.enum([
 
   // Negative statuses
   'ORDER_EXPIRED',
+  'ESCROW_REFUNDED',
 ]);
 
 export const crossBorderTimelineStatusSchema = z.enum([
